@@ -1,56 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ewsj - SaaS Platform for JEE & NEET Aspirants
 
-## Getting Started
+**Ewsj** is a SaaS-based EdTech platform designed to help **JEE** and **NEET** aspirants prepare effectively for their exams. With a focus on **AI-driven study plans, real-time performance analytics, mock tests, live sessions, and 24/7 mentorship**, Ewsj offers an **interactive** and **structured learning environment** to maximize student success.
 
-First, run the development server:
+## Features
+
+- **AI-Powered Study Plans**: Personalized schedules that adapt to the student’s strengths and weaknesses.
+- **Question Bank & Mock Tests**: An extensive collection of practice questions and test papers with step-by-step solutions.
+- **Live & Recorded Lectures**: High-quality sessions delivered by expert instructors, available for later access.
+- **Performance Analytics**: Real-time tracking of student progress with recommendations for improvement.
+- **Community Support**: A dedicated platform for mentoring, discussion, and peer-to-peer collaboration.
+- **Seamless Payment Integration**: Secure subscription management through **Razorpay** or **Stripe**.
+
+## Tech Stack
+
+### Frontend
+
+- **Next.js (React.js)**: A React framework for building the user interface, optimized for performance and SEO.
+- **Tailwind CSS**: A utility-first CSS framework used for fast and responsive UI development.
+- **Framer Motion**: For adding smooth animations to the user interface, enhancing the overall user experience.
+
+### Backend
+
+- **NestJS (Node.js + TypeScript)**: A powerful framework for building scalable and modular APIs.
+- **PostgreSQL**: A robust relational database used for structured data storage.
+- **Redis**: For caching to speed up repetitive database queries and improve overall performance.
+- **WebSockets**: Real-time communication protocol used for live doubt-solving and interaction.
+
+### Authentication & Security
+
+- **JWT & OAuth**: For secure user authentication and authorization.
+- **AWS Cognito / Firebase Auth**: For handling identity management and social logins.
+
+### Payments & Subscriptions
+
+- **Razorpay / Stripe**: For handling online payments and subscription management.
+
+### Cloud & DevOps
+
+- **AWS (EC2, S3, RDS, Lambda)**: AWS services used for cloud hosting, storage, and serverless functions.
+- **Docker & Kubernetes**: For containerization and deployment, ensuring consistency across environments.
+- **CI/CD (GitHub Actions / Jenkins)**: Automated deployment pipeline to enable quick and reliable releases.
+
+## Installation
+
+To run Ewsj locally, follow the steps below.
+
+### 1. Clone the repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-```
-Ewsj is a cutting-edge SaaS platform designed to revolutionize JEE and NEET preparation.
-With a focus on personalized learning, interactive problem-solving, and AI-driven insights,
-Ewsj helps students streamline their study process and maximize their performance.
-
-Key Features:
-✅ AI-Powered Study Plans – Custom-tailored schedules based on individual strengths & weaknesses.
-✅ Question Bank & Mock Tests – Extensive database of high-quality questions with detailed solutions.
-✅ Live & Recorded Lectures – Expert-led sessions for in-depth conceptual clarity.
-✅ Performance Analytics – Advanced tracking to monitor progress and optimize study strategies.
-✅ Community & Mentorship – Engage with top mentors and a like-minded student community.
-
-Ewsj aims to bridge the gap between traditional coaching and smart digital learning,
-providing aspirants with a highly efficient, structured, and engaging way to crack their exams.
-
-
-```
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-
-
+git clone https://github.com/your-repo/ewsj.git
+cd ewsj
