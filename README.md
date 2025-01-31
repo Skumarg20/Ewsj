@@ -16,7 +16,9 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 ```
-Ewsj is a cutting-edge SaaS platform designed to revolutionize JEE and NEET preparation. With a focus on personalized learning, interactive problem-solving, and AI-driven insights, Ewsj helps students streamline their study process and maximize their performance.
+Ewsj is a cutting-edge SaaS platform designed to revolutionize JEE and NEET preparation.
+With a focus on personalized learning, interactive problem-solving, and AI-driven insights,
+Ewsj helps students streamline their study process and maximize their performance.
 
 Key Features:
 ✅ AI-Powered Study Plans – Custom-tailored schedules based on individual strengths & weaknesses.
@@ -25,7 +27,8 @@ Key Features:
 ✅ Performance Analytics – Advanced tracking to monitor progress and optimize study strategies.
 ✅ Community & Mentorship – Engage with top mentors and a like-minded student community.
 
-Ewsj aims to bridge the gap between traditional coaching and smart digital learning, providing aspirants with a highly efficient, structured, and engaging way to crack their exams.
+Ewsj aims to bridge the gap between traditional coaching and smart digital learning,
+providing aspirants with a highly efficient, structured, and engaging way to crack their exams.
 
 
 ```
