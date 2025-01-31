@@ -15,6 +15,20 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```
+Ewsj is a cutting-edge SaaS platform designed to revolutionize JEE and NEET preparation. With a focus on personalized learning, interactive problem-solving, and AI-driven insights, Ewsj helps students streamline their study process and maximize their performance.
+
+Key Features:
+✅ AI-Powered Study Plans – Custom-tailored schedules based on individual strengths & weaknesses.
+✅ Question Bank & Mock Tests – Extensive database of high-quality questions with detailed solutions.
+✅ Live & Recorded Lectures – Expert-led sessions for in-depth conceptual clarity.
+✅ Performance Analytics – Advanced tracking to monitor progress and optimize study strategies.
+✅ Community & Mentorship – Engage with top mentors and a like-minded student community.
+
+Ewsj aims to bridge the gap between traditional coaching and smart digital learning, providing aspirants with a highly efficient, structured, and engaging way to crack their exams.
+
+
+```
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
@@ -34,3 +48,6 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+
