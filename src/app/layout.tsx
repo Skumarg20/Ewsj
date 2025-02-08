@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import { Provider } from "@/components/ui/provider"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,19 +25,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className=" scroll-smooth" lang="en">
+    <html className=" scroll-smooth" lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased m-auto `}
       >
+        <Provider>
+          
         <div className="">
           <div className="w-[100%] m-auto backdrop-blur-md sticky top-0 z-50 bg-slate-100">
 
-            <Navbar />
+          {/* <Navbar /> */}
           </div>
-          <div className=" border"></div>
+          <div className=" border">
+          {children}
+          </div>
         </div>
-        {children}
-        <Footer/>
+       
+        {/* <Footer/> */}
+        </Provider>
       </body>
     </html>
   );
