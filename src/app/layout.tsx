@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Provider } from "@/components/ui/provider"
@@ -26,6 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <html className=" scroll-smooth" lang="en" suppressHydrationWarning>
+        <head>
+      
+        <Script
+          src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"
+          strategy="beforeInteractive" 
+        />
+      </head>
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased m-auto `}
       >
@@ -44,6 +53,7 @@ export default function RootLayout({
         {/* <Footer/> */}
         </Provider>
       </body>
+      
     </html>
   );
 }

@@ -1,87 +1,181 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { LuTimerReset } from "react-icons/lu";
+import { RiResetLeftLine } from "react-icons/ri";
+import { CgSandClock } from "react-icons/cg";
 
-export default function StopWatch() {
-    const [time, setTime] = useState(0);
-    const [isRunning, setIsRunning] = useState(false);
-    const [isTimerMode, setIsTimerMode] = useState(false);
-    const [isTimerSet, setIsTimerSet] = useState(false);
-    const [inputHours, setInputHours] = useState(0);
-    const [inputMinutes, setInputMinutes] = useState(0);
-    const [inputSeconds, setInputSeconds] = useState(0);
-    const [isFullScreen, setIsFullScreen] = useState(false);
+type TimerProps = {
+    time: number;
+    setTime: React.Dispatch<React.SetStateAction<number>>;
+    isRunning: boolean;
+    setIsRunning: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+type TimeObject = {
+    hours: number,
+    minutes: number,
+    seconds: number
+};
+
+export default function Stopwatch({ time, setTime, isRunning, setIsRunning }: TimerProps) {
+    const [hours, setHours] = useState(0);
+    const [minutes, setMinutes] = useState(0);
+    const [seconds, setSeconds] = useState(0);
+    const [isVisible, setIsVisible] = useState(false);
+    const [isTimerMode, setTimerMode] = useState(false);
 
     useEffect(() => {
-        let timer=null;
+        let timer: NodeJS.Timeout;
         if (isRunning) {
             timer = setInterval(() => {
-                setTime((prev) => {
-                    if (isTimerMode && prev <= 0) {
-                        setIsRunning(false);
-                        return 0;
+                setTime(prev => {
+                    if (isTimerMode) {
+                        const newTime = prev - 1000;
+                        if (newTime <= 0) {
+                            setIsRunning(false);
+                            return 0;
+                        }
+                        return newTime;
                     }
-                    return isTimerMode ? prev - 1000 : prev + 1000;
+                    return prev + 1000;
                 });
             }, 1000);
         }
-        return () => timer && clearInterval(timer);
+        return () => clearInterval(timer);
     }, [isRunning, isTimerMode]);
 
-    const formatTime = (time:number) => {
+    const formatTime = (time: number) => {
         const seconds = Math.floor(time / 1000) % 60;
         const minutes = Math.floor(time / 60000) % 60;
         const hours = Math.floor(time / 3600000);
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
 
-    const handleSetTimer = () => {
-        const totalMilliseconds = (inputHours * 3600 + inputMinutes * 60 + inputSeconds) * 1000;
-        if (totalMilliseconds > 0) {
-            setTime(totalMilliseconds);
-            setIsRunning(false);
-            setIsTimerSet(true);
-        }
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const totalMilliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
+        setTime(totalMilliseconds);
+        setTimerMode(true);
+        setIsRunning(true);
+        setIsVisible(false);
+    };
+
+    const toggleFormAndTimer = () => {
+        setIsVisible(!isVisible);
+      
     };
 
     return (
-        <div className="w-screen h-screen flex flex-col items-center justify-center bg-gray-900 text-white" onClick={() => setIsFullScreen(false)}>
-            <h1 className={`font-bold tracking-wider text-center transition-all duration-500 ${isFullScreen ? 'absolute inset-0 flex items-center justify-center text-[clamp(4rem,10vw,10rem)]' : 'text-[clamp(5rem,13vw,12rem)] mb-8'}`}>
+        <div className="flex flex-col items-center justify-center bg-slate-100 text-gray-800 p-6 rounded-lg shadow-lg h-full w-full">
+            <div className="w-full h-[60%] flex items-center justify-center text-[22vw] font-bold leading-none whitespace-nowrap">
                 {formatTime(time)}
-            </h1>
-            {!isFullScreen && (
-                <>
-                    {!isTimerSet && (
-                        <button onClick={(e) => { e.stopPropagation(); setIsTimerMode((prev) => !prev); setTime(0); setIsRunning(false); }}
-                            className="w-auto h-auto px-6 py-3 rounded-2xl mb-4 text-lg md:text-xl bg-blue-500 text-white font-semibold shadow-md transition-transform hover:scale-105">
-                            Switch to {isTimerMode ? 'Stopwatch' : 'Timer'}
-                        </button>
-                    )}
-                    {isTimerMode && !isTimerSet && (
-                        <div className="mb-4 flex gap-2 items-center">
-                            {['hours', 'minutes', 'seconds'].map((unit) => (
-                                <input key={unit} type="number" value={unit === 'hours' ? inputHours : unit === 'minutes' ? inputMinutes : inputSeconds}
-                                    onChange={(e) => {
-                                        const value = Math.max(0, Number(e.target.value));
-                                        if (unit === 'hours') setInputHours(value);
-                                        if (unit === 'minutes') setInputMinutes(value);
-                                        if (unit === 'seconds') setInputSeconds(value);
-                                    }} className="w-16 px-3 py-2 text-lg text-center bg-white text-black rounded-md" placeholder={unit.charAt(0).toUpperCase() + unit.slice(1)} />
-                            ))}
-                            <button onClick={handleSetTimer} className="px-6 py-3 text-lg bg-gray-700 text-white rounded-2xl shadow-md hover:scale-105">Set Timer</button>
-                        </div>
-                    )}
-                    <div className="flex gap-4">
-                        <button onClick={(e) => { e.stopPropagation(); setIsRunning(!isRunning); setIsFullScreen(isRunning ? false : true); }}
-                            className={`px-6 py-3 text-lg font-semibold shadow-md transition-transform rounded-2xl ${isRunning ? 'bg-yellow-500 text-black' : 'bg-green-600 text-white'} hover:scale-110`}>
-                            {isRunning ? 'Pause' : 'Start'}
-                        </button>
-                        <button onClick={(e) => { e.stopPropagation(); setTime(0); setInputHours(0),setInputMinutes(0),setInputSeconds(0), setIsRunning(false); setIsTimerSet(false); }}
-                            className="px-6 py-3 text-lg bg-red-600 text-white font-semibold rounded-2xl shadow-md hover:scale-110">
-                            Reset
-                        </button>
-                    </div>
-                </>
-            )}
+            </div>
+    
+            {isVisible && (
+    <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="flex gap-3 justify-center">
+            <div className="flex items-center space-x-1">
+                <input
+                    type="number"
+                    name="hours"
+                    value={hours}
+                    onChange={(e) => setHours(Math.max(0, parseInt(e.target.value) || 0))}
+                    className={`w-16 px-1 py-1 mr-0 border rounded-3xl text-center bg-slate-200 font-bold transition-colors ${
+                        hours > 0 ? "text-blue-600 border-blue-400" : "text-gray-700 border-blue-400"
+                    }`}
+                    min="0"
+                    placeholder="0"
+                    disabled={isRunning}
+                />
+                <span className={`text-lg font-semibold transition-colors ${hours > 0 ? "text-blue-600" : "text-gray-800"}`}>
+                    <sub>hr</sub>
+                </span>
+            </div>
+
+            <div className="flex items-center space-x-1">
+                <input
+                    type="number"
+                    name="minutes"
+                    value={minutes}
+                    onChange={(e) => setMinutes(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
+                    className={`w-16 px-1 py-1 mr-0 border rounded-3xl text-center bg-slate-200 font-bold transition-colors ${
+                        minutes > 0 ? "text-blue-600 border-blue-400" : "text-gray-700 border-blue-400"
+                    }`}
+                    min="0"
+                    max="59"
+                    placeholder="0"
+                    disabled={isRunning}
+                />
+                <span className={`text-lg font-semibold transition-colors ${minutes > 0 ? "text-blue-600" : "text-gray-800"}`}>
+                    <sub>m</sub>
+                </span>
+            </div>
+
+            <div className="flex items-center space-x-1">
+                <input
+                    type="number"
+                    name="seconds"
+                    value={seconds}
+                    onChange={(e) => setSeconds(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
+                    className={`w-16 px-1 py-1 mr-0 border rounded-3xl text-center bg-slate-200 font-bold transition-colors ${
+                        seconds > 0 ? "text-blue-600 border-blue-400" : "text-gray-700 border-blue-400"
+                    }`}
+                    min="0"
+                    max="59"
+                    placeholder="0"
+                    disabled={isRunning}
+                />
+                <span className={`text-lg font-semibold transition-colors ${seconds > 0 ? "text-blue-600" : "text-gray-800"}`}>
+                    <sub>s</sub>
+                </span>
+            </div>
+        </div>
+
+        {/* Submit Button */}
+        <button 
+            type="submit"
+            className="w-full py-2 mt-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-3xl transition-all duration-300 ease-in-out"
+        >
+            Submit
+        </button>
+    </form>
+)}    
+    
+            <div className="flex flex-col gap-4 mt-6 w-[30%]">
+                <div className="flex justify-between w-full">
+                    <button 
+                        onClick={() => setIsRunning(!isRunning)} 
+                        className={`px-5 py-3 rounded-3xl transition-all duration-300 shadow-md ${
+                           ( isRunning && !isTimerMode)
+                                ? "bg-red-600 hover:bg-red-700 shadow-red-500/50"
+                                : "bg-green-600 hover:bg-green-700 shadow-green-500/50"
+                        }`}
+                    >
+                        <LuTimerReset className="text-2xl text-white drop-shadow-lg" />
+                       
+                    </button>
+    
+                    <button 
+                        onClick={() => { setTime(0); setIsRunning(false); setTimerMode(false) }} 
+                        className="px-5 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl shadow-lg shadow-blue-500/50 transition-all duration-300"
+                    >
+                        
+                        <RiResetLeftLine className="text-2xl text-white drop-shadow-lg" />
+                        
+                    </button>
+
+    
+                    <button 
+                        onClick={toggleFormAndTimer}
+                        className="px-5 py-3 bg-gray-700 hover:bg-gray-800 rounded-3xl shadow-lg shadow-gray-500/50 transition-all duration-300"
+                    >
+                        
+                        <CgSandClock className="text-2xl text-white drop-shadow-lg" />
+                       
+                    </button>
+                </div>
+            </div>
         </div>
     );
+    
 }

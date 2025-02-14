@@ -5,7 +5,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-// Define form values type
+
 type FormValues = {
   email: string;
   password: string;
@@ -27,7 +27,7 @@ const signupSchema = loginSchema.concat(
     class: yup.string().required("Class selection is required"),
   })
 );
-
+let classforInput='mt-1 text-gray-700 block w-full px-3 py-2 border border-blue-600 rounded-3xl bg-[#e6e5e8] focus:outline-none focus:ring-gray-400 focus:border-gray-300'
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
 
@@ -48,92 +48,74 @@ const Login: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
-    // Add submission logic
+    
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-      <div className="bg-[#3d394d] p-8 shadow-md w-full max-w-md rounded-lg text-black mt-5">
-        <h1 className="text-2xl font-bold mb-6 text-center">
+    <div className="h-screen bg-[#fcfbfb] flex items-center justify-center">
+    <div className="bg-[#f5f5f5] shadow-md w-[50%] max-w-4xl rounded-2xl flex flex-col md:flex-row pl-3 pt-10 md:ml-20">
+    
+      <div className="md:w-full p-6">
+        <h1 className="text-2xl font-bold mb-6 text-center text-gray-500 rounded-3xl">
           {isLogin ? "Login" : "Signup"}
         </h1>
-
+  
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Email */}
+        
           <div>
-            <label className="block text-sm font-medium text-black">Email</label>
+            <label className="block text-sm font-medium text-gray-900">Email</label>
             <input
               {...register("email")}
               type="email"
               placeholder="Enter your email"
-              className="mt-1 text-gray-300 block w-full px-3 py-2 border border-[#121212] rounded-none shadow-sm focus:outline-none focus:ring-gray-300 focus:border-gray-100"
+              className={classforInput}
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
             )}
           </div>
-
-          {/* Password */}
+  
+    
           <div>
-            <label className="block text-sm font-medium text-black">Password</label>
+            <label className="block text-sm font-medium text-gray-900">Password</label>
             <input
               {...register("password")}
               type="password"
               placeholder="Enter your password"
-              className="mt-1 text-gray-300 block w-full px-3 py-2 border border-[#121212] rounded-none shadow-sm focus:outline-none focus:ring-gray-300 focus:border-gray-100"
+              className={classforInput}
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
             )}
           </div>
-
-          {/* Additional Fields for Signup */}
+  
+        
           {!isLogin && (
             <>
-              {/* Phone Number */}
+              
               <div>
-                <label className="block text-sm font-medium text-black">
-                  Phone Number
-                </label>
+                <label className="block text-sm font-medium text-gray-900">Phone Number</label>
                 <input
                   {...register("phone")}
                   type="tel"
                   placeholder="Enter your phone number"
-                  className="mt-1 text-gray-300 block w-full px-3 py-2 border border-[#121212] rounded-none shadow-sm focus:outline-none focus:ring-gray-300 focus:border-gray-100"
+                  className={classforInput}
                 />
                 {errors.phone && (
                   <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
                 )}
               </div>
-
-              {/* Address */}
+  
+              {/* Class Selection */}
               <div>
-                <label className="block text-sm font-medium text-black">
-                  Address
-                </label>
-                <input
-                  {...register("address")}
-                  type="text"
-                  placeholder="Enter your address"
-                  className="mt-1 text-gray-300 block w-full px-3 py-2 border border-[#121212] rounded-none shadow-sm focus:outline-none focus:ring-gray-300 focus:border-gray-100"
-                />
-                {errors.address && (
-                  <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
-                )}
-              </div>
-
-              {/* Class (JEE/NEET) */}
-              <div>
-                <label className="block text-sm font-medium text-black">
-                  Class
-                </label>
+                <label className="block text-sm font-medium text-gray-900">Class</label>
                 <Controller
                   name="class"
                   control={control}
                   render={({ field }) => (
                     <select
                       {...field}
-                      className="mt-1 text-white block w-full px-3 py-2 border border-gray-300 rounded-none shadow-sm focus:outline-none focus:ring-[#121212] focus:border-[#121212]"
+                       className="w-full bg-slate-200 text-gray-700 rounded-3xl border-blue-400 p-2 border-ring"
                     >
                       <option value="">Select your class</option>
                       <option value="JEE">JEE</option>
@@ -147,28 +129,44 @@ const Login: React.FC = () => {
               </div>
             </>
           )}
-
+  
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-[#121212] text-white py-2 px-4 rounded-md focus:ring-[#121212] focus:border-[#121212] focus:outline-none focus:ring-2  focus:ring-offset-2"
+            className="w-full bg-[#1e90ff] hover:bg-slate-300 hover:text-gray-900 text-white py-2 px-4 rounded-3xl focus:ring-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300"
           >
             {isLogin ? "Login" : "Signup"}
           </button>
         </form>
-
+  
         {/* Toggle between Login and Signup */}
-        <p className="mt-4 text-center text-sm text-black">
+        <p className="mt-4 text-center text-sm text-gray-700">
           {isLogin ? "Don't have an account? " : "Already have an account? "}
           <button
             onClick={toggleForm}
-            className="text-white hover:text-[#121212] focus:outline-none"
+            className="text-blue-400 hover:underline focus:outline-none hover:bg-slate-100 hover:text-gray-700"
           >
             {isLogin ? "Signup" : "Login"}
           </button>
         </p>
-      </div>
+      </div> 
     </div>
+
+    <div className="hidden md:flex md:w-1/2 bg-[#e8e8ef] p-6 rounded-r-2xl flex-col items-center justify-center text-center text-gray-800">
+        <h2 className="text-3xl font-bold">Track Your Journey 🚀</h2>
+        <p className="mt-4 text-gray-500">
+          "Stay committed, stay focused, and reach your target. Whether you're preparing for JEE or NEET, your hard work will pay off"
+          <br/>
+          <span>Let’s ace it together!</span> 💪
+        </p>
+        <img
+          src="https://source.unsplash.com/300x200/?goal,motivation"
+          alt="Motivation"
+          className="mt-6 rounded-lg shadow-md"
+        />
+      </div>
+  </div>
+  
   );
 };
 

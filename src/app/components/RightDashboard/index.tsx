@@ -63,14 +63,14 @@ const RightDashboard = () => {
   ];
 
   return (
-    <div className="h-auto bg-gray-900 text-white p-6">
-  {/* Welcome Section */}
+    <div className="h-auto bg-slate-100 text-gray-900 p-6">
+ 
   <div className="text-2xl font-bold mb-4">Welcome Back, Sanjeev! 🚀</div>
 
-  {/* Grid Layout */}
+ 
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-  {/* To-Do List */}
-  <Card className="bg-gray-800 p-4 rounded-xl h-auto w-full">
+ 
+  <Card className="bg-slate-100 p-4 rounded-xl h-auto w-full">
     <h2 className="text-lg font-semibold mb-3">📌 To-Do List</h2>
     <ul>
       {todos.map((task) => (
@@ -82,7 +82,7 @@ const RightDashboard = () => {
           </button>
           {editingId === task.id ? (
             <input
-              className="bg-gray-700 text-white p-1 rounded"
+              className="bg-slate-100 text-white p-1 rounded"
               value={newText}
               onChange={(e) => setNewText(e.target.value)}
               onBlur={handleUpdate}
@@ -108,7 +108,7 @@ const RightDashboard = () => {
   </Card>
 
   {/* Learning Progress */}
-  <Card className="bg-gray-800 p-4 rounded-xl h-auto w-full">
+  <Card className="bg-slate-100 p-4 rounded-xl h-auto w-full">
     <h2 className="text-lg font-semibold mb-3">📖 Learning Progress</h2>
     <p>Today's Goal: Complete {completedCount} Topics</p>
     <Progress value={taskCompletedPercentage} className="mt-2" />
@@ -119,7 +119,7 @@ const RightDashboard = () => {
   </Card>
 </div>
 
-  <Card className="bg-gray-800 p-4 rounded-none h-auto self-start mt-5">
+  <Card className="bg-slate-100 p-4 rounded-none h-auto self-start mt-5">
       <StickyNotes />
     </Card>
 

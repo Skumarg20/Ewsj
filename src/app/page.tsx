@@ -1,4 +1,4 @@
-
+'use cli'
 import Hero from "./components/Hero";
 import Services from "./components/Ourservice";
 import Contact from "./components/Contact";
@@ -7,7 +7,10 @@ import Dashboard from "./screen/dashboard";
 import Login from "./utils/SignIn";
 import StopWatch from "./screen/stopwatch";
 
+
+
 export default function Home() {
+
   return (
   <>
  {/* <div>
@@ -24,9 +27,9 @@ export default function Home() {
 
 <div><Blog/></div> */}
 {/* <Dashboard/> */}
-<StopWatch/>
+{/* <StopWatch/> */}
 {/* <Login/> */}
-
+ 
   </>
   );
 }
