@@ -4,7 +4,9 @@ import "./globals.css";
 import Script from "next/script";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import {LoadingProvider }from "@/app/loader/context/loadingprovider"
 import { Provider } from "@/components/ui/provider"
+import LoadingSpinner from "./loader/LoadingSpinner";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -38,8 +40,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased m-auto `}
       >
+        <LoadingProvider>
         <Provider>
-          
+        <LoadingSpinner />
         <div className="">
           <div className="w-[100%] m-auto backdrop-blur-md sticky top-0 z-50 bg-slate-100">
 
@@ -52,6 +55,7 @@ export default function RootLayout({
        
         {/* <Footer/> */}
         </Provider>
+        </LoadingProvider>
       </body>
       
     </html>

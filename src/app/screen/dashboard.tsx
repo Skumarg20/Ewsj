@@ -1,37 +1,42 @@
 "use client";
 import * as React from "react";
-import { extendTheme, styled } from "@mui/material/styles";
+import { extendTheme } from "@mui/material/styles";
+import { Box, Typography, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import BarChartIcon from "@mui/icons-material/BarChart";
 import DescriptionIcon from "@mui/icons-material/Description";
-import LayersIcon from "@mui/icons-material/Layers";
-import { AppProvider, Navigation, Router } from "@toolpad/core/AppProvider";
+import { AiOutlineSchedule } from "react-icons/ai";
+import { FaNotesMedical } from "react-icons/fa6";
+import { MdOutlineMoreTime, MdGroups2 } from "react-icons/md";
+import { GrNodes } from "react-icons/gr";
+import { AppProvider, Router } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import { Box, Typography } from "@mui/material";
-import { ClockIcon } from "@heroicons/react/20/solid";
 import Profile from "../utils/Profile";
 import RightDashboard from "../components/RightDashboard";
-import TimeTable from "@/app/timetable/index"; // Import your TimeTable component
+import TimeTable from "@/app/timetable/index";
 import StudyPlan from "../studyplan";
+import Clusters from "../talksphere/clusters";
 
-const NAVIGATION: Navigation = [
+
+const NAVIGATION = [
   { kind: "header", title: "Sanjeev Kumar" },
   { segment: "dashboard", title: "Dashboard", icon: <DashboardIcon /> },
-  { segment: "studyplan", title: "Study Plan", icon: <ClockIcon /> },
-  { segment: "timetable", title: "Time Table", icon: <ClockIcon /> },
+  { segment: "studyplan", title: "Study Plan", icon: <AiOutlineSchedule /> },
+  { segment: "timetable", title: "Time Table", icon: <MdOutlineMoreTime /> },
+  { segment: "notes", title: "Notes", icon: <FaNotesMedical /> },
   { kind: "divider" },
-  { kind: "header", title: "Analytics" },
+  { kind: "header", title: "TalkSphere" },
   {
-    segment: "reports",
-    title: "Reports",
-    icon: <BarChartIcon />,
+    segment: "group",
+    title: "Clusters",
+    icon: <MdGroups2 />,
     children: [
-      { segment: "sales", title: "Sales", icon: <DescriptionIcon /> },
-      { segment: "traffic", title: "Traffic", icon: <DescriptionIcon /> },
+      { segment: "hbhsales", title: "Sales", icon: <DescriptionIcon />, groupId: "sal8777es" },
+      { segment: "traf98fic", title: "Traffic", icon: <DescriptionIcon />, groupId: "traff38587ic" },
     ],
   },
-  { segment: "integrations", title: "Integrations", icon: <LayersIcon /> },
+  { segment: "peers", title: "Peers", icon: <GrNodes /> },
 ];
+
 
 const demoTheme = extendTheme({
   colorSchemes: { light: true, dark: true },
@@ -41,32 +46,52 @@ const demoTheme = extendTheme({
   },
 });
 
-// Custom hook to manage navigation
+
 function useDemoRouter(initialPath: string): Router {
   const [pathname, setPathname] = React.useState(initialPath);
 
-  return React.useMemo(() => ({
-    pathname,
-    searchParams: new URLSearchParams(),
-    navigate: (path: string | URL) => setPathname(String(path)),
-  }), [pathname]);
+  return React.useMemo(
+    () => ({
+      pathname,
+      searchParams: new URLSearchParams(),
+      navigate: (path: string | URL) => setPathname(String(path)),
+    }),
+    [pathname]
+  );
 }
 
-// Function to dynamically render content
+
+
+// 📌 DYNAMIC PAGE CONTENT (NOW HANDLES `/group/:groupId`)
 function PageContent({ pathname }: { pathname: string }) {
   console.log(pathname);
+
+  const isGroupPage = pathname.startsWith("/group/");
+  console.log(isGroupPage);
+
+  const groupId = isGroupPage ? pathname.split("/")[2] : null;
+  console.log(groupId);
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       {pathname === "/dashboard" && <RightDashboard />}
-      {pathname==="/studyplan" && <StudyPlan/>}
+      {pathname === "/studyplan" && <StudyPlan />}
       {pathname === "/timetable" && <TimeTable />}
+      {pathname === "/group" && <Clusters />}
+      {isGroupPage && (
+        <Typography variant="h4" sx={{ mt: 2, textAlign: "center" }}>
+          Viewing Group: <b>{groupId}</b>
+          <h1>hello</h1>
+        </Typography>
+      )}
     </Box>
   );
 }
 
+// 🌟 MAIN DASHBOARD COMPONENT
 export default function Dashboard(props: any) {
   const { window } = props;
-  const router = useDemoRouter("dashboard");
+  const router = useDemoRouter("/dashboard");
   const demoWindow = window ? window() : undefined;
 
   return (

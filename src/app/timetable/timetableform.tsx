@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
-// Enum for TimeFrame (matching the DTO)
+
 const TimeFrame = {
   DAILY: 'daily',
   WEEKLY: 'weekly',
@@ -40,8 +40,8 @@ const timetableSchema = z.object({
 });
 
 type TimetableFormValues = z.infer<typeof timetableSchema>;
-
-export default function TimetableForm() {
+type FormData = z.infer<typeof timetableSchema>;
+export default function TimetableForm({handleformdata}:any) {
   const [subjectInput, setSubjectInput] = useState("");
   
   const {
@@ -92,7 +92,8 @@ export default function TimetableForm() {
   };
 
   const onSubmit = (data: TimetableFormValues) => {
-    console.log("Form data:", data);
+    handleformdata(data,false);
+    
   };
 
   return (

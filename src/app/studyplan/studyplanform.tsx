@@ -5,31 +5,20 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GraduationCap } from "lucide-react";
-import { Clock } from "lucide-react";
-import { BookOpen } from "lucide-react";
-import { ListOrdered } from "lucide-react";
+import { GraduationCap, Clock, BookOpen, ListOrdered, X, Tag } from "lucide-react";
 import Image from "next/image";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
-import { X } from "lucide-react";
 import { GiDuration } from "react-icons/gi";
-import { Tag } from "lucide-react";
 import { Typography } from "@mui/material";
-import studyPlanImage from '@/app/animations/studyplan.jpg'
+import studyPlanImage from '@/app/animations/studyplan.jpg';
+
 export enum DurationUnit {
   Weeks = "weeks",
   Months = "months",
   Years = "years",
 }
-
 
 // Zod Schema
 const studyPlanSchema = z.object({
@@ -40,7 +29,7 @@ const studyPlanSchema = z.object({
   dailyStudyHours: z.number().min(1).max(24),
   targetTopics: z.array(z.string()).optional(),
   targetQuestionsPerSubject: z.record(z.string(), z.number().positive()),
-  probleminStudies:z.string().min(1,"this is not required")
+  probleminStudies: z.string().min(1, "This field is required"),
 });
 
 type StudyPlanFormValues = z.infer<typeof studyPlanSchema>;
@@ -61,18 +50,16 @@ export default function StudyPlanForm() {
     },
   });
 
-  const onSubmit = (data: StudyPlanFormValues) => {
-    console.log("Form data:", data);
-  };
-
   const addSubject = () => {
     setValue("targetQuestionsPerSubject", {
       ...watch("targetQuestionsPerSubject"),
       ["New Subject"]: 0,
     });
   };
+
   const [inputValue, setInputValue] = useState("");
   const topics = watch("targetTopics") || [];
+
   const handleAddTopic = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
@@ -81,46 +68,49 @@ export default function StudyPlanForm() {
     }
   };
 
-  // Remove topic
   const handleRemoveTopic = (topic: string) => {
-    setValue(
-      "targetTopics",
-      topics.filter((t) => t !== topic)
-    );
+    setValue("targetTopics", topics.filter((t) => t !== topic));
+  };
+
+  const onSubmit = (data: StudyPlanFormValues) => {
+    console.log("Form data:", data);
   };
 
   const className =
     "rounded-full border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow hover:border-blue-400 shadow-sm";
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
- <div className="relative space-y-4 mb-8 flex flex-col items-center">
-  {/* Floating Image in Top Right */}
-  <div className="absolute top-0 right-0 min-w-16 min-h-16 md:w-[20%] md:h-[20%] -z-5">
-        <Image src={studyPlanImage} alt="Study Icon" layout="responsive" />
+      <div className="relative space-y-4 mb-8 flex flex-col items-center">
+        <div className="absolute top-0 right-0 min-w-16 min-h-16 md:w-[20%] md:h-[20%] -z-5">
+          <Image src={studyPlanImage} alt="Study Icon" layout="responsive" />
+        </div>
+        <h1 className="text-4xl font-bold text-left text-blue-600 z-10">
+          Your Path to Success Starts Here
+        </h1>
+        <p className="text-lg text-center text-gray-600 z-10">
+          Create Your Personalized Study Strategy
+        </p>
       </div>
 
-  {/* Centered Content */}
-  <h1 className="text-4xl font-bold text-left text-blue-600 z-10">
-    Your Path to Success Starts Here
-  </h1>
-  <p className="text-lg text-center text-gray-600 z-10">
-    Create Your Personalized Study Strategy
-  </p>
-</div>
-    
-    <div className="absolute top-0 right-0 translate-x-4 -translate-y-4">
-      <svg width="50" height="50" viewBox="0 0 50 50" className="text-blue-300">
-        <path
-          d="M25 0L30 20L40 25L30 30L25 50L20 30L10 25L20 20L25 0Z"
-          fill="currentColor"
-          className="animate-pulse"
-        />
-      </svg>
+      <div className="absolute top-0 right-0 translate-x-4 -translate-y-4">
+        <svg width="50" height="50" viewBox="0 0 50 50" className="text-blue-300">
+          <path
+            d="M25 0L30 20L40 25L30 30L25 50L20 30L10 25L20 20L25 0Z"
+            fill="currentColor"
+            className="animate-pulse"
+          />
+        </svg>
+      </div>
 
-</div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
+      <form
+        onSubmit={handleSubmit((data) => {
+          console.log("Form submitted with data:", data); // Debugging log
+          onSubmit(data);
+        })}
+        className="space-y-6"
+      >
+         <div>
           <Label htmlFor="exam">Exam Name</Label>
           <div className="relative w-full">
             <Input
@@ -308,7 +298,7 @@ export default function StudyPlanForm() {
           )}
         </div>
 
-        <div>
+        {/* <div>
           <Label htmlFor="probleminStudies">Describe the problem you're facing in your studies:</Label>
           <div className="relative w-full">
             <Input
@@ -324,9 +314,8 @@ export default function StudyPlanForm() {
           {errors.exam && (
             <p className="text-red-500 text-sm">{errors.exam.message}</p>
           )}
-        </div>
+        </div> */}
 
-        {/* Submit Button */}
         <Button
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-full"
