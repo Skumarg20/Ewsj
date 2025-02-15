@@ -15,6 +15,7 @@ import RightDashboard from "../components/RightDashboard";
 import TimeTable from "@/app/timetable/index";
 import StudyPlan from "../studyplan";
 import Clusters from "../talksphere/clusters";
+import Notes from "../Notes";
 
 
 const NAVIGATION = [
@@ -78,6 +79,7 @@ function PageContent({ pathname }: { pathname: string }) {
       {pathname === "/studyplan" && <StudyPlan />}
       {pathname === "/timetable" && <TimeTable />}
       {pathname === "/group" && <Clusters />}
+      {pathname==="/notes" && <Notes />}
       {isGroupPage && (
         <Typography variant="h4" sx={{ mt: 2, textAlign: "center" }}>
           Viewing Group: <b>{groupId}</b>
