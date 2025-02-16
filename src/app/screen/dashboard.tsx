@@ -88,7 +88,7 @@ function PageContent({ pathname }: { pathname: string }) {
   );
 }
 
-// 🌟 MAIN DASHBOARD COMPONENT
+
 export default function Dashboard(props: any) {
   const { window } = props;
   const router = useDemoRouter("/dashboard");

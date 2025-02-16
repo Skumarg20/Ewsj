@@ -220,7 +220,7 @@ export default function TimetableForm({handleformdata}:any) {
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full active:bg-blue-950"
         >
           Generate Timetable
         </Button>

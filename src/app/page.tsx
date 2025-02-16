@@ -6,7 +6,7 @@ import Blog from "./components/Blog";
 import Dashboard from "./screen/dashboard";
 import Login from "./utils/SignIn";
 import StopWatch from "./screen/stopwatch";
-import TimeTable from "./components/timetable";
+import TimeTable from "./components/timetableui";
 
 
 

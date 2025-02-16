@@ -9,46 +9,70 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
 
 interface TableProps {
   caption?: string;
   headers: string[];
   data: { [key: string]: string }[];
+  handleonChange(finaldata: any): void;
 }
 
-export default function TimeTables({ caption, headers, data }: TableProps) {
-  const [tableHeaders, setTableHeaders] = useState<string[]>(headers);
+export default function TimeTables({
+  caption,
+  headers,
+  data,
+  handleonChange,
+}: TableProps) {
+  // const [tableHeaders, setTableHeaders] = useState<string[]>(headers);
   const [tableData, setTableData] = useState<{ [key: string]: string }[]>(data);
 
- 
-  const handleHeaderEdit = (index: number, event: React.FocusEvent<HTMLTableCellElement>) => {
-    const updatedHeaders = [...tableHeaders];
-    updatedHeaders[index] = event.target.innerText;
-    setTableHeaders(updatedHeaders);
-  };
+  handleonChange(tableData);
+  console.log(tableData, "this is table data in table");
+  // console.log(tableHeaders, tableData);
 
- 
-  const handleCellEdit = (rowIndex: number, columnKey: string, event: React.FocusEvent<HTMLTableCellElement>) => {
+  // const handleHeaderEdit = (index: number, event: React.FocusEvent<HTMLTableCellElement>) => {
+  //   const updatedHeaders = [...tableHeaders];
+  //   updatedHeaders[index] = event.target.innerText;
+  //   setTableHeaders(updatedHeaders);
+  // };
+
+  const handleCellEdit = (
+    rowIndex: number,
+    columnKey: string,
+    event: React.FocusEvent<HTMLTableCellElement>
+  ) => {
     const updatedData = [...tableData];
-    updatedData[rowIndex] = { ...updatedData[rowIndex], [columnKey]: event.target.innerText };
+    updatedData[rowIndex] = {
+      ...updatedData[rowIndex],
+      [columnKey]: event.target.innerText,
+    };
     setTableData(updatedData);
   };
 
- 
-  const addColumn = () => {
-    const newHeader = `Column ${tableHeaders.length + 1}`;
-    setTableHeaders((prevHeaders) => [...prevHeaders, newHeader]);
+  // const addColumn = () => {
+  //   const newHeader = `Column ${tableHeaders.length + 1}`;
+  //   setTableHeaders((prevHeaders) => [...prevHeaders, newHeader]);
 
-    const updatedData = tableData.map((row) => ({
-      ...row,
-      [newHeader]: "", 
-    }));
+  //   const updatedData = tableData.map((row) => ({
+  //     ...row,
+  //     [newHeader]: "",
+  //   }));
 
+  //   setTableData(updatedData);
+  // };
+  const addRow = () => {
+    const newRow: { [key: string]: string } = {};
+    headers.forEach((header) => (newRow[header] = ""));
+    setTableData((prevData) => [...prevData, newRow]);
+  };
+  const removeRow = (rowIndex: number) => {
+    const updatedData = tableData.filter((_, index) => index !== rowIndex);
     setTableData(updatedData);
   };
 
   return (
-    <div className="w-full rounded-3xl bg-white p-4 shadow-lg cursor-pointer">
+    <div className="w-full rounded-3xl flex-col bg-white p-4 shadow-lg cursor-pointer justify-center items-center">
       <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-200 rounded-xl">
         <Table className="min-w-full">
           {caption && (
@@ -60,15 +84,12 @@ export default function TimeTables({ caption, headers, data }: TableProps) {
           {/* Editable Table Headers */}
           <TableHeader className="bg-gray-200">
             <TableRow className="border-b-2 border-gray-900">
-              {tableHeaders.map((header, index) => (
+              {headers.map((header, index) => (
                 <TableHead
                   key={index}
-                  contentEditable
-                  suppressContentEditableWarning
-                  onBlur={(event) => handleHeaderEdit(index, event)}
-                  className="text-center px-4 py-2  border-gray-900 outline-none focus:ring-1 focus:ring-gray-500 focus:rounded-2xl "
+                  className="text-center px-4 py-2 border-gray-900 outline-none focus:ring-1 focus:ring-gray-500 focus:rounded-2xl"
                 >
-                  {header}
+                  {header.toUpperCase()}
                 </TableHead>
               ))}
             </TableRow>
@@ -78,22 +99,40 @@ export default function TimeTables({ caption, headers, data }: TableProps) {
           <TableBody>
             {tableData.length > 0 ? (
               tableData.map((row, rowIndex) => (
-                <TableRow key={rowIndex} className="border-b border-gray-900 hover:bg-gray-100">
-                  {tableHeaders.map((header, colIndex) => (
+                <TableRow
+                  key={rowIndex}
+                  className="border-b border-gray-900 hover:bg-gray-100"
+                >
+                  {headers.map((header, colIndex) => (
                     <TableCell
                       key={colIndex}
                       contentEditable
                       suppressContentEditableWarning
-                    className="text-center px-4 py-2 whitespace-nowrap border-gray-900 outline-none rounded-lg focus:ring-1 focus:ring-gray-500 focus:rounded-2xl"
+                      onBlur={(event) =>
+                        handleCellEdit(rowIndex, header, event)
+                      }
+                      className="text-center px-4 py-2 whitespace-nowrap border-gray-900 outline-none rounded-lg focus:ring-1 focus:ring-gray-500 focus:rounded-2xl"
                     >
                       {row[header] || ""}
                     </TableCell>
                   ))}
+
+                  <TableCell className="text-center px-4 py-2">
+                    <Button
+                      onClick={() => removeRow(rowIndex)}
+                      className="text-red-500 hover:text-white hover:bg-red-500 px-2 py-1 rounded-lg"
+                    >
+                      <Trash size={18} />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={tableHeaders.length} className="text-center px-4 py-2">
+                <TableCell
+                  colSpan={headers.length}
+                  className="text-center px-4 py-2"
+                >
                   No data available
                 </TableCell>
               </TableRow>
@@ -102,9 +141,11 @@ export default function TimeTables({ caption, headers, data }: TableProps) {
         </Table>
       </div>
 
-      {/* ✅ Add Column Button (Now Works!) */}
-      <Button onClick={addColumn} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg">
-        Add Column
+      <Button
+        onClick={addRow}
+        className="bg-blue-600 w-full p-3 text-white px-4 mt-3 rounded-3xl hover:text-gray-800 hover:bg-white"
+      >
+        Add Row
       </Button>
     </div>
   );
