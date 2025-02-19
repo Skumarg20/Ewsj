@@ -15,9 +15,8 @@ import RightDashboard from "../components/RightDashboard";
 import TimeTable from "@/app/timetable/index";
 import StudyPlan from "../studyplan";
 import Clusters from "../talksphere/clusters";
-import Notes from "../Notes";
-
-
+import Notes from "@/app/notes/page"
+import TimerModal from '@/app/components/TimeModel/index'
 const NAVIGATION = [
   { kind: "header", title: "Sanjeev Kumar" },
   { segment: "dashboard", title: "Dashboard", icon: <DashboardIcon /> },
@@ -40,7 +39,7 @@ const NAVIGATION = [
 
 
 const demoTheme = extendTheme({
-  colorSchemes: { light: true, dark: true },
+  colorSchemes: { light: true },
   colorSchemeSelector: "class",
   breakpoints: {
     values: { xs: 0, sm: 600, md: 600, lg: 1200, xl: 1536 },
@@ -89,7 +88,11 @@ function PageContent({ pathname }: { pathname: string }) {
     </Box>
   );
 }
-
+// function StopWatch(){
+//   return <>
+//   <Stopwatch/>
+//   </>
+// }
 
 export default function Dashboard(props: any) {
   const { window } = props;
@@ -110,7 +113,7 @@ export default function Dashboard(props: any) {
     >
       <DashboardLayout
         slots={{
-          toolbarAccount: () => null,
+          toolbarAccount: ()=><TimerModal/>,
           sidebarFooter: () => (
             <Profile
               user={{
@@ -128,3 +131,4 @@ export default function Dashboard(props: any) {
     </AppProvider>
   );
 }
+

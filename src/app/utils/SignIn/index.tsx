@@ -4,8 +4,14 @@ import { useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
-
+import {login} from '../../../lib/api'
+import { useRouter } from "next/navigation";
+import MotivationalCard from './foundercard';
+import Image from 'next/image';
+import getTimeTable from '@/state/store/timetablestore'
+import useRedirectToDashboard from "@/hooks/dashboardRedirectHook";
+import { motion } from "framer-motion";
+import { FiUser, FiLock, FiMail, FiPhone, FiBook, FiArrowRight } from "react-icons/fi";
 type FormValues = {
   email: string;
   password: string;
@@ -14,7 +20,6 @@ type FormValues = {
   class?: string;
 };
 
-// Schema validation
 const loginSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
   password: yup.string().required("Password is required"),
@@ -27,10 +32,17 @@ const signupSchema = loginSchema.concat(
     class: yup.string().required("Class selection is required"),
   })
 );
-let classforInput='mt-1 text-gray-700 block w-full px-3 py-2 border border-blue-600 rounded-3xl bg-[#e6e5e8] focus:outline-none focus:ring-gray-400 focus:border-gray-300'
-const Login: React.FC = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
 
+const classforInput =
+  "mt-1 text-gray-700 block w-full px-3 py-2 border border-blue-600 rounded-3xl bg-[#e6e5e8] focus:outline-none focus:ring-gray-400 focus:border-gray-300";
+
+const Login: React.FC = () => {
+
+  const router = useRouter();
+  
+  const redirectToDashboard = useRedirectToDashboard(); 
+  const [isLogin, setIsLogin] = useState<boolean>(true);
+ 
   const {
     control,
     handleSubmit,
@@ -46,127 +58,176 @@ const Login: React.FC = () => {
     reset();
   };
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    
+    if (isLogin) {
+      try {
+        await login(data.email,data.password);
+        await redirectToDashboard();
+      } catch (error) {
+        console.log("login failed",error);
+      }
+
+    }
     
   };
 
   return (
-    <div className="h-screen bg-[#fcfbfb] flex items-center justify-center">
-    <div className="bg-[#f5f5f5] shadow-md w-[50%] max-w-4xl rounded-2xl flex flex-col md:flex-row pl-3 pt-10 md:ml-20">
-    
-      <div className="md:w-full p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-500 rounded-3xl">
-          {isLogin ? "Login" : "Signup"}
-        </h1>
-  
+    <div className="h-auto mt-5 bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col md:flex-row w-[80%] justify-center m-auto p-auto rounded-3xl shadow-xl">
+    <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-[10%] p-5">
+      <motion.div 
+        className="w-[100%] mr-7 flex-col items-center justify-center"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div 
+          className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-white shadow-lg"
+          whileHover={{ scale: 1.05 }}
+        >
+          <img
+            src="/student.png"
+            alt="Founder"
+            className="w-full h-full object-cover"
+          />
+        </motion.div>
+
+        <motion.h1 
+          className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+        >
+          {isLogin ? "Welcome Back!" : "Get Started"}
+        </motion.h1>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        
-          <div>
-            <label className="block text-sm font-medium text-gray-900">Email</label>
-            <input
-              {...register("email")}
-              type="email"
-              placeholder="Enter your email"
-              className={classforInput}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-            )}
-          </div>
-  
-    
-          <div>
-            <label className="block text-sm font-medium text-gray-900">Password</label>
-            <input
-              {...register("password")}
-              type="password"
-              placeholder="Enter your password"
-              className={classforInput}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-            )}
-          </div>
-  
-        
-          {!isLogin && (
-            <>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-900">Phone Number</label>
-                <input
-                  {...register("phone")}
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  className={classforInput}
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-                )}
+          {[
+            {
+              name: "email",
+              icon: <FiMail className="text-blue-600" />,
+              type: "email",
+              placeholder: "Enter your email",
+              error: errors.email
+            },
+            {
+              name: "password",
+              icon: <FiLock className="text-blue-600" />,
+              type: "password",
+              placeholder: "Enter your password",
+              error: errors.password
+            },
+            ...(!isLogin ? [
+              {
+                name: "phone",
+                icon: <FiPhone className="text-blue-600" />,
+                type: "tel",
+                placeholder: "Enter your phone number",
+                error: errors.phone
+              },
+            ] : [])
+          ].map((field, index) => (
+            <motion.div
+              key={field.name}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
+                {field.icon}
+                <label>{field.name.charAt(0).toUpperCase() + field.name.slice(1)}</label>
               </div>
-  
-              {/* Class Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900">Class</label>
-                <Controller
-                  name="class"
-                  control={control}
-                  render={({ field }) => (
+              <input
+                {...register(field.name as keyof FormValues)}
+                type={field.type}
+                placeholder={field.placeholder}
+                className="mt-1 text-gray-700 block w-full px-3 py-2 border border-blue-200 rounded-3xl bg-white focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all"
+              />
+              {field.error && (
+                <p className="text-red-500 text-sm mt-1">{field.error.message}</p>
+              )}
+            </motion.div>
+          ))}
+
+          {!isLogin && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
+                <FiBook className="text-blue-600" />
+                <label>Class</label>
+              </div>
+              <Controller
+                name="class"
+                control={control}
+                render={({ field }) => (
+                  <div className="relative">
                     <select
                       {...field}
-                       className="w-full bg-slate-200 text-gray-700 rounded-3xl border-blue-400 p-2 border-ring"
+                      className="w-full bg-white text-gray-700 rounded-3xl border border-blue-200 p-2 focus:ring-2 focus:ring-blue-300 focus:border-blue-300 appearance-none"
                     >
                       <option value="">Select your class</option>
                       <option value="JEE">JEE</option>
                       <option value="NEET">NEET</option>
                     </select>
-                  )}
-                />
-                {errors.class && (
-                  <p className="text-red-500 text-sm mt-1">{errors.class.message}</p>
+                    <FiArrowRight className="absolute right-3 top-3 text-gray-400 rotate-90" />
+                  </div>
                 )}
-              </div>
-            </>
+              />
+              {errors.class && (
+                <p className="text-red-500 text-sm mt-1">{errors.class.message}</p>
+              )}
+            </motion.div>
           )}
-  
-          {/* Submit Button */}
-          <button
+
+          <motion.button
             type="submit"
-            className="w-full bg-[#1e90ff] hover:bg-slate-300 hover:text-gray-900 text-white py-2 px-4 rounded-3xl focus:ring-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-2 px-4 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all flex items-center justify-center gap-2"
           >
             {isLogin ? "Login" : "Signup"}
-          </button>
+            <FiArrowRight className="inline-block" />
+          </motion.button>
         </form>
-  
-        {/* Toggle between Login and Signup */}
-        <p className="mt-4 text-center text-sm text-gray-700">
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
+
+        <motion.p 
+          className="mt-4 text-center text-sm text-gray-600"
+          whileHover={{ scale: 1.02 }}
+        >
+          {isLogin ? "New here? " : "Already have an account? "}
           <button
             onClick={toggleForm}
-            className="text-blue-400 hover:underline focus:outline-none hover:bg-slate-100 hover:text-gray-700"
+            className="text-blue-500 hover:text-blue-600 font-medium focus:outline-none"
           >
-            {isLogin ? "Signup" : "Login"}
+            {isLogin ? "Create Account" : "Sign In"}
           </button>
-        </p>
-      </div> 
+        </motion.p>
+      </motion.div>
+
+      <motion.div 
+        className="w-full md:w-[45%] shrink-0"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+      >
+        <MotivationalCard />
+      </motion.div>
     </div>
 
-    <div className="hidden md:flex md:w-1/2 bg-[#e8e8ef] p-6 rounded-r-2xl flex-col items-center justify-center text-center text-gray-800">
-        <h2 className="text-3xl font-bold">Track Your Journey 🚀</h2>
-        <p className="mt-4 text-gray-500">
-          "Stay committed, stay focused, and reach your target. Whether you're preparing for JEE or NEET, your hard work will pay off"
-          <br/>
-          <span>Let’s ace it together!</span> 💪
-        </p>
-        <img
-          src="https://source.unsplash.com/300x200/?goal,motivation"
-          alt="Motivation"
-          className="mt-6 rounded-lg shadow-md"
-        />
-      </div>
+    {/* Floating Graphics */}
+    <div className="absolute inset-0 pointer-events-none">
+      <motion.div
+        className="absolute top-20 left-20 w-32 h-32 bg-blue-100 rounded-full blur-xl opacity-50"
+        animate={{ y: [0, -20, 0] }}
+        transition={{ duration: 6, repeat: Infinity }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-20 w-24 h-24 bg-purple-100 rounded-full blur-xl opacity-50"
+        animate={{ y: [0, 20, 0] }}
+        transition={{ duration: 5, repeat: Infinity }}
+      />
+    </div>
   </div>
-  
   );
 };
 

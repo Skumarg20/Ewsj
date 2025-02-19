@@ -10,9 +10,8 @@ import Image from "next/image";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
-import { GiDuration } from "react-icons/gi";
-import { Typography } from "@mui/material";
-import studyPlanImage from '@/app/animations/studyplan.jpg';
+
+
 
 export enum DurationUnit {
   Weeks = "weeks",
@@ -83,7 +82,7 @@ export default function StudyPlanForm() {
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <div className="relative space-y-4 mb-8 flex flex-col items-center">
         <div className="absolute top-0 right-0 min-w-16 min-h-16 md:w-[20%] md:h-[20%] -z-5">
-          <Image src={studyPlanImage} alt="Study Icon" layout="responsive" />
+          <Image src='/studyplan' alt="Study Icon" layout="responsive" />
         </div>
         <h1 className="text-4xl font-bold text-left text-blue-600 z-10">
           Your Path to Success Starts Here

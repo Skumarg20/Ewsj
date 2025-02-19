@@ -16,9 +16,9 @@ const AllNotes = () => {
 
   const handleSubmitNote = () => {
     if (singleNote.trim()) {
-      setNotes([...notes, singleNote]); // Add new note to the list
-      setSingleNote(""); // Clear the note input field after submission
-      setIsModalOpen(false); // Close the modal
+      setNotes([...notes, singleNote]); 
+      setSingleNote(""); 
+      setIsModalOpen(false); 
     }
   };
 

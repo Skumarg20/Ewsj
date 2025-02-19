@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 type Props<T> = {
     url: string;
     token: string;
-    type:T
     setLoading: (state: boolean) => void; 
   };
-function useFetchData<T>({url,setLoading}:Props<T>) {
+function useFetchData<T>({url,token,setLoading}:Props<T>) {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +16,7 @@ function useFetchData<T>({url,setLoading}:Props<T>) {
         const response = await fetch(url, {
           method: "GET",
           headers: {
-            "Authorization": "Bearer YOUR_TOKEN_HERE",
+            Authorization: `Bearer ${token}`,,
             "Content-Type": "application/json",
           },
         });

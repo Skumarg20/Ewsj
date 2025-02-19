@@ -11,7 +11,10 @@ export default {
   	extend: {
   		animation: {
   			'spin-slow': 'spin 10s linear infinite',
-  			'spin-reverse-slow': 'spin-reverse 10s linear infinite'
+  			'spin-reverse-slow': 'spin-reverse 10s linear infinite',
+			'gradient-move': 'gradient 15s ease infinite',
+			  'float': 'float 6s ease-in-out infinite',
+			  'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
   		},
   		keyframes: {
   			'spin-reverse': {
@@ -23,6 +26,7 @@ export default {
   				}
   			}
   		},
+		  
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
