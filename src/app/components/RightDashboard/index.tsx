@@ -27,47 +27,11 @@ import DashBoardChat from "@/components/dashboardchat";
 import ChatBuddie from "@/components/chatbuddie";
 import useStudyPlanStore from "@/state/store/timetablestore";
 import NotesApp from "@/components/shortnotes";
-
+import TodoApp from "@/components/todo";
 const RightDashboard = () => {
   const [showChat, setShowChat] = useState(false);
   const { currentStudyPlan } = useStudyPlanStore();
-  // const { todos, addTodo, toggleTodo, removeTodo, updateTodo } = useTodoStore();
-  // const [editingId, setEditingId] = useState<number | null>(null);
-  // const [newText, setNewText] = useState("");
-  // const [showPopup, setShowPopup] = useState(false);
-
-  // const completedCount: number = todos.reduce(
-  //   (count, items) => (items.completed ? count + 1 : count),
-  //   0
-  // );
-  // const taskCompletedPercentage: number = todos.length
-  // ? (completedCount / todos.length) * 100
-  // : 0;
-
-  // const handleUpdate = () => {
-  //   if (editingId !== null && newText.trim() !== "") {
-  //     updateTodo(editingId, newText);
-  //   }
-  //   setEditingId(null);
-  //   setNewText("");
-  // };
-
-  // const handleEdit = (id: number, text: string) => {
-  //   setEditingId(id);
-  //   setNewText(text);
-  // };
-
-  // useEffect(() => {
-  //   if (taskCompletedPercentage === 100) {
-  //     setShowPopup(true);
-  //   }
-  // }, [taskCompletedPercentage]);
-
-  // const performanceData = [
-  //   { subject: "Physics", score: 80 },
-  //   { subject: "Maths", score: 75 },
-  //   { subject: "Chemistry", score: 85 },
-  // ];
+  
 
   return (
     <div className="h-auto bg-slate-100 text-gray-900 p-6">
@@ -86,10 +50,13 @@ const RightDashboard = () => {
         </div>
       </div>
 
-      <Card className="bg-slate-100 p-4 rounded-none h-auto self-start mt-5">
+     
         {/* <StickyNotes /> */}
-        <NotesApp/>
-      </Card>
+        <div className="w-full rounded-lg">
+            <TodoApp/>
+        </div>
+      
+
 
       {/* Performance Analytics */}
     </div>

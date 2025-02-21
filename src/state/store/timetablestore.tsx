@@ -1,25 +1,9 @@
 import { create } from "zustand";
 import axios from "axios";
 import {getAuthHeader} from '../../lib/api'
+import { StudyPlanInterface,StudySession } from "@/interface/studysession";
 
-export interface StudySession {
-  id:string;
-  time: string;
-  subject: string;
-  topic?: string;
-  activity: string;
-  notes?: string;
-  completed?:boolean;
-}
 
-export interface StudyPlanInterface {
-  date?: string;
-  title?: string;
-  description?: string;
-  study_hours?: number;
-  schedule?: StudySession[];
-  quote?: string;
-}
 
 interface StudyPlanState {
   formData: StudyPlanInterface | null;

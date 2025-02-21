@@ -83,11 +83,10 @@ export function RichTextEditorDemo({ className }: { className?: string }) {
       },
     },
     onUpdate: ({ editor }) => {
-      // do what you want to do with output
-      // Update stats
-      // saving as text/json/hmtml
-      // const text = editor.getHTML();
-      console.log(editor.getText());
+      
+      const text = editor.getJSON();
+      console.log(editor.getJSON(),"this is output");
+      console.log(text,"this is text");
     },
   });
 
@@ -105,7 +104,7 @@ export function RichTextEditorDemo({ className }: { className?: string }) {
       <TipTapFloatingMenu editor={editor} />
       <EditorContent
         editor={editor}
-        className=" min-h-[600px] w-full min-w-full cursor-text sm:p-6"
+        className=" min-h-[600px] w-full bg-white text-black min-w-full cursor-text sm:p-6"
       />
     </div>
   );

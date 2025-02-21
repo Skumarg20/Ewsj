@@ -12,6 +12,7 @@ import { StudyPlanInterface } from "@/interface/studysession";
 import SessionUI from "../components/sessionui";
 import { motion } from "framer-motion";
 import { FaChartLine, FaCalendarAlt, FaChevronRight } from "react-icons/fa";
+import ViewAnalysisTimetable from '@/components/ViewAnalysistimetable'
 function TimeTablePlan() {
   const [open, setOpen] = useState(false);
   const [openTimeTable, setOpenTimeTable] = useState(false);
@@ -41,7 +42,7 @@ function TimeTablePlan() {
     await getTimeTable(setLoading); 
     setOpenTimeTable(true);
   };
-  const handleViewAnalyiss=async()=>{
+  const handleViewAnalyis=async()=>{
     await getTimeTable(setLoading);
     setViewAnalysis(true);
   }
@@ -76,12 +77,12 @@ function TimeTablePlan() {
  
 
   const memoizedTimeTable = useMemo(() => {
-    return passData ? <TimeTable data={passData} /> : null;
+    return passData ? <TimeTable data={passData} /> : <h1>error</h1>;
   }, [passData]);
 
-  // const memoizedViewAnalysisdata=useMemo(()=>{
-  //   return analysizedData?<></>
-  // },analysizedData);
+  const memoizedViewAnalysisdata=useMemo(()=>{
+    return passData?<ViewAnalysisTimetable data={passData}/>:<h1>error</h1>;
+  },[passData]);
   return (
     <div className="bg-slate-100 text-gray-800 h-auto p-3 relative">
       <CardTimeTable setOpen={setOpen} open={showSaveButton} />
@@ -106,7 +107,7 @@ function TimeTablePlan() {
   >
     <button
       className="bg-gradient-to-br from-[#14284f] to-blue-600 text-white px-6 py-3 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 group backdrop-blur-md"
-      onClick={() => setOpen(true)}
+      onClick={handleViewAnalyis}
     >
       <FaChartLine className="w-5 h-5 group-hover:rotate-12 transition-transform" />
       View Time Analysis

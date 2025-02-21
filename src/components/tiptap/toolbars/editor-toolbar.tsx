@@ -24,7 +24,7 @@ import { CodeBlockToolbar } from "./code-block";
 
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
   return (
-    <div className="sticky top-0 z-20 w-full border-b bg-background hidden sm:block">
+    <div className="fixed top-0 z-20 w-full border-b bg-gray-800 text-slate-50 hidden sm:block ">
       <ToolbarProvider editor={editor}>
         <TooltipProvider>
           <ScrollArea className="h-fit py-0.5">

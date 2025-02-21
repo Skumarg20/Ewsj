@@ -13,7 +13,7 @@ import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import Profile from "../utils/Profile";
 import RightDashboard from "../components/RightDashboard";
 import TimeTable from "@/app/timetable/index";
-import StudyPlan from "../studyplan";
+import StudyPlan from "../studyplan/page";
 import Clusters from "../talksphere/clusters";
 import Notes from "@/app/notes/page"
 import TimerModal from '@/app/components/TimeModel/index'
@@ -108,7 +108,6 @@ export default function Dashboard(props: any) {
         homeUrl: "/dashboard",
       }}
       router={router}
-      theme={demoTheme}
       window={demoWindow}
     >
       <DashboardLayout
