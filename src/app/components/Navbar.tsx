@@ -1,74 +1,130 @@
 'use client'
-import { useState } from "react";
-import Link from "next/link";
+import React, { useState, useEffect } from 'react';
+import { 
+  Home,
+  Briefcase,
+  Users,
+  Phone,
+  LogIn,
+  Menu,
+  X,
+  Rocket,
+  ChevronRight
+} from 'lucide-react';
 
-const Navbar = () => {
+function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <div className="w-[90%] px-7 py-3 flex justify-between items-center">
-      {/* Brand Section */}
-      <div>
-        <h1 className="text-[30px] font-bold text-gray-900">EwSanj</h1>
-      </div>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled ? 'bg-white/80 backdrop-blur-lg shadow-lg' : 'bg-transparent'
+    }`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <div className="flex items-center space-x-2 group">
+            <Rocket className={`w-8 h-8 ${
+              scrolled ? 'text-indigo-600' : 'text-white'
+            } transform group-hover:rotate-12 transition-all duration-300`} />
+            <span className={`text-2xl font-bold ${
+              scrolled ? 'text-gray-900' : 'text-white'
+            } group-hover:text-indigo-500 transition-colors duration-300`}>
+              EwSanj
+            </span>
+          </div>
 
-      {/* Desktop Menu */}
-      <div className="hidden md:flex justify-end gap-8 items-center">
-        <Link href={"#home"} className="text-gray-700 hover:text-blue-500 transition-all duration-300 font-bold">Home</Link>
-        <Link href={"#services"} className="text-gray-700 hover:text-blue-500 transition-all duration-300 font-bold">Our Services</Link>
-        <Link href={"#about"} className="text-gray-700 hover:text-blue-500 transition-all duration-300 font-bold">About Us</Link>
-        <Link href={"#contact"} className="text-gray-700 hover:text-blue-500 transition-all duration-300 font-bold">Contact</Link>
-        <Link href={"#login"} className="text-gray-700 hover:text-blue-500 transition-all duration-300 font-bold">Login</Link>
-      </div>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {[
+              { name: 'Home', icon: Home },
+              { name: 'Services', icon: Briefcase },
+              { name: 'About', icon: Users },
+              { name: 'Contact', icon: Phone },
+            ].map((item) => (
+              <a
+                key={item.name}
+                href={`${item.name.toLowerCase()}`}
+                className={`group flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium ${
+                  scrolled 
+                    ? 'text-gray-700 hover:text-indigo-600' 
+                    : 'text-white hover:text-indigo-200'
+                } transition-all duration-300 hover:scale-105`}
+              >
+                <item.icon className="w-4 h-4 group-hover:rotate-6 transition-transform duration-300" />
+                <span>{item.name}</span>
+                <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
+              </a>
+            ))}
+            <button 
+            onClick={()=>window.location.href='/login'}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-full ${
+              scrolled 
+                ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
+                : 'bg-white/10 text-white hover:bg-white/20'
+            } transition-all duration-300 hover:scale-105 backdrop-blur-sm`}>
+              <LogIn className="w-4 h-4" />
+              <span>Login</span>
+            </button>
+          </div>
 
-      {/* Mobile Menu Toggle */}
-      <div className="md:hidden flex items-center">
-        <button
-          onClick={toggleMenu}
-          className="text-black focus:outline-none"
-          aria-label="Toggle Menu"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            {isMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="absolute top-16 right-7 bg-white shadow-lg rounded-lg p-5 flex flex-col items-start gap-4 z-10 md:hidden">
-          <Link href={"#home"} className="text-gray-700 hover:text-blue-500 transition-all duration-300">Home</Link>
-          <Link href={"#services"} className="text-gray-700 hover:text-blue-500 transition-all duration-300">Our Services</Link>
-          <Link href={"#about"} className="text-gray-700 hover:text-blue-500 transition-all duration-300">About Us</Link>
-          <Link href={"#contact"} className="text-gray-700 hover:text-blue-500 transition-all duration-300">Contact</Link>
-          <Link href={"#login"} className="text-gray-700 hover:text-blue-500 transition-all duration-300">Login</Link>
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`p-2 rounded-lg ${
+                scrolled ? 'text-gray-600' : 'text-white'
+              } hover:bg-white/10 transition-colors duration-300`}
+            >
+              {isMenuOpen ? (
+                <X className="w-6 h-6 animate-spin-once" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
-      )}
-    </div>
-  );
-};
 
+        {/* Mobile Menu */}
+        <div className={`md:hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen 
+            ? 'opacity-100 translate-y-0' 
+            : 'opacity-0 -translate-y-4 pointer-events-none'
+        }`}>
+          <div className="px-2 pt-2 pb-3 space-y-1 bg-white/80 backdrop-blur-lg rounded-lg shadow-lg mb-4">
+            {[
+              { name: 'Home', icon: Home },
+              { name: 'Services', icon: Briefcase },
+              { name: 'About', icon: Users },
+              { name: 'Contact', icon: Phone },
+            ].map((item) => (
+              <a
+                key={item.name}
+                href={`#${item.name.toLowerCase()}`}
+                className="group flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-300"
+              >
+                <item.icon className="w-5 h-5 group-hover:rotate-6 transition-transform duration-300" />
+                <span>{item.name}</span>
+                <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ml-auto" />
+              </a>
+            ))}
+            <button className="w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-300">
+              <LogIn className="w-5 h-5" />
+              <span>Login</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
 export default Navbar;

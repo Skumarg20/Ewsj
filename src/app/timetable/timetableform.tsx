@@ -6,28 +6,29 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trash2, BookOpen, Calendar, Clock, Tag, GraduationCap } from "lucide-react";
-import { IoDocumentText } from "react-icons/io5";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Trash2,
+  BookOpen,
+  Calendar,
+  Clock,
+  Tag,
+  GraduationCap,
+} from "lucide-react";
+import { IoDocumentText } from "react-icons/io5";
+import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
-
+import SessionCard from "@/components/Custom/sessionCard";
 
 const TimeFrame = {
-  DAILY: 'daily',
-  WEEKLY: 'weekly',
-  MONTHLY: 'monthly'
+  DAILY: "daily",
+  WEEKLY: "weekly",
+  MONTHLY: "monthly",
 } as const;
 
 // Zod Schema based on the DTO
 const subjectPrioritySchema = z.object({
   subject: z.string().min(1, "Subject is required"),
-  weightage: z.number().min(1).max(100, "Weightage must be between 1 and 100")
+  weightage: z.number().min(1).max(100, "Weightage must be between 1 and 100"),
 });
 
 const timetableSchema = z.object({
@@ -36,27 +37,27 @@ const timetableSchema = z.object({
   targetExam: z.string().min(1, "Target exam is required"),
   subjects: z.array(z.string()).min(1, "At least one subject is required"),
   priorities: z.array(subjectPrioritySchema).optional(),
-  includeBreaks: z.boolean()
+  includeBreaks: z.boolean(),
 });
 
 type TimetableFormValues = z.infer<typeof timetableSchema>;
-type FormData = z.infer<typeof timetableSchema>;
-export default function TimetableForm({handleformdata}:any) {
+
+export default function TimetableForm({ handleformdata }: any) {
   const [subjectInput, setSubjectInput] = useState("");
-  
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = useForm<TimetableFormValues>({
     resolver: zodResolver(timetableSchema),
     defaultValues: {
       subjects: [],
       priorities: [],
       includeBreaks: true,
-    }
+    },
   });
 
   const subjects = watch("subjects");
@@ -74,157 +75,229 @@ export default function TimetableForm({handleformdata}:any) {
   };
 
   const handleRemoveSubject = (subject: string) => {
-    setValue("subjects", subjects.filter(s => s !== subject));
-    setValue("priorities", priorities.filter(p => p.subject !== subject));
+    setValue(
+      "subjects",
+      subjects.filter((s) => s !== subject)
+    );
+    setValue(
+      "priorities",
+      priorities.filter((p) => p.subject !== subject)
+    );
   };
 
   const handleAddPriority = (subject: string, weightage: number) => {
     const newPriorities = [...priorities];
-    const existingIndex = priorities.findIndex(p => p.subject === subject);
-    
+    const existingIndex = priorities.findIndex((p) => p.subject === subject);
+
     if (existingIndex >= 0) {
       newPriorities[existingIndex] = { subject, weightage };
     } else {
       newPriorities.push({ subject, weightage });
     }
-    
+
     setValue("priorities", newPriorities);
   };
 
   const onSubmit = (data: TimetableFormValues) => {
-    handleformdata(data,false);
-    
+    handleformdata(data, false);
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <div className="space-y-4 mb-8">
-        <h1 className="text-4xl font-bold text-blue-600">
-          Create Your Perfect Timetable
-        </h1>
-        <p className="text-lg text-gray-600">
-          Customize your study schedule for maximum efficiency
-        </p>
+    <div className="w-full h-auto mx-auto p-6 bg-white rounded-lg shadow-md">
+      <SessionCard
+        topic="Create Your Perfect Timetable"
+        notes="Customize your study schedule for maximum efficiency"
+        notesClass="text-black font-bold"
+        cardClass="bg-[#14284f] p-6 m-4 rounded-xl"
+      />
+
+<form onSubmit={handleSubmit(onSubmit)} className="space-y-6 relative overflow-hidden w-[80%] m-auto p-auto">
+  {/* Floating Background Elements */}
+  <div className="absolute inset-0 pointer-events-none">
+    <motion.div 
+      className="absolute top-20 left-20 w-48 h-48 bg-blue-100 rounded-full blur-xl opacity-20"
+      animate={{ y: [0, -40, 0] }}
+      transition={{ duration: 8, repeat: Infinity }}
+    />
+    <motion.div 
+      className="absolute bottom-20 right-20 w-32 h-32 bg-purple-100 rounded-full blur-xl opacity-20"
+      animate={{ y: [0, 40, 0] }}
+      transition={{ duration: 6, repeat: Infinity }}
+    />
+  </div>
+
+  {/* Daily Routine */}
+  <motion.div 
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+  >
+    <Label htmlFor="dailyRoutine">Daily Routine</Label>
+    <div className="relative">
+      <Input
+        id="dailyRoutine"
+        type="text"
+        {...register("dailyRoutine")}
+        placeholder="Describe your daily routine"
+        className="pl-10 rounded-full border-gray-300 bg-white/90 backdrop-blur-sm hover:border-blue-400 focus:ring-2 focus:ring-blue-500"
+      />
+      <motion.div 
+        whileHover={{ rotate: 15 }}
+        className="absolute left-3 top-1/2 -translate-y-1/2"
+      >
+        <IoDocumentText className="text-blue-500 h-5 w-5" />
+      </motion.div>
+    </div>
+    {errors.dailyRoutine && (
+      <p className="text-red-500 text-sm mt-1">{errors.dailyRoutine.message}</p>
+    )}
+  </motion.div>
+
+  {/* Target Exam */}
+  <motion.div 
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: 0.1 }}
+  >
+    <Label htmlFor="targetExam">Target Exam</Label>
+    <div className="relative">
+      <Input
+        id="targetExam"
+        {...register("targetExam")}
+        placeholder="Enter your target exam"
+        className="pl-10 rounded-full border-gray-300 bg-white/90 backdrop-blur-sm hover:border-purple-400 focus:ring-2 focus:ring-purple-500"
+      />
+      <motion.div 
+        whileHover={{ scale: 1.1 }}
+        className="absolute left-3 top-1/2 -translate-y-1/2"
+      >
+        <GraduationCap className="text-purple-500 h-5 w-5" />
+      </motion.div>
+    </div>
+    {errors.targetExam && (
+      <p className="text-red-500 text-sm mt-1">{errors.targetExam.message}</p>
+    )}
+  </motion.div>
+
+  {/* Study Hours */}
+  <motion.div 
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: 0.2 }}
+  >
+    <Label htmlFor="studyHours">Study Hours</Label>
+    <div className="relative">
+      <Input
+        id="studyHours"
+        type="number"
+        {...register("studyHours", { valueAsNumber: true })}
+        min="1"
+        max="16"
+        className="pl-10 rounded-full border-gray-300 bg-white/90 backdrop-blur-sm hover:border-green-400 focus:ring-2 focus:ring-green-500"
+      />
+      <motion.div 
+        whileHover={{ scale: 1.1 }}
+       
+        className="absolute left-3 top-1/2 -translate-y-1/2"
+      >
+        <Clock className="text-green-500 h-5 w-5" />
+      </motion.div>
+    </div>
+    {errors.studyHours && (
+      <p className="text-red-500 text-sm mt-1">{errors.studyHours.message}</p>
+    )}
+  </motion.div>
+
+  {/* Subjects */}
+  <motion.div 
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: 0.3 }}
+  >
+    <Label>Subjects</Label>
+    <div className="space-y-2">
+      <div className="relative">
+        <Input
+          placeholder="Add a subject and press Enter"
+          value={subjectInput}
+          onChange={(e) => setSubjectInput(e.target.value)}
+          onKeyDown={handleAddSubject}
+          className="pl-10 rounded-full border-gray-300 bg-white/90 backdrop-blur-sm hover:border-yellow-400 focus:ring-2 focus:ring-yellow-500"
+        />
+        <motion.div 
+          whileHover={{ scale: 1.1 }}
+          className="absolute left-3 top-1/2 -translate-y-1/2"
+        >
+          <BookOpen className="text-yellow-500 h-5 w-5" />
+        </motion.div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Daily Routine */}
-          <div>
-          <Label htmlFor="dailyRoutine">Daily Routine</Label>
-          <div className="relative">
-            <Input
-              id="dailyRoutine"
-              {...register("dailyRoutine")}
-              placeholder="Describe your daily routine"
-              className="pl-10 rounded-full"
-            />
-          
-            <IoDocumentText className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-          </div>
-          {errors.dailyRoutine && (
-            <p className="text-red-500 text-sm">{errors.dailyRoutine.message}</p>
-          )}
-        </div>
-        {/* Target Exam */}
-        <div>
-          <Label htmlFor="targetExam">Target Exam</Label>
-          <div className="relative">
-            <Input
-              id="targetExam"
-              {...register("targetExam")}
-              placeholder="Enter your target exam"
-              className="pl-10 rounded-full"
-            />
-            <GraduationCap className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-          </div>
-          {errors.targetExam && (
-            <p className="text-red-500 text-sm">{errors.targetExam.message}</p>
-          )}
-        </div>
-
-      
-
-        {/* Study Hours */}
-        <div>
-          <Label htmlFor="studyHours">Enter Your Study Hours for Today</Label>
-          <div className="relative">
-            <Input
-              id="studyHours"
-              type="number"
-              {...register("studyHours", { valueAsNumber: true })}
-              min="1"
-              max="16"
-              className="pl-10 rounded-full"
-            />
-            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-          </div>
-          {errors.studyHours && (
-            <p className="text-red-500 text-sm">{errors.studyHours.message}</p>
-          )}
-        </div>
-
-      
-      
-        {/* Subjects and Priorities */}
-        <div>
-          <Label>Subjects</Label>
-          <div className="space-y-2">
-            <div className="relative">
+      <div className="space-y-2">
+        {subjects.map((subject) => (
+          <motion.div
+            key={subject}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 bg-white p-3 rounded-2xl shadow-sm border border-gray-100"
+          >
+            <span className="flex-grow">{subject}</span>
+            <div className="flex items-center gap-2">
               <Input
-                placeholder="Add a subject and press Enter"
-                value={subjectInput}
-                onChange={(e) => setSubjectInput(e.target.value)}
-                onKeyDown={handleAddSubject}
-                className="pl-10 rounded-full"
+                type="number"
+                placeholder="Priority (1-100)"
+                className="w-32 rounded-full bg-gray-50"
+                onChange={(e) => handleAddPriority(subject, parseInt(e.target.value))}
               />
-              <BookOpen className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+              <motion.button
+                type="button"
+                onClick={() => handleRemoveSubject(subject)}
+                whileHover={{ scale: 1.1 }}
+                className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-500"
+              >
+                <Trash2 className="h-4 w-4" />
+              </motion.button>
             </div>
-            
-            <div className="space-y-2">
-              {subjects.map((subject) => (
-                <div key={subject} className="flex items-center gap-2 bg-gray-50 p-3 rounded-2xl">
-                  <span className="flex-grow">{subject}</span>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="number"
-                      placeholder="Priority (1-100)"
-                      className="w-32 rounded-full"
-                      onChange={(e) => handleAddPriority(subject, parseInt(e.target.value))}
-                      defaultValue={priorities.find(p => p.subject === subject)?.weightage}
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => handleRemoveSubject(subject)}
-                      variant="destructive"
-                      className="rounded-full"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </motion.div>
 
-        {/* Include Breaks Switch */}
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="includeBreaks"
-            checked={watch("includeBreaks")}
-            onCheckedChange={(checked) => setValue("includeBreaks", checked)}
-          />
-          <Label htmlFor="includeBreaks">Include study breaks in timetable</Label>
-        </div>
+  {/* Include Breaks Switch */}
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="flex items-center space-x-2 p-3 bg-blue-50 rounded-xl"
+  >
+    <Switch
+      id="includeBreaks"
+      checked={watch("includeBreaks")}
+      onCheckedChange={(checked) => setValue("includeBreaks", checked)}
+      className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-gray-300"
+    />
+    <Label htmlFor="includeBreaks" className="text-gray-700">
+      Include study breaks in timetable
+    </Label>
+  </motion.div>
 
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full"
-        >
-          Generate Timetable
-        </Button>
-      </form>
+  {/* Submit Button */}
+  <motion.div 
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    <Button
+      type="submit"
+      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full py-6 text-lg font-semibold shadow-lg transition-all"
+    >
+      <motion.span
+        animate={{ x: [0, 5, -5, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        🚀
+      </motion.span>
+      Generate Timetable
+    </Button>
+  </motion.div>
+</form>
     </div>
   );
 }

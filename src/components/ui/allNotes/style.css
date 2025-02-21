@@ -1,0 +1,12 @@
+/* Add this CSS for toolbar buttons */
+.toolbar-button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .toolbar-button:hover {
+    background-color: #f0f0f0;
+  }
+  
