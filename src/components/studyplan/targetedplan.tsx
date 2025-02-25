@@ -8,13 +8,29 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
-const TargetedForm = () => {
-  const [formData, setFormData] = useState({
+interface TargetPlanData {
+  dailyPlan: string[];
+  subjects: string[];
+  dueDate: string; // Using string for date input, will be converted to Date on submit
+  chapters: string[];
+  dailyHours: number;
+  existingCommitments: boolean;
+  milestones: string[];
+}
+
+interface TargetFormProps {
+  onSubmit: (formData: TargetPlanData) => void;
+}
+
+const TargetedForm = ({ onSubmit }: TargetFormProps) => {
+  const [formData, setFormData] = useState<TargetPlanData>({
+    dailyPlan: [],
+    subjects: [],
     dueDate: '',
-    target: '',
-    chapters: '',
-    dailyHours: '',
-    hasOtherTimetable: 'no',
+    chapters: [],
+    dailyHours: 0,
+    existingCommitments: false,
+    milestones: [],
   });
   const [plan, setPlan] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -23,14 +39,37 @@ const TargetedForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const response = await axios.post('http://localhost:3000/api/targeted-plan', formData);
-    setPlan(response.data.plan);
-    setLoading(false);
+
+    // Convert comma-separated strings to arrays only on submit
+    const submitData: TargetPlanData = {
+      ...formData,
+      subjects: formData.subjects[0]?.split(',').map(item => item.trim()).filter(Boolean) || [],
+      chapters: formData.chapters[0]?.split(',').map(item => item.trim()).filter(Boolean) || [],
+      milestones: formData.milestones[0]?.split(',').map(item => item.trim()).filter(Boolean) || [],
+      dueDate: new Date(formData.dueDate).toISOString(),
+    };
+
+    onSubmit(submitData);
+    setLoading(false); // Assuming onSubmit is synchronous; move inside try/catch if async
+  };
+
+  // Handle regular input changes without splitting until submit
+  const handleInputChange = (field: keyof TargetPlanData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [field]: [e.target.value] }); // Store as single string in array
+  };
+
+  // Handle numeric input
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, dailyHours: parseInt(e.target.value) || 0 });
+  };
+
+  // Handle boolean select
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, existingCommitments: e.target.value === 'yes' });
   };
 
   return (
     <>
-      {/* Trigger Button */}
       <motion.button
         whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
         whileTap={{ scale: 0.95 }}
@@ -44,7 +83,6 @@ const TargetedForm = () => {
         </div>
       </motion.button>
 
-      {/* Popup Form */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -61,7 +99,6 @@ const TargetedForm = () => {
               className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-2 border-emerald-100 relative"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
               <motion.button
                 whileHover={{ rotate: 90 }}
                 onClick={() => setIsOpen(false)}
@@ -70,14 +107,9 @@ const TargetedForm = () => {
                 <FaTimes className="text-2xl" />
               </motion.button>
 
-              {/* Header */}
               <div className="text-center mb-8 relative">
                 <div className="absolute -top-8 left-1/2 -translate-x-1/2">
-                  <motion.div
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="text-4xl"
-                  >
+                  <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 2, repeat: Infinity }} className="text-4xl">
                     🚩
                   </motion.div>
                 </div>
@@ -85,19 +117,18 @@ const TargetedForm = () => {
                   <FaBullseye className="text-4xl text-white animate-pulse" />
                 </div>
                 <h3 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  Precision Study Strategist
+                  Targeted Study Planner
                 </h3>
                 <p className="text-gray-600 mt-2 flex items-center justify-center gap-2">
                   <FaRegSmileBeam className="text-yellow-400 animate-bounce" />
                   <span className="bg-gradient-to-r from-green-100 to-emerald-100 px-3 py-1 rounded-full">
-                    "Conquer your goals with military precision!"
+                    "Hit your goals with precision!"
                   </span>
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
-                  {/* Date Input */}
                   <motion.div whileHover={{ scale: 1.01 }}>
                     <div className="relative group">
                       <FaCalendarDay className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
@@ -106,83 +137,86 @@ const TargetedForm = () => {
                         value={formData.dueDate}
                         onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                         className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
+                        required
                       />
-                      <div className="absolute right-3 top-3 text-emerald-300">
-                        📅
-                      </div>
+                      <div className="absolute right-3 top-3 text-emerald-300">📅</div>
                     </div>
                   </motion.div>
 
-                  {/* Target Input */}
                   <motion.div whileHover={{ scale: 1.01 }}>
                     <div className="relative group">
-                      <FaBullseye className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
+                      <FaBook className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
                       <input
                         type="text"
-                        placeholder="Primary Target/Goal"
-                        value={formData.target}
-                        onChange={(e) => setFormData({ ...formData, target: e.target.value })}
+                        placeholder="Subjects (comma separated)"
+                        value={formData.subjects[0] || ''} // Display as string
+                        onChange={handleInputChange('subjects')}
                         className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
+                        required
                       />
-                      <div className="absolute right-3 top-3 text-emerald-300">
-                        🎯
-                      </div>
+                      <div className="absolute right-3 top-3 text-emerald-300">📚</div>
                     </div>
                   </motion.div>
 
-                  {/* Chapters Textarea */}
                   <motion.div whileHover={{ scale: 1.01 }}>
                     <div className="relative group">
                       <FaBook className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
                       <textarea
-                        placeholder="Key Chapters/Topics (comma separated)\nExample: Algebra, Organic Chemistry, World History"
-                        value={formData.chapters}
-                        onChange={(e) => setFormData({ ...formData, chapters: e.target.value })}
-                        className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all resize-none min-h-[120px] bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
+                        placeholder="Chapters (comma separated)"
+                        value={formData.chapters[0] || ''} // Display as string
+                        onChange={handleInputChange('chapters')}
+                        className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all resize-none min-h-[100px] bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
+                        required
                       />
-                      <div className="absolute right-3 top-3 text-emerald-300">
-                        📚
-                      </div>
+                      <div className="absolute right-3 top-3 text-emerald-300">📖</div>
                     </div>
                   </motion.div>
 
-                  {/* Bottom Row */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Daily Hours */}
-                    <motion.div whileHover={{ scale: 1.02 }}>
-                      <div className="relative group">
-                        <FaClock className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
-                        <input
-                          type="number"
-                          placeholder="🕒 Daily Hours"
-                          value={formData.dailyHours}
-                          onChange={(e) => setFormData({ ...formData, dailyHours: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
-                        />
-                      </div>
-                    </motion.div>
+                  <motion.div whileHover={{ scale: 1.01 }}>
+                    <div className="relative group">
+                      <FaBullseye className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
+                      <textarea
+                        placeholder="Milestones (comma separated)"
+                        value={formData.milestones[0] || ''} // Display as string
+                        onChange={handleInputChange('milestones')}
+                        className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all resize-none min-h-[100px] bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
+                        required
+                      />
+                      <div className="absolute right-3 top-3 text-emerald-300">🎯</div>
+                    </div>
+                  </motion.div>
 
-                    {/* Schedule Select */}
-                    <motion.div whileHover={{ scale: 1.02 }}>
-                      <div className="relative group">
-                        <FaCheck className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
-                        <select
-                          value={formData.hasOtherTimetable}
-                          onChange={(e) => setFormData({ ...formData, hasOtherTimetable: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all appearance-none bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
-                        >
-                          <option value="no">🚀 Fresh Start</option>
-                          <option value="yes">📅 Existing Schedule</option>
-                        </select>
-                        <div className="absolute right-3 top-3 text-emerald-300">
-                          ⚡
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
+                  <motion.div whileHover={{ scale: 1.02 }}>
+                    <div className="relative group">
+                      <FaClock className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
+                      <input
+                        type="number"
+                        placeholder="Daily Hours"
+                        value={formData.dailyHours || ''}
+                        onChange={handleNumberChange}
+                        className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
+                        min="1"
+                        required
+                      />
+                    </div>
+                  </motion.div>
+
+                  <motion.div whileHover={{ scale: 1.02 }}>
+                    <div className="relative group">
+                      <FaCheck className="absolute top-3 left-3 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
+                      <select
+                        value={formData.existingCommitments ? 'yes' : 'no'}
+                        onChange={handleSelectChange}
+                        className="w-full pl-10 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all appearance-none bg-white text-gray-800 font-medium shadow-sm hover:shadow-emerald-100"
+                      >
+                        <option value="no">No Existing Commitments</option>
+                        <option value="yes">Has Existing Commitments</option>
+                      </select>
+                      <div className="absolute right-3 top-3 text-emerald-300">⚡</div>
+                    </div>
+                  </motion.div>
                 </div>
 
-                {/* Submit Button */}
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(16, 185, 129, 0.4)" }}
                   whileTap={{ scale: 0.95 }}
@@ -194,19 +228,18 @@ const TargetedForm = () => {
                   {loading ? (
                     <>
                       <FaSpinner className="animate-spin text-xl" />
-                      <span>Calculating Best Strategy...</span>
+                      <span>Generating Plan...</span>
                     </>
                   ) : (
                     <>
                       <FaRocket className="text-xl animate-bounce" />
-                      <span className="text-shadow">Launch Mission Plan</span>
+                      <span className="text-shadow">Create Target Plan</span>
                       <div className="absolute right-4 text-xl">🚀</div>
                     </>
                   )}
                 </motion.button>
               </form>
 
-              {/* Generated Plan */}
               {plan && (
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -215,7 +248,7 @@ const TargetedForm = () => {
                 >
                   <div className="flex items-center gap-2 mb-4 text-emerald-700">
                     <FaTrophy className="text-2xl animate-bounce" />
-                    <h4 className="text-xl font-bold">Victory Blueprint</h4>
+                    <h4 className="text-xl font-bold">Your Target Plan</h4>
                   </div>
                   <div className="space-y-3">
                     {plan.split('\n').map((line, index) => (
@@ -232,27 +265,8 @@ const TargetedForm = () => {
                       </motion.div>
                     ))}
                   </div>
-                  <div className="mt-4 flex items-center gap-2 text-emerald-600">
-                    <FaChartLine className="animate-pulse" />
-                    <span className="font-medium">Projected Success Rate: 98% 🎉</span>
-                  </div>
                 </motion.div>
               )}
-
-              {/* Motivational Footer */}
-              <div className="mt-8 text-center text-sm text-gray-600 flex flex-col items-center gap-2">
-                <div className="flex items-center gap-2 bg-emerald-100 px-4 py-2 rounded-full">
-                  <FaRegSmileBeam className="text-yellow-500" />
-                  <span>"Success is the only option! 💪</span>
-                </div>
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ repeat: Infinity, duration: 3 }}
-                  className="text-2xl"
-                >
-                  🏆
-                </motion.div>
-              </div>
             </motion.div>
           </motion.div>
         )}

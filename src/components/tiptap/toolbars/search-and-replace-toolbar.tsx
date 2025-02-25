@@ -86,7 +86,7 @@ export function SearchAndReplaceToolbar() {
 			</Tooltip>
 
 			<PopoverContent
-				align="end"
+				align="start"
 				onCloseAutoFocus={(e) => {
 					e.preventDefault();
 				}}

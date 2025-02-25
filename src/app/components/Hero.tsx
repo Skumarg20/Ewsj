@@ -9,13 +9,20 @@ import {
   Award,
   Users,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Hero = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <>
       <div className="min-h-screen bg-gray-50 rounded-xl mt-0">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 min-h-screen w-full flex items-center justify-center overflow-hidden rounded-2xl mb-5">
+        <div className="relative bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 min-h-screen w-full flex items-center justify-center overflow-hidden rounded-b-2xl mb-5">
           {/* Background gradient animation */}
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 opacity-90 animate-gradient-move"></div>
 
@@ -44,13 +51,23 @@ const Hero = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
-              <button className="group bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+              <button className="group bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+              onClick={() => {
+                if (isClient) {
+                  window.location.href = "/bookacall";
+                }
+              }}>
+               
                 <Calendar className="w-5 h-5" />
                 Book A 30 Min Call
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <button 
-              onClick={() => window.location.href = '/login'}
+               onClick={() => {
+                if (isClient) {
+                  window.location.href = "/login";
+                }
+              }}
               className="group bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2">
                 <Star className="w-5 h-5" />
                 Sign Up for Rank

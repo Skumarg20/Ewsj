@@ -24,36 +24,16 @@ import {
 import { RichTextEditorDemo } from "@/components/tiptap/rich-text-editor";
 import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
-
+import { JSONContent } from "@tiptap/core";
+import {CreateFolder,Note,FolderData} from '@/interface/notesinterface'
 const spring = {
   type: "spring",
   stiffness: 300,
   damping: 30,
 };
 
-// Define interfaces
-interface CreateFolder {
-  name: string;
-  color: string;
-  description?: string;
-}
 
-interface Note {
-  id: number;
-  title: string;
-  preview: string;
-  date: string;
-  lastModified: string;
-  tags?: string[];
-}
 
-interface FolderData {
-  id: string;
-  name: string;
-  color: string;
-  description?: string;
-  notes: Note[];
-}
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
 
@@ -65,16 +45,16 @@ function CreateFolderModal({
   onCreate: (name: string, color: string, description?: string) => void;
 }) {
   const [folderName, setFolderName] = useState("");
-  const [selectedColor, setSelectedColor] = useState("indigo");
+  const [selectedColor, setSelectedColor] = useState("#4F46E5"); // Default to indigo
   const [description, setDescription] = useState("");
 
   const colors = [
-    { name: "indigo", class: "from-indigo-500 to-indigo-600" },
-    { name: "blue", class: "from-blue-500 to-cyan-500" },
-    { name: "purple", class: "from-purple-500 to-pink-500" },
-    { name: "green", class: "from-green-500 to-emerald-500" },
-    { name: "red", class: "from-red-500 to-rose-500" },
-    { name: "orange", class: "from-orange-500 to-amber-500" },
+    { color: "#4F46E5" }, // Indigo
+    { color: "#3B82F6" }, // Blue
+    { color: "#8B5CF6" }, // Purple
+    { color: "#10B981" }, // Green
+    { color: "#EF4444" }, // Red
+    { color: "#F59E0B" }, // Orange
   ];
 
   return (
@@ -119,12 +99,13 @@ function CreateFolderModal({
               Choose Color
             </label>
             <div className="grid grid-cols-6 gap-2">
-              {colors.map((color) => (
+              {colors.map((item) => (
                 <button
-                  key={color.name}
-                  onClick={() => setSelectedColor(color.name)}
-                  className={`w-8 h-8 rounded-lg bg-gradient-to-r ${color.class} 
-                    ${selectedColor === color.name ? "ring-2 ring-offset-2 ring-indigo-600" : ""}`}
+                  key={item.color}
+                  onClick={() => setSelectedColor(item.color)}
+                  style={{ backgroundColor: item.color }}
+                  className={`w-8 h-8 rounded-lg
+                    ${selectedColor === item.color ? "ring-2 ring-offset-2 ring-indigo-600" : ""}`}
                 />
               ))}
             </div>
@@ -157,17 +138,16 @@ function CreateFolderModal({
     </div>
   );
 }
-
 function SubjectFolder({
   subject,
   folderData,
   onViewNotes,
   onEditFolder,
-  onDeleteFolder,
+  // onDeleteFolder,
 }: {
   subject: string;
   folderData: FolderData;
-  onViewNotes: (subject: string) => void; // Changed to view notes
+  onViewNotes: (subject: string) => void;
   onEditFolder: (folder: CreateFolder) => void;
   onDeleteFolder: (folder: CreateFolder) => void;
 }) {
@@ -182,47 +162,77 @@ function SubjectFolder({
       className="relative group"
     >
       <button
-        onClick={() => onViewNotes(subject)} // Changed to view notes
+        onClick={() => onViewNotes(subject)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="w-full p-4 flex flex-col items-center justify-center gap-3
-          bg-white rounded-xl shadow-sm hover:shadow-md transition-all
-          border-2 border-transparent hover:border-indigo-100"
+          bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300
+          border-2 border-transparent hover:border-indigo-200 relative overflow-hidden"
       >
+        {/* Static Folder Design */}
         <motion.div
-          animate={{ scale: isHovered ? 1.1 : 1 }}
-          className={`w-20 h-20 rounded-2xl flex items-center justify-center
-            shadow-lg ${folderData.color}`}
+          animate={{ scale: isHovered ? 1.1 : 1, rotate: isHovered ? 2 : 0 }}
+          className="w-20 h-20 rounded-2xl flex items-center justify-center
+            relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500
+            shadow-lg overflow-hidden"
         >
-          <Folder className="w-8 h-8 text-white" />
+          {/* Subtle overlay pattern */}
+          <div
+  className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2020%2020%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill=%22%233B82F6%22%20fill-opacity=%220.2%22%3E%3Ccircle%20cx=%223%22%20cy=%223%22%20r=%221%22/%3E%3Ccircle%20cx=%2210%22%20cy=%2210%22%20r=%221%22/%3E%3Ccircle%20cx=%2217%22%20cy=%2217%22%20r=%221%22/%3E%3C/g%3E%3C/svg%3E')] animate-pulse-slow"
+/>
+          
+          {/* Folder Icon */}
+          <Folder className="w-8 h-8 text-white z-10" />
+
+          {/* Glowing effect */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            animate={{ x: [-100, 100] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+          />
         </motion.div>
-        <span className="font-medium text-gray-800 text-center">{subject}</span>
-        <span className="text-sm text-gray-500">
+
+        {/* Subject Name */}
+        <span className="font-semibold text-gray-800 text-center bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          {subject}
+        </span>
+
+        {/* Notes Count */}
+        <span className="text-sm text-gray-500 font-medium">
           {folderData.notes.length} notes
         </span>
+
+        {/* Subtle background decoration */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+          <div className="absolute top-[-20px] left-[-20px] w-16 h-16 bg-indigo-300/20 rounded-full animate-pulse" />
+          <div className="absolute bottom-[-20px] right-[-20px] w-16 h-16 bg-purple-300/20 rounded-full animate-pulse" />
+        </div>
       </button>
 
-      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Action Buttons */}
+      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <button
           onClick={(e) => {
             e.stopPropagation();
             onEditFolder({ name: subject, color: folderData.color, description: folderData.description });
           }}
           className="p-1.5 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm
-            hover:bg-indigo-50 text-gray-500 hover:text-indigo-600"
+            hover:bg-indigo-100 hover:shadow-md text-indigo-500 hover:text-indigo-700
+            transition-all duration-200"
         >
           <Edit2 className="w-4 h-4" />
         </button>
-        <button
+        {/* <button
           onClick={(e) => {
             e.stopPropagation();
             onDeleteFolder({ name: subject, color: folderData.color, description: folderData.description });
           }}
           className="p-1.5 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm
-            hover:bg-red-50 text-gray-500 hover:text-red-600"
+            hover:bg-red-100 hover:shadow-md text-red-500 hover:text-red-700
+            transition-all duration-200"
         >
           <Trash2 className="w-4 h-4" />
-        </button>
+        </button> */}
       </div>
     </motion.div>
   );
@@ -233,11 +243,11 @@ function Notes() {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [folders, setFolders] = useState<Record<string, FolderData>>({});
-  const [noteContent, setNoteContent] = useState("");
-  const [noteTags, setNoteTags] = useState("");
+  const [noteContent, setNoteContent] = useState<JSONContent|null>(null);
+  const [title, setTitle] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
+  console.log(noteContent,"this is notes content need to submit");
   useEffect(() => {
     fetchFolders();
   }, []);
@@ -314,27 +324,27 @@ function Notes() {
     }
   };
 
-  const handleDeleteFolder = async ({ name, color, description }: CreateFolder) => {
-    if (window.confirm(`Are you sure you want to delete "${name}" and all its contents?`)) {
-      setIsDeleting(true);
-      try {
-        const folderId = folders[name].id;
-        await axios.delete(`${API_BASE_URL}/notesfolder/${folderId}`, {
-          headers: { ...getAuthHeader(), "Content-Type": "application/json" } },
-        );
-        setFolders((prev) => {
-          const newFolders = { ...prev };
-          delete newFolders[name];
-          return newFolders;
-        });
-      } catch (error) {
-        console.error("Error deleting folder:", error);
-        throw error;
-      } finally {
-        setIsDeleting(false);
-      }
-    }
-  };
+  // const handleDeleteFolder = async ({ name, color, description }: CreateFolder) => {
+  //   if (window.confirm(`Are you sure you want to delete "${name}" and all its contents?`)) {
+  //     setIsDeleting(true);
+  //     try {
+  //       const folderId = folders[name].id;
+  //       await axios.delete(`${API_BASE_URL}/notesfolder/${folderId}`, {
+  //         headers: { ...getAuthHeader(), "Content-Type": "application/json" } },
+  //       );
+  //       setFolders((prev) => {
+  //         const newFolders = { ...prev };
+  //         delete newFolders[name];
+  //         return newFolders;
+  //       });
+  //     } catch (error) {
+  //       console.error("Error deleting folder:", error);
+  //       throw error;
+  //     } finally {
+  //       setIsDeleting(false);
+  //     }
+  //   }
+  // };
 
   const handleViewNotes = (subject: string) => {
     setSelectedSubject(subject);
@@ -344,25 +354,33 @@ function Notes() {
   const handleCreateNote = (subject: string) => {
     setSelectedSubject(subject);
     setView("create");
-    setNoteContent("");
-    setNoteTags("");
+    setNoteContent(null);
+    setTitle("");
   };
 
   const handleSaveNote = async () => {
-    if (!selectedSubject || !noteContent) return;
-
+    console.log("Selected Subject:", selectedSubject, "Note Content:", noteContent, "this is for save notes api");
+    if (!selectedSubject || !noteContent) {
+      console.log("Missing required fields - selectedSubject or noteContent is undefined");
+      return;
+    }
+  
     try {
       const folderId = folders[selectedSubject].id;
+      console.log("Folder ID:", folderId, "Title:", title,JSON.stringify(noteContent)); 
+      const payload = {
+        title: title || "Untitled",
+        content: JSON.stringify(noteContent || ""), // Ensure content is always a string
+      };
+      console.log(payload,"this is payload");
       const response = await axios.post(
-        `${API_BASE_URL}/notesfolder/${folderId}/notes`,
-        {
-          title: noteContent.substring(0, 30) + "...",
-          content: noteContent,
-          tags: noteTags.split(",").map((tag) => tag.trim()),
-        },
+        `${API_BASE_URL}/notes/${folderId}/note`,
+        payload,
         { headers: { ...getAuthHeader(), "Content-Type": "application/json" } }
       );
-
+  
+      console.log("API Response:", response.data); // Log response for debugging
+  
       setFolders((prev) => ({
         ...prev,
         [selectedSubject]: {
@@ -372,19 +390,28 @@ function Notes() {
             {
               id: response.data.id,
               title: response.data.title,
-              preview: response.data.content.substring(0, 50) + "...",
+              preview: response.data.content.substring(0, 50) + "..." || "No preview",
               date: new Date().toISOString().split("T")[0],
               lastModified: "Just now",
             },
           ],
         },
       }));
-      setView("notes"); // Return to notes view after saving
+      setView("notes");
+      setNoteContent(null);
+      setTitle(""); // Clear title after saving
     } catch (error) {
       console.error("Error saving note:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error response:", error.response?.data);
+      }
     }
   };
+const handleOnContentChange=(content:JSONContent)=>{
+  console.log(content,"this is main content i need to submit");
+  setNoteContent((prevcontent)=>content);
 
+}
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {showCreateFolder && (
@@ -424,7 +451,6 @@ function Notes() {
                       folderData={folderData}
                       onViewNotes={handleViewNotes} // Updated prop
                       onEditFolder={handleEditFolder}
-                      onDeleteFolder={handleDeleteFolder}
                     />
                   ))}
                   <motion.button
@@ -518,19 +544,19 @@ function Notes() {
               <span>{new Date().toLocaleDateString()}</span>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 rounded-sm">
               <RichTextEditorDemo
                 className="w-full"
-                value={noteContent}
-                onChange={setNoteContent}
+                initialContent={noteContent}
+               onContentChange={handleOnContentChange}
               />
               <div className="flex items-center gap-4">
                 <input
                   type="text"
-                  placeholder="Add tags (comma separated)"
-                  value={noteTags}
-                  onChange={(e) => setNoteTags(e.target.value)}
-                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200"
+                  placeholder="Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="flex-1 px-4 py-2 rounded-lg border border-gray-500 bg-white text-gray-800"
                 />
                 <button
                   onClick={handleSaveNote}
@@ -547,16 +573,5 @@ function Notes() {
   );
 }
 
-function getColorClass(color: string) {
-  const colors = {
-    blue: "from-blue-400 to-blue-600",
-    purple: "from-purple-400 to-purple-600",
-    green: "from-green-400 to-green-600",
-    red: "from-red-400 to-red-600",
-    orange: "from-orange-400 to-orange-600",
-    indigo: "from-indigo-400 to-indigo-600",
-  };
-  return colors[color as keyof typeof colors] || "from-indigo-400 to-indigo-600";
-}
 
 export default Notes;

@@ -13,13 +13,12 @@ import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
-import { EditorContent, type Extension, useEditor } from "@tiptap/react";
+import { EditorContent, type Extension, JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TipTapFloatingMenu } from "@/components/tiptap/extensions/floating-menu";
 import { FloatingToolbar } from "@/components/tiptap/extensions/floating-toolbar";
 import { EditorToolbar } from "./toolbars/editor-toolbar";
 import Placeholder from "@tiptap/extension-placeholder";
-import { content } from "@/lib/content";
 
 const extensions = [
   StarterKit.configure({
@@ -46,7 +45,6 @@ const extensions = [
         case "detailsSummary":
           return "Section title";
         case "codeBlock":
-          // never show the placeholder when editing code
           return "";
         default:
           return "Write, type '/' for commands";
@@ -72,21 +70,28 @@ const extensions = [
   Typography,
 ];
 
-export function RichTextEditorDemo({ className }: { className?: string }) {
+type RichTextEditorDemoProps = {
+  className?: string;
+  initialContent?: JSONContent | string |null; // Accept initial content as prop
+  onContentChange?: (content: JSONContent) => void; // Callback for content updates
+};
+
+export function RichTextEditorDemo({ className, initialContent, onContentChange }: RichTextEditorDemoProps) {
   const editor = useEditor({
     immediatelyRender: false,
     extensions: extensions as Extension[],
-    content,
+    content: initialContent || { type: "doc", content: [] }, // Use initialContent or empty doc
     editorProps: {
       attributes: {
         class: "max-w-full focus:outline-none",
       },
     },
     onUpdate: ({ editor }) => {
-      
-      const text = editor.getJSON();
-      console.log(editor.getJSON(),"this is output");
-      console.log(text,"this is text");
+      const jsonContent = editor.getJSON();
+      if (onContentChange) {
+        onContentChange(jsonContent);
+        console.log("Updated content:", jsonContent); // Log for debugging
+      }
     },
   });
 
@@ -95,16 +100,16 @@ export function RichTextEditorDemo({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "relative max-h-[calc(100dvh-6rem)] text-black w-full overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0",
+        "relative max-h-[calc(100vh-6rem)] text-black w-full h-auto bg-white overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0 flex flex-col items-center",
         className
       )}
     >
       <EditorToolbar editor={editor} />
-      <FloatingToolbar editor={editor} />
+      {/* <FloatingToolbar editor={editor} /> */}
       <TipTapFloatingMenu editor={editor} />
       <EditorContent
         editor={editor}
-        className=" min-h-[600px] w-full bg-white text-black min-w-full cursor-text sm:p-6"
+        className="h-full w-full bg-white text-black cursor-text sm:p-3"
       />
     </div>
   );

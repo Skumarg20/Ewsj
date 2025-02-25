@@ -4,7 +4,7 @@ type Props={
 }
 export default function DashBoardChat({ onStartChat }:Props) {
   return (
-    <div className="h-[50vh] md:h[55vh] flex items-center justify-center bg-gradient-to-br md:mt-5 md:pt-10 md:mb-6">
+    <div className="h-auto md:h-auto max-w-full flex items-center justify-center bg-gradient-to-br md:mt-5 md:pt-10 md:mb-6">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden p-6">
         <div className="flex items-center justify-center mb-4">
           <div className="bg-indigo-100 p-1 rounded-full">

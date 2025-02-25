@@ -5,12 +5,22 @@ import { FaSpinner, FaBook, FaThLarge, FaClock, FaGraduationCap, FaRegSmileBeam,
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
-const WeeklyForm = () => {
+interface formData{
+  target:string[];
+  exam:string;
+  chapters:string[];
+  dailyHours:number;
+  studentType:string;
+}
+interface WeeklyFormProps {
+  onSubmit: (formData: formData) => void;
+}
+const WeeklyForm = ({onSubmit}:WeeklyFormProps) => {
   const [formData, setFormData] = useState({
     target: '',
     exam: '',
     chapters: '',
-    dailyHours: '',
+    dailyHours: 3,
     studentType: 'school',
   });
   const [plan, setPlan] = useState<string | null>(null);
@@ -19,10 +29,15 @@ const WeeklyForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    const response = await axios.post('http://localhost:3000/api/weekly-plan', formData);
-    setPlan(response.data.plan);
-    setLoading(false);
+    const processedData: formData = {
+      target: formData.target.split('\n').filter(t => t.trim()),
+      exam: formData.exam,
+      chapters: formData.chapters.split('\n').filter(c => c.trim()),
+      dailyHours: formData.dailyHours,
+      studentType: formData.studentType
+    };
+    console.log(processedData,"this is data i am sending to form");
+    onSubmit(processedData);
   };
 
   return (
@@ -93,74 +108,84 @@ const WeeklyForm = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  {/* Weekly Goal */}
-                  <motion.div whileHover={{ scale: 1.01 }}>
-                    <div className="relative group">
-                      <FaThLarge className="absolute top-4 left-3 text-blue-500 group-hover:text-blue-600 transition-colors" />
-                      <textarea
-                        placeholder="🎯 Weekly Goals\n• Example: Complete Algebra basics\n• Master 5 new concepts"
-                        value={formData.target}
-                        onChange={(e) => setFormData({ ...formData, target: e.target.value })}
-                        className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all resize-none min-h-[120px] bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
-                      />
-                      <div className="absolute right-3 top-3 text-blue-300">
-                        📌
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Subjects/Chapters */}
-                  <motion.div whileHover={{ scale: 1.01 }}>
-                    <div className="relative group">
-                      <FaBook className="absolute top-4 left-3 text-blue-500 group-hover:text-blue-600 transition-colors" />
-                      <textarea
-                        placeholder="📚 Subjects/Chapters\n• Example: Mathematics: Chapter 1-3\n• Physics: Newton's Laws"
-                        value={formData.chapters}
-                        onChange={(e) => setFormData({ ...formData, chapters: e.target.value })}
-                        className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all resize-none min-h-[100px] bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
-                      />
-                      <div className="absolute right-3 top-3 text-blue-300">
-                        📖
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Bottom Row */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Daily Hours */}
-                    <motion.div whileHover={{ scale: 1.02 }}>
-                      <div className="relative group">
-                        <FaClock className="absolute top-3 left-3 text-blue-500 group-hover:text-blue-600 transition-colors" />
-                        <input
-                          type="number"
-                          placeholder="⏳ Daily Hours"
-                          value={formData.dailyHours}
-                          onChange={(e) => setFormData({ ...formData, dailyHours: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Student Type */}
-                    <motion.div whileHover={{ scale: 1.02 }}>
-                      <div className="relative group">
-                        <FaGraduationCap className="absolute top-3 left-3 text-blue-500 group-hover:text-blue-600 transition-colors" />
-                        <select
-                          value={formData.studentType}
-                          onChange={(e) => setFormData({ ...formData, studentType: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all appearance-none bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
-                        >
-                          <option value="school">🎒 School Student</option>
-                          <option value="dropper">📚 Full-time Learner</option>
-                        </select>
-                        <div className="absolute right-3 top-3 text-blue-300">
-                          👩🎓
-                        </div>
-                      </div>
-                    </motion.div>
+              <div className="space-y-4">
+                {/* Target Exam Input */}
+                <motion.div whileHover={{ scale: 1.01 }}>
+                  <div className="relative group">
+                    <FaThLarge className="absolute top-4 left-3 text-blue-500" />
+                    <input
+                      placeholder="🎯 Target Exam (e.g., JEE Mains 2024)"
+                      value={formData.exam}
+                      onChange={(e) => setFormData({ ...formData, exam: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
+                    />
                   </div>
+                </motion.div>
+
+                {/* Weekly Goals */}
+                <motion.div whileHover={{ scale: 1.01 }}>
+                  <div className="relative group">
+                    <FaThLarge className="absolute top-4 left-3 text-blue-500" />
+                    <textarea
+                      placeholder="📌 Weekly Targets (one per line)\n• Complete Motion chapter\n• Solve 10 practice problems daily"
+                      value={formData.target}
+                      onChange={(e) => setFormData({ ...formData, target: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all resize-none min-h-[120px] bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
+                    />
+                  </div>
+                </motion.div>
+
+                {/* Chapters Input */}
+                <motion.div whileHover={{ scale: 1.01 }}>
+                  <div className="relative group">
+                    <FaBook className="absolute top-4 left-3 text-blue-500" />
+                    <textarea
+                      placeholder="📚 Chapters to Cover (one per line)\n• Motion\n• Energy\n• Thermodynamics"
+                      value={formData.chapters}
+                      onChange={(e) => setFormData({ ...formData, chapters: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all resize-none min-h-[100px] bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
+                    />
+                  </div>
+                </motion.div>
+
+                {/* Bottom Row */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Daily Hours Input */}
+                  <motion.div whileHover={{ scale: 1.02 }}>
+                    <div className="relative group">
+                      <FaClock className="absolute top-3 left-3 text-blue-500" />
+                      <input
+                        type="number"
+                        min="1"
+                        max="12"
+                        placeholder="⏳ Daily Study Hours"
+                        value={formData.dailyHours}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          dailyHours: Math.min(12, Math.max(1, parseInt(e.target.value)) || 3)
+                        })}
+                        className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Student Type Select */}
+                  <motion.div whileHover={{ scale: 1.02 }}>
+                    <div className="relative group">
+                      <FaGraduationCap className="absolute top-3 left-3 text-blue-500" />
+                      <select
+                        value={formData.studentType}
+                        onChange={(e) => setFormData({ ...formData, studentType: e.target.value })}
+                        className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all appearance-none bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
+                      >
+                        <option value="school">🎒 School Student</option>
+                        <option value="dropper">📚 Full-time Learner</option>
+                        <option value="working">💼 Working Professional</option>
+                      </select>
+                    </div>
+                  </motion.div>
                 </div>
+              </div>
 
                 {/* Submit Button */}
                 <motion.button
