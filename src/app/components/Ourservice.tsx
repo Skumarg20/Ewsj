@@ -103,7 +103,7 @@ const services: Service[] = [
   },
   {
     id: 9,
-    title: 'Download Syllabus & Books (JEE/NEET)',
+    title: 'Download Syllabus & Books ',
     description:
       'Download subject-wise syllabi and books for JEE and NEET to aid in your preparation. We offer syllabi for Physics, Chemistry, and Mathematics/Biology to help you stay on track with your studies.',
     icon: <FaDownload className="w-8 h-8 text-orange-500" />,

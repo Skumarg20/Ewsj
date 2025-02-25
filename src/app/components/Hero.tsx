@@ -53,9 +53,9 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
               <button className="group bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
               onClick={() => {
-                if (isClient) {
+                
                   window.location.href = "/bookacall";
-                }
+                
               }}>
                
                 <Calendar className="w-5 h-5" />
@@ -64,9 +64,9 @@ const Hero = () => {
               </button>
               <button 
                onClick={() => {
-                if (isClient) {
+                
                   window.location.href = "/login";
-                }
+                
               }}
               className="group bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2">
                 <Star className="w-5 h-5" />

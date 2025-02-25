@@ -15,6 +15,7 @@ import { GrNodes } from "react-icons/gr";
 import { RxDashboard } from "react-icons/rx";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { motion } from "framer-motion";
+import ProfileDropdown from "@/components/profiledropdown";
 
 const NAVIGATION = [
   { segment: "dashboard", title: "Dashboard", icon: <RxDashboard /> },
@@ -26,8 +27,18 @@ const NAVIGATION = [
     title: "Clusters",
     icon: <MdGroups2 />,
     children: [
-      { segment: "hbhsales", title: "Sales", icon: <GrNodes />, groupId: "sal8777es" },
-      { segment: "traf98fic", title: "Traffic", icon: <GrNodes />, groupId: "traff38587ic" },
+      {
+        segment: "hbhsales",
+        title: "Sales",
+        icon: <GrNodes />,
+        groupId: "sal8777es",
+      },
+      {
+        segment: "traf98fic",
+        title: "Traffic",
+        icon: <GrNodes />,
+        groupId: "traff38587ic",
+      },
     ],
   },
   { segment: "peers", title: "Peers", icon: <GrNodes /> },
@@ -72,9 +83,19 @@ function PageContent({ pathname }: { pathname: string }) {
 }
 
 // Navbar Item Component
-function NavbarItem({ item, pathname, navigate }: { item: any; pathname: string; navigate: (path: string) => void }) {
+function NavbarItem({
+  item,
+  pathname,
+  navigate,
+}: {
+  item: any;
+  pathname: string;
+  navigate: (path: string) => void;
+}) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const isActive = pathname === `/${item.segment}` || (item.children && pathname.startsWith(`/${item.segment}/`));
+  const isActive =
+    pathname === `/${item.segment}` ||
+    (item.children && pathname.startsWith(`/${item.segment}/`));
 
   return (
     <div className="relative">
@@ -86,7 +107,9 @@ function NavbarItem({ item, pathname, navigate }: { item: any; pathname: string;
           else navigate(`/${item.segment}`);
         }}
         className={`flex items-center p-3 rounded-xl cursor-pointer transition-colors ${
-          isActive ? "bg-indigo-600 text-white" : "text-gray-700 hover:bg-indigo-100"
+          isActive
+            ? "bg-indigo-600 text-white"
+            : "text-gray-700 hover:bg-indigo-100"
         }`}
       >
         <span className="text-xl mr-3">{item.icon}</span>
@@ -104,7 +127,9 @@ function NavbarItem({ item, pathname, navigate }: { item: any; pathname: string;
               whileHover={{ scale: 1.05 }}
               onClick={() => navigate(`/group/${child.segment}`)}
               className={`flex items-center p-2 rounded-lg cursor-pointer ${
-                pathname === `/group/${child.segment}` ? "bg-purple-500 text-white" : "text-gray-600 hover:bg-purple-100"
+                pathname === `/group/${child.segment}`
+                  ? "bg-purple-500 text-white"
+                  : "text-gray-600 hover:bg-purple-100"
               }`}
             >
               <span className="text-lg mr-2">{child.icon}</span>
@@ -163,44 +188,49 @@ export default function Dashboard(props: any) {
             className="fixed top-0 left-0 w-64 h-full bg-white shadow-xl rounded-r-2xl p-4 flex flex-col justify-between z-20"
           >
             <div className="space-y-2 mt-14">
-             
               {NAVIGATION.map((item, index) =>
                 item.segment ? (
-                  <NavbarItem key={index} item={item} pathname={router.pathname} navigate={router.navigate} />
+                  <NavbarItem
+                    key={index}
+                    item={item}
+                    pathname={router.pathname}
+                    navigate={router.navigate}
+                  />
                 ) : null
               )}
             </div>
-            <Profile
-              user={{
-                name: "John Doe",
-                email: "john.doe@example.com",
-                avatarUrl: null,
-              }}
-            />
           </motion.div>
         )}
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {/* Top Bar */}
-          <div className="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-30">
-            <div className="flex items-center space-x-4">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={toggleNavbar}
-                className="text-indigo-600 text-xl hover:text-indigo-800 transition-colors p-2  rounded-full bg-indigo-50"
-                aria-label={isNavbarOpen ? "Hide Navbar" : "Show Navbar"}
-              >
-                {isNavbarOpen ? <IoIosClose /> : <IoIosMenu />}
-              </motion.button>
-              <div className="flex items-center">
-                <img
-                  src="https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png"
-                  alt="Coginest"
-                  className="h-8 w-auto mr-2"
-                />
-                <h1 className="text-lg font-bold text-indigo-600">Coginest</h1>
+          <div className="bg-white shadow-md p-2 flex justify-evenly items-center sticky top-0 z-30">
+            <div className="flex justify-between items-center w-full">
+              <div className="flex items-center space-x-4">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={toggleNavbar}
+                  className="text-indigo-600 text-xl hover:text-indigo-800 transition-colors p-2 rounded-full bg-indigo-50"
+                  aria-label={isNavbarOpen ? "Hide Navbar" : "Show Navbar"}
+                >
+                  {isNavbarOpen ? <IoIosClose /> : <IoIosMenu />}
+                </motion.button>
+                <div className="flex items-center">
+                  <img
+                    src="https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png"
+                    alt="Coginest"
+                    className="h-8 w-auto mr-2"
+                  />
+                  <h1 className="text-lg font-bold text-indigo-600">
+                    Coginest
+                  </h1>
+                </div>
+              </div>
+
+              <div>
+                <ProfileDropdown />
               </div>
             </div>
             <div className="flex items-center space-x-4">

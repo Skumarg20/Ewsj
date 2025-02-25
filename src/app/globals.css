@@ -20,7 +20,14 @@
   background: #475569; /* Even darker on hover */
 }
 
-
+.toast-centered {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: auto !important;
+  max-width: 90% !important;
+}
 
 
 @keyframes gradient {
