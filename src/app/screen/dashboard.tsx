@@ -56,7 +56,7 @@ function useDemoRouter(initialPath: string): Router {
   );
 }
 
-// Page Content Component
+
 function PageContent({ pathname }: { pathname: string }) {
   const isGroupPage = pathname.startsWith("/group/");
   const groupId = isGroupPage ? pathname.split("/")[2] : null;

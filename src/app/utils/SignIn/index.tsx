@@ -7,8 +7,7 @@ import * as yup from "yup";
 import { login, signup } from '../../../lib/api'
 import { useRouter } from "next/navigation";
 import MotivationalCard from './foundercard';
-import Image from 'next/image';
-import getTimeTable from '@/state/store/timetablestore'
+
 import useRedirectToDashboard from "@/hooks/dashboardRedirectHook";
 import { motion } from "framer-motion";
 import { FiLock, FiMail, FiPhone, FiBook, FiArrowRight, FiEye, FiEyeOff, FiBookOpen, FiMapPin, FiUser } from "react-icons/fi";

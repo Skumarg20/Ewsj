@@ -1,3 +1,4 @@
+// components/tiptap/rich-text-editor.tsx (unchanged from your version)
 "use client";
 import "./tiptap.css";
 import { cn } from "@/lib/utils";
@@ -22,19 +23,9 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 const extensions = [
   StarterKit.configure({
-    orderedList: {
-      HTMLAttributes: {
-        class: "list-decimal",
-      },
-    },
-    bulletList: {
-      HTMLAttributes: {
-        class: "list-disc",
-      },
-    },
-    heading: {
-      levels: [1, 2, 3, 4],
-    },
+    orderedList: { HTMLAttributes: { class: "list-decimal" } },
+    bulletList: { HTMLAttributes: { class: "list-disc" } },
+    heading: { levels: [1, 2, 3, 4] },
   }),
   Placeholder.configure({
     emptyNodeClass: "is-editor-empty",
@@ -52,18 +43,14 @@ const extensions = [
     },
     includeChildren: false,
   }),
-  TextAlign.configure({
-    types: ["heading", "paragraph"],
-  }),
+  TextAlign.configure({ types: ["heading", "paragraph"] }),
   TextStyle,
   Subscript,
   Superscript,
   Underline,
   Link,
   Color,
-  Highlight.configure({
-    multicolor: true,
-  }),
+  Highlight.configure({ multicolor: true }),
   ImageExtension,
   ImagePlaceholder,
   SearchAndReplace,
@@ -72,30 +59,35 @@ const extensions = [
 
 type RichTextEditorDemoProps = {
   className?: string;
-  initialContent?: JSONContent | string |null; // Accept initial content as prop
-  onContentChange?: (content: JSONContent) => void; // Callback for content updates
+  initialContent?: JSONContent | string | null;
+  onContentChange?: (content: JSONContent) => void;
+  editable?: boolean;
 };
 
-export function RichTextEditorDemo({ className, initialContent, onContentChange }: RichTextEditorDemoProps) {
+export function RichTextEditorDemo({
+  className,
+  initialContent,
+  onContentChange,
+  editable = true,
+}: RichTextEditorDemoProps) {
   const editor = useEditor({
     immediatelyRender: false,
     extensions: extensions as Extension[],
-    content: initialContent || { type: "doc", content: [] }, // Use initialContent or empty doc
+    content:initialContent|| { type: "doc", content: [] },
+    editable,
     editorProps: {
-      attributes: {
-        class: "max-w-full focus:outline-none",
-      },
+      attributes: { class: "max-w-full focus:outline-none" },
     },
     onUpdate: ({ editor }) => {
       const jsonContent = editor.getJSON();
       if (onContentChange) {
         onContentChange(jsonContent);
-        console.log("Updated content:", jsonContent); // Log for debugging
+        console.log("Updated content:", jsonContent);
       }
     },
   });
-
-  if (!editor) return null;
+console.log(initialContent,"this is content comming into editor page")
+  if (!editor) return <div className="text-gray-500">Loading editor...</div>;
 
   return (
     <div
@@ -105,11 +97,10 @@ export function RichTextEditorDemo({ className, initialContent, onContentChange 
       )}
     >
       <EditorToolbar editor={editor} />
-      {/* <FloatingToolbar editor={editor} /> */}
       <TipTapFloatingMenu editor={editor} />
       <EditorContent
         editor={editor}
-        className="h-full w-full bg-white text-black cursor-text sm:p-3"
+        className="h-full w-full bg-white text-black cursor-text sm:p-3 prose prose-sm sm:prose-lg"
       />
     </div>
   );

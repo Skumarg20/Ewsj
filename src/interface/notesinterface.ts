@@ -9,6 +9,7 @@ export interface CreateFolder {
     title: string;
     preview: string;
     date: string;
+    content:string;
     lastModified: string;
     tags?: string[];
   }

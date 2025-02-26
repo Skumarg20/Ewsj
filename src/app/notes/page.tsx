@@ -21,11 +21,13 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { RichTextEditorDemo } from "@/components/tiptap/rich-text-editor";
 import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
 import { JSONContent } from "@tiptap/core";
 import {CreateFolder,Note,FolderData} from '@/interface/notesinterface'
+import NoteEditor from "./[noteId]/page";
 const spring = {
   type: "spring",
   stiffness: 300,
@@ -149,7 +151,7 @@ function SubjectFolder({
   folderData: FolderData;
   onViewNotes: (subject: string) => void;
   onEditFolder: (folder: CreateFolder) => void;
-  onDeleteFolder: (folder: CreateFolder) => void;
+  // onDeleteFolder: (folder: CreateFolder) => void;
 }) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -239,15 +241,18 @@ function SubjectFolder({
 }
 
 function Notes() {
-  const [view, setView] = useState<"list" | "create" | "notes">("list"); // Added "notes" view
+  const [view, setView] = useState<"list" | "create" | "notes" | "edit">("list"); // Added "notes" view
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [folders, setFolders] = useState<Record<string, FolderData>>({});
   const [noteContent, setNoteContent] = useState<JSONContent|null>(null);
   const [title, setTitle] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
-  console.log(noteContent,"this is notes content need to submit");
+  
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  console.log(selectedNote,"this is notes content selected note need to submit");
   useEffect(() => {
     fetchFolders();
   }, []);
@@ -324,6 +329,12 @@ function Notes() {
     }
   };
 
+  const handleViewNote = (note: Note) => {
+    console.log(note,"this is not in handleview note")
+    setSelectedNote(note);
+    setView("edit");
+  };
+  
   // const handleDeleteFolder = async ({ name, color, description }: CreateFolder) => {
   //   if (window.confirm(`Are you sure you want to delete "${name}" and all its contents?`)) {
   //     setIsDeleting(true);
@@ -407,10 +418,36 @@ function Notes() {
       }
     }
   };
-const handleOnContentChange=(content:JSONContent)=>{
-  console.log(content,"this is main content i need to submit");
-  setNoteContent((prevcontent)=>content);
-
+  const handleOnContentChange = (content: JSONContent) => {
+    console.log("Content changed:", content);
+    setNoteContent(content);
+    if (selectedNote && selectedSubject) {
+      setFolders((prev) => ({
+        ...prev,
+        [selectedSubject]: {
+          ...prev[selectedSubject],
+          notes: prev[selectedSubject].notes.map((n) =>
+            n.id === selectedNote.id
+              ? {
+                  ...n,
+                  content: JSON.stringify(content), // Store as JSON string
+                  preview: content.content?.[0]?.content?.[0]?.text?.substring(0, 50) + "..." || "No preview",
+                  lastModified: "Just now",
+                }
+              : n
+          ),
+        },
+      }));
+    }
+  };
+if (view === "edit" && selectedNote) {
+  console.log(selectedNote,"this is selected note");
+  return (
+    <NoteEditor
+      noteData={selectedNote}
+      onContentChange={handleOnContentChange}
+    />
+  );
 }
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -508,9 +545,9 @@ const handleOnContentChange=(content:JSONContent)=>{
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="p-4 bg-gray-50 rounded-lg shadow-sm"
+                    onClick={() => handleViewNote(note)}
                   >
                     <h3 className="text-lg font-medium text-gray-800">{note.title}</h3>
-                    <p className="text-sm text-gray-600">{note.preview}</p>
                     <div className="flex items-center gap-2 text-gray-500 text-sm mt-2">
                       <Calendar className="w-4 h-4" />
                       <span>{note.date}</span>
