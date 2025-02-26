@@ -32,6 +32,7 @@ const ImagePlaceholderToolbar = React.forwardRef<
 						e.preventDefault()
 						editor?.chain().focus().insertImagePlaceholder().run();
 						onClick?.(e);
+						console.log(e,"this is console from image component")
 					}}
 					ref={ref}
 					{...props}

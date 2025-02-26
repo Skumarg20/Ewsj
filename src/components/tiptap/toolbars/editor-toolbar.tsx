@@ -21,60 +21,95 @@ import { ImagePlaceholderToolbar } from "./image-placeholder-toolbar";
 import { ColorHighlightToolbar } from "./color-and-highlight";
 import { SearchAndReplaceToolbar } from "./search-and-replace-toolbar";
 import { CodeBlockToolbar } from "./code-block";
+import { motion } from 'framer-motion';
+import { FaUndo, FaRedo, FaHeading, FaQuoteRight, FaCode, FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaListUl, FaListOl, FaRulerHorizontal, FaAlignLeft, FaImage, FaHighlighter, FaSearch } from 'react-icons/fa';
 
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
+  const toolbarVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } }
+  };
+
+  const groupVariants = {
+    hover: { scale: 1.05, transition: { duration: 0.2 } }
+  };
+
   return (
-    <div className="sticky top-0 z-20 w-full border-b bg-background hidden sm:block">
+    <motion.div
+    className="sticky top-0 z-50 w-full h-12  bg-white shadow-sm text-gray-800 "
+    variants={toolbarVariants}
+    initial="visible"
+    animate="visible"
+  >
       <ToolbarProvider editor={editor}>
         <TooltipProvider>
-          <ScrollArea className="h-fit py-0.5">
-            <div>
-              <div className="flex items-center gap-1 px-2">
-                {/* History Group */}
-                <UndoToolbar />
-                <RedoToolbar />
-                <Separator orientation="vertical" className="mx-1 h-7" />
+        <ScrollArea className="h-full py-0.5 px-1 sm:px-2">
+        <div className="flex items-center gap-1 sm:gap-1 whitespace-nowrap">
+              {/* History Group */}
+              <motion.div className="flex items-center gap-0.5 sm:gap-1" variants={groupVariants} whileHover="hover">
+       
+        <UndoToolbar />
+        <RedoToolbar />
+        <Separator orientation="vertical" className="mx-0.5 sm:mx-1 h-5 sm:h-6 bg-gray-300" />
+      </motion.div>
 
-                {/* Text Structure Group */}
+              {/* Text Structure Group */}
+              <motion.div className="flex items-center gap-1" variants={groupVariants} whileHover="hover">
+               
                 <HeadingsToolbar />
                 <BlockquoteToolbar />
                 <CodeToolbar />
-                <CodeBlockToolbar/>
-                <Separator orientation="vertical" className="mx-1 h-7" />
+                <CodeBlockToolbar />
+                <Separator orientation="vertical" className="mx-1 h-6 bg-gray-300" />
+              </motion.div>
 
-                {/* Basic Formatting Group */}
+              {/* Basic Formatting Group */}
+              <motion.div className="flex items-center gap-1" variants={groupVariants} whileHover="hover">
+                
                 <BoldToolbar />
                 <ItalicToolbar />
                 <UnderlineToolbar />
                 <StrikeThroughToolbar />
                 <LinkToolbar />
-                <Separator orientation="vertical" className="mx-1 h-7" />
+                <Separator orientation="vertical" className="mx-1 h-6 bg-gray-300" />
+              </motion.div>
 
-                {/* Lists & Structure Group */}
+              {/* Lists & Structure Group */}
+              <motion.div className="flex items-center gap-1" variants={groupVariants} whileHover="hover">
+                
                 <BulletListToolbar />
                 <OrderedListToolbar />
                 <HorizontalRuleToolbar />
-                <Separator orientation="vertical" className="mx-1 h-7" />
+                <Separator orientation="vertical" className="mx-1 h-6 bg-gray-300" />
+              </motion.div>
 
-                {/* Alignment Group */}
+              {/* Alignment Group */}
+              <motion.div className="flex items-center gap-1" variants={groupVariants} whileHover="hover">
+                
                 <AlignmentTooolbar />
-                <Separator orientation="vertical" className="mx-1 h-7" />
+                <Separator orientation="vertical" className="mx-1 h-6 bg-gray-300" />
+              </motion.div>
 
-                {/* Media & Styling Group */}
+              {/* Media & Styling Group */}
+              <motion.div className="flex items-center gap-1" variants={groupVariants} whileHover="hover">
+               
                 <ImagePlaceholderToolbar />
                 <ColorHighlightToolbar />
-                <Separator orientation="vertical" className="mx-1 h-7" />
+                <Separator orientation="vertical" className="mx-1 h-6 bg-gray-300" />
+              </motion.div>
 
-                <div className="flex-1" />
+              <div className="flex-1 min-w-0" /> {/* Spacer, prevents overflow */}
 
-                {/* Utility Group */}
+              {/* Utility Group */}
+              <motion.div className="flex items-left gap-1 mr-10 ml-0 " variants={groupVariants} whileHover="hover">
+            
                 <SearchAndReplaceToolbar />
-              </div>
+              </motion.div>
             </div>
-            <ScrollBar className="hidden" orientation="horizontal" />
+            <ScrollBar orientation="horizontal" className="h-2" />{/* Visible scrollbar if needed */}
           </ScrollArea>
         </TooltipProvider>
       </ToolbarProvider>
-    </div>
+    </motion.div>
   );
 };

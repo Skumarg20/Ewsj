@@ -1,11 +1,16 @@
-'use client'
-import React, { useState } from 'react';
-import { 
-  FolderOpen, 
-  Plus, 
-  Book, 
-  FileText, 
-  Calendar, 
+"use client";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Folder,
+  FolderOpen,
+  Plus,
+  Book,
+  Notebook,
+  FlaskConical,
+  Calculator,
+  FileText,
+  Calendar,
   Clock,
   ChevronRight,
   Search,
@@ -14,91 +19,44 @@ import {
   Settings,
   Edit2,
   Trash2,
-  X
-} from 'lucide-react';
-import { RichTextEditorDemo } from '@/components/tiptap/rich-text-editor';
-
-// Sample data structure with custom folders support
-const sampleNotes = {
-  Physics: {
-    id: 'physics-001',
-    color: 'blue',
-    notes: [
-      {
-        id: 1,
-        title: "Electromagnetism Core Concepts",
-        preview: "Key principles of electromagnetic induction and its applications...",
-        date: "2025-02-18",
-        lastModified: "2 hours ago",
-        tags: ["electromagnetics", "induction", "important"]
-      },
-      {
-        id: 2,
-        title: "Wave Optics Notes",
-        preview: "Detailed explanation of interference, diffraction, and polarization...",
-        date: "2025-02-17",
-        lastModified: "1 day ago",
-        tags: ["optics", "waves"]
-      }
-    ]
-  },
-  Chemistry: {
-    id: 'chemistry-001',
-    color: 'purple',
-    notes: [
-      {
-        id: 3,
-        title: "Organic Chemistry Mechanisms",
-        preview: "SN1 and SN2 reaction mechanisms with detailed examples...",
-        date: "2025-02-18",
-        lastModified: "5 hours ago",
-        tags: ["organic", "reactions", "mechanisms"]
-      }
-    ]
-  },
-  Mathematics: {
-    id: 'math-001',
-    color: 'green',
-    notes: [
-      {
-        id: 4,
-        title: "Integration Techniques",
-        preview: "Advanced methods of integration including parts and substitution...",
-        date: "2025-02-16",
-        lastModified: "3 days ago",
-        tags: ["calculus", "integration"]
-      }
-    ]
-  }
+  X,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { RichTextEditorDemo } from "@/components/tiptap/rich-text-editor";
+import axios from "axios";
+import { getAuthHeader } from "@/lib/api";
+import { JSONContent } from "@tiptap/core";
+import {CreateFolder,Note,FolderData} from '@/interface/notesinterface'
+import NoteEditor from "./[noteId]/page";
+const spring = {
+  type: "spring",
+  stiffness: 300,
+  damping: 30,
 };
 
-interface FolderData {
-  id: string;
-  color: string;
-  notes: Array<{
-    id: number;
-    title: string;
-    preview: string;
-    date: string;
-    lastModified: string;
-    tags: string[];
-  }>;
-}
 
-function CreateFolderModal({ onClose, onCreate }: { 
+
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
+
+function CreateFolderModal({
+  onClose,
+  onCreate,
+}: {
   onClose: () => void;
-  onCreate: (name: string, color: string) => void;
+  onCreate: (name: string, color: string, description?: string) => void;
 }) {
-  const [folderName, setFolderName] = useState('');
-  const [selectedColor, setSelectedColor] = useState('indigo');
-  
+  const [folderName, setFolderName] = useState("");
+  const [selectedColor, setSelectedColor] = useState("#4F46E5"); // Default to indigo
+  const [description, setDescription] = useState("");
+
   const colors = [
-    { name: 'indigo', class: 'from-indigo-500 to-indigo-600' },
-    { name: 'blue', class: 'from-blue-500 to-cyan-500' },
-    { name: 'purple', class: 'from-purple-500 to-pink-500' },
-    { name: 'green', class: 'from-green-500 to-emerald-500' },
-    { name: 'red', class: 'from-red-500 to-rose-500' },
-    { name: 'orange', class: 'from-orange-500 to-amber-500' },
+    { color: "#4F46E5" }, // Indigo
+    { color: "#3B82F6" }, // Blue
+    { color: "#8B5CF6" }, // Purple
+    { color: "#10B981" }, // Green
+    { color: "#EF4444" }, // Red
+    { color: "#F59E0B" }, // Orange
   ];
 
   return (
@@ -125,18 +83,31 @@ function CreateFolderModal({ onClose, onCreate }: {
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
-
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description (Optional)
+            </label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter description..."
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 
+                focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Choose Color
             </label>
             <div className="grid grid-cols-6 gap-2">
-              {colors.map((color) => (
+              {colors.map((item) => (
                 <button
-                  key={color.name}
-                  onClick={() => setSelectedColor(color.name)}
-                  className={`w-8 h-8 rounded-lg bg-gradient-to-r ${color.class} 
-                    ${selectedColor === color.name ? 'ring-2 ring-offset-2 ring-indigo-600' : ''}`}
+                  key={item.color}
+                  onClick={() => setSelectedColor(item.color)}
+                  style={{ backgroundColor: item.color }}
+                  className={`w-8 h-8 rounded-lg
+                    ${selectedColor === item.color ? "ring-2 ring-offset-2 ring-indigo-600" : ""}`}
                 />
               ))}
             </div>
@@ -152,7 +123,7 @@ function CreateFolderModal({ onClose, onCreate }: {
             <button
               onClick={() => {
                 if (folderName.trim()) {
-                  onCreate(folderName, selectedColor);
+                  onCreate(folderName, selectedColor, description);
                   onClose();
                 }
               }}
@@ -169,158 +140,317 @@ function CreateFolderModal({ onClose, onCreate }: {
     </div>
   );
 }
-
-function SubjectFolder({ subject, folderData, onNoteClick, onCreateNote, onEditFolder, onDeleteFolder }: {
+function SubjectFolder({
+  subject,
+  folderData,
+  onViewNotes,
+  onEditFolder,
+  // onDeleteFolder,
+}: {
   subject: string;
   folderData: FolderData;
-  onNoteClick: (note: any) => void;
-  onCreateNote: (subject: string) => void;
-  onEditFolder: (subject: string) => void;
-  onDeleteFolder: (subject: string) => void;
+  onViewNotes: (subject: string) => void;
+  onEditFolder: (folder: CreateFolder) => void;
+  // onDeleteFolder: (folder: CreateFolder) => void;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showActions, setShowActions] = useState(false);
-
-  const getSubjectColor = (color: string) => {
-    const colors = {
-      'blue': 'from-blue-500 to-cyan-500 shadow-blue-200',
-      'purple': 'from-purple-500 to-pink-500 shadow-purple-200',
-      'green': 'from-green-500 to-emerald-500 shadow-green-200',
-      'red': 'from-red-500 to-rose-500 shadow-red-200',
-      'orange': 'from-orange-500 to-amber-500 shadow-orange-200',
-    };
-    return colors[color as keyof typeof colors] || 'from-indigo-500 to-violet-500 shadow-indigo-200';
-  };
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="mb-6">
-      <div className="relative">
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          onMouseEnter={() => setShowActions(true)}
-          onMouseLeave={() => setShowActions(false)}
-          className={`w-full bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-200
-            flex items-center justify-between group mb-2`}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="relative group"
+    >
+      <button
+        onClick={() => onViewNotes(subject)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="w-full p-4 flex flex-col items-center justify-center gap-3
+          bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300
+          border-2 border-transparent hover:border-indigo-200 relative overflow-hidden"
+      >
+        {/* Static Folder Design */}
+        <motion.div
+          animate={{ scale: isHovered ? 1.1 : 1, rotate: isHovered ? 2 : 0 }}
+          className="w-20 h-20 rounded-2xl flex items-center justify-center
+            relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500
+            shadow-lg overflow-hidden"
         >
-          <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${getSubjectColor(folderData.color)} 
-              flex items-center justify-center shadow-lg`}>
-              <Book className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-semibold text-gray-800">{subject}</span>
-            <span className="text-sm text-gray-500">({folderData.notes.length} notes)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            {showActions && (
-              <div className="flex items-center gap-2 mr-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEditFolder(subject);
-                  }}
-                  className="p-2 text-gray-400 hover:text-indigo-600 transition-colors"
-                >
-                  <Edit2 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteFolder(subject);
-                  }}
-                  className="p-2 text-gray-400 hover:text-red-600 transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-            <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform duration-200
-              ${isOpen ? 'rotate-90' : 'rotate-0'}`} />
-          </div>
-        </button>
-      </div>
-      
-      {isOpen && (
-        <div className="pl-4 space-y-3">
-          {folderData.notes.map(note => (
-            <div 
-              key={note.id}
-              onClick={() => onNoteClick(note)}
-              className="bg-white/60 backdrop-blur-sm rounded-xl p-4 cursor-pointer
-                hover:shadow-md transition-all duration-200 border border-gray-100"
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-medium text-gray-800">{note.title}</h3>
-                <span className="text-xs text-gray-500">{note.lastModified}</span>
-              </div>
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2">{note.preview}</p>
-              <div className="flex items-center gap-2">
-                {note.tags.map(tag => (
-                  <span key={tag} className="px-2 py-1 rounded-full bg-gray-100 text-xs text-gray-600">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-          <button
-            onClick={() => onCreateNote(subject)}
-            className="w-full bg-white/40 backdrop-blur-sm rounded-xl p-4 
-              border border-dashed border-gray-300 hover:border-indigo-300
-              hover:bg-white/60 transition-all duration-200
-              flex items-center justify-center gap-2 text-gray-600 hover:text-indigo-600"
-          >
-            <Plus className="w-5 h-5" />
-            <span>Create New Note</span>
-          </button>
+          {/* Subtle overlay pattern */}
+          <div
+  className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2020%2020%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill=%22%233B82F6%22%20fill-opacity=%220.2%22%3E%3Ccircle%20cx=%223%22%20cy=%223%22%20r=%221%22/%3E%3Ccircle%20cx=%2210%22%20cy=%2210%22%20r=%221%22/%3E%3Ccircle%20cx=%2217%22%20cy=%2217%22%20r=%221%22/%3E%3C/g%3E%3C/svg%3E')] animate-pulse-slow"
+/>
+          
+          {/* Folder Icon */}
+          <Folder className="w-8 h-8 text-white z-10" />
+
+          {/* Glowing effect */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            animate={{ x: [-100, 100] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+          />
+        </motion.div>
+
+        {/* Subject Name */}
+        <span className="font-semibold text-gray-800 text-center bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          {subject}
+        </span>
+
+        {/* Notes Count */}
+        <span className="text-sm text-gray-500 font-medium">
+          {folderData.notes.length} notes
+        </span>
+
+        {/* Subtle background decoration */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+          <div className="absolute top-[-20px] left-[-20px] w-16 h-16 bg-indigo-300/20 rounded-full animate-pulse" />
+          <div className="absolute bottom-[-20px] right-[-20px] w-16 h-16 bg-purple-300/20 rounded-full animate-pulse" />
         </div>
-      )}
-    </div>
+      </button>
+
+      {/* Action Buttons */}
+      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onEditFolder({ name: subject, color: folderData.color, description: folderData.description });
+          }}
+          className="p-1.5 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm
+            hover:bg-indigo-100 hover:shadow-md text-indigo-500 hover:text-indigo-700
+            transition-all duration-200"
+        >
+          <Edit2 className="w-4 h-4" />
+        </button>
+        {/* <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDeleteFolder({ name: subject, color: folderData.color, description: folderData.description });
+          }}
+          className="p-1.5 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm
+            hover:bg-red-100 hover:shadow-md text-red-500 hover:text-red-700
+            transition-all duration-200"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button> */}
+      </div>
+    </motion.div>
   );
 }
 
 function Notes() {
-  const [view, setView] = useState<'list' | 'create'>('list');
+  const [view, setView] = useState<"list" | "create" | "notes" | "edit">("list"); // Added "notes" view
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
-  const [folders, setFolders] = useState<Record<string, FolderData>>(sampleNotes);
+  const [folders, setFolders] = useState<Record<string, FolderData>>({});
+  const [noteContent, setNoteContent] = useState<JSONContent|null>(null);
+  const [title, setTitle] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  console.log(selectedNote,"this is notes content selected note need to submit");
+  useEffect(() => {
+    fetchFolders();
+  }, []);
 
-  const handleCreateFolder = (name: string, color: string) => {
-    setFolders(prev => ({
-      ...prev,
-      [name]: {
-        id: `folder-${Date.now()}`,
-        color,
-        notes: []
-      }
-    }));
-  };
-
-  const handleEditFolder = (subject: string) => {
-    // Implement folder editing logic
-    console.log('Edit folder:', subject);
-  };
-
-  const handleDeleteFolder = (subject: string) => {
-    // Implement folder deletion logic with confirmation
-    if (window.confirm(`Are you sure you want to delete the folder "${subject}" and all its notes?`)) {
-      const newFolders = { ...folders };
-      delete newFolders[subject];
-      setFolders(newFolders);
+  const fetchFolders = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_BASE_URL}/notesfolder`, {
+        headers: getAuthHeader(),
+      });
+      const folderData = response.data.reduce(
+        (acc: Record<string, FolderData>, folder: any) => {
+          acc[folder.name] = {
+            id: folder.id,
+            name: folder.name,
+            color: folder.color,
+            description: folder.description,
+            notes: folder.notes || [],
+          };
+          return acc;
+        },
+        {}
+      );
+      setFolders(folderData);
+    } catch (error) {
+      console.error("Error fetching folders:", error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleCreateFolder = async (name: string, color: string, description?: string) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/notesfolder`,
+        { name, color, description },
+        { headers: { ...getAuthHeader(), "Content-Type": "application/json" } }
+      );
+      setFolders((prev) => ({
+        ...prev,
+        [name]: {
+          id: response.data.id,
+          name,
+          color,
+          description,
+          notes: [],
+        },
+      }));
+    } catch (error) {
+      console.error("Error creating folder:", error);
+    }
+  };
+
+  const handleEditFolder = async ({ name, color, description }: CreateFolder) => {
+    try {
+      const newName = prompt("Enter new folder name:", name);
+      if (newName && newName !== name) {
+        const folderId = folders[name].id;
+        await axios.put(
+          `${API_BASE_URL}/notesfolder/${folderId}`,
+          { name: newName, color, description },
+          { headers: { ...getAuthHeader(), "Content-Type": "application/json" } }
+        );
+        setFolders((prev) => {
+          const newFolders = { ...prev };
+          newFolders[newName] = { ...newFolders[name], name: newName };
+          delete newFolders[name];
+          return newFolders;
+        });
+      }
+    } catch (error) {
+      console.error("Error editing folder:", error);
+      throw error;
+    }
+  };
+
+  const handleViewNote = (note: Note) => {
+    console.log(note,"this is not in handleview note")
+    setSelectedNote(note);
+    setView("edit");
+  };
+  
+  // const handleDeleteFolder = async ({ name, color, description }: CreateFolder) => {
+  //   if (window.confirm(`Are you sure you want to delete "${name}" and all its contents?`)) {
+  //     setIsDeleting(true);
+  //     try {
+  //       const folderId = folders[name].id;
+  //       await axios.delete(`${API_BASE_URL}/notesfolder/${folderId}`, {
+  //         headers: { ...getAuthHeader(), "Content-Type": "application/json" } },
+  //       );
+  //       setFolders((prev) => {
+  //         const newFolders = { ...prev };
+  //         delete newFolders[name];
+  //         return newFolders;
+  //       });
+  //     } catch (error) {
+  //       console.error("Error deleting folder:", error);
+  //       throw error;
+  //     } finally {
+  //       setIsDeleting(false);
+  //     }
+  //   }
+  // };
+
+  const handleViewNotes = (subject: string) => {
+    setSelectedSubject(subject);
+    setView("notes");
   };
 
   const handleCreateNote = (subject: string) => {
     setSelectedSubject(subject);
-    setView('create');
+    setView("create");
+    setNoteContent(null);
+    setTitle("");
   };
 
-  const handleNoteClick = (note: any) => {
-    // Handle note click - you can implement note viewing/editing here
-    console.log('Note clicked:', note);
+  const handleSaveNote = async () => {
+    console.log("Selected Subject:", selectedSubject, "Note Content:", noteContent, "this is for save notes api");
+    if (!selectedSubject || !noteContent) {
+      console.log("Missing required fields - selectedSubject or noteContent is undefined");
+      return;
+    }
+  
+    try {
+      const folderId = folders[selectedSubject].id;
+      console.log("Folder ID:", folderId, "Title:", title,JSON.stringify(noteContent)); 
+      const payload = {
+        title: title || "Untitled",
+        content: JSON.stringify(noteContent || ""), // Ensure content is always a string
+      };
+      console.log(payload,"this is payload");
+      const response = await axios.post(
+        `${API_BASE_URL}/notes/${folderId}/note`,
+        payload,
+        { headers: { ...getAuthHeader(), "Content-Type": "application/json" } }
+      );
+  
+      console.log("API Response:", response.data); // Log response for debugging
+  
+      setFolders((prev) => ({
+        ...prev,
+        [selectedSubject]: {
+          ...prev[selectedSubject],
+          notes: [
+            ...prev[selectedSubject].notes,
+            {
+              id: response.data.id,
+              title: response.data.title,
+              preview: response.data.content.substring(0, 50) + "..." || "No preview",
+              date: new Date().toISOString().split("T")[0],
+              lastModified: "Just now",
+            },
+          ],
+        },
+      }));
+      setView("notes");
+      setNoteContent(null);
+      setTitle(""); // Clear title after saving
+    } catch (error) {
+      console.error("Error saving note:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error response:", error.response?.data);
+      }
+    }
   };
-
+  const handleOnContentChange = (content: JSONContent) => {
+    console.log("Content changed:", content);
+    setNoteContent(content);
+    if (selectedNote && selectedSubject) {
+      setFolders((prev) => ({
+        ...prev,
+        [selectedSubject]: {
+          ...prev[selectedSubject],
+          notes: prev[selectedSubject].notes.map((n) =>
+            n.id === selectedNote.id
+              ? {
+                  ...n,
+                  content: JSON.stringify(content), // Store as JSON string
+                  preview: content.content?.[0]?.content?.[0]?.text?.substring(0, 50) + "..." || "No preview",
+                  lastModified: "Just now",
+                }
+              : n
+          ),
+        },
+      }));
+    }
+  };
+if (view === "edit" && selectedNote) {
+  console.log(selectedNote,"this is selected note");
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50">
+    <NoteEditor
+      noteData={selectedNote}
+      onContentChange={handleOnContentChange}
+    />
+  );
+}
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {showCreateFolder && (
         <CreateFolderModal
           onClose={() => setShowCreateFolder(false)}
@@ -328,85 +458,147 @@ function Notes() {
         />
       )}
 
-      {view === 'list' ? (
-        <div className="max-w-4xl mx-auto py-8 px-4">
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r 
-                from-indigo-600 to-purple-600">
-                Your Study Notes
+      {view === "list" ? (
+        <div className="max-w-6xl mx-auto py-8 px-4">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <FolderOpen className="text-indigo-600 w-6 h-6" />
+                Study Notes
               </h1>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
                 onClick={() => setShowCreateFolder(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm
-                  hover:shadow-md transition-all duration-200 text-indigo-600 hover:text-indigo-700"
+                className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm"
               >
                 <FolderPlus className="w-5 h-5" />
-                <span>New Folder</span>
-              </button>
+                New Folder
+              </motion.button>
             </div>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search your notes..."
-                className="w-full px-4 py-3 pl-12 rounded-xl bg-white/80 backdrop-blur-sm
-                  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500
-                  focus:border-transparent"
-              />
-              <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-4">
-            {Object.entries(folders).map(([subject, folderData]) => (
-              <SubjectFolder
-                key={folderData.id}
-                subject={subject}
-                folderData={folderData}
-                onNoteClick={handleNoteClick}
-                onCreateNote={handleCreateNote}
-                onEditFolder={handleEditFolder}
-                onDeleteFolder={handleDeleteFolder}
-              />
-            ))}
+            {loading ? (
+              <div>Loading folders...</div>
+            ) : (
+              <AnimatePresence>
+                <motion.div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {Object.entries(folders).map(([subject, folderData]) => (
+                    <SubjectFolder
+                      key={folderData.id}
+                      subject={subject}
+                      folderData={folderData}
+                      onViewNotes={handleViewNotes} // Updated prop
+                      onEditFolder={handleEditFolder}
+                    />
+                  ))}
+                  <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowCreateFolder(true)}
+                  className="w-full p-4 flex flex-col items-center justify-center gap-3
+                    bg-white/50 rounded-xl shadow-sm hover:shadow-md transition-all
+                    border-2 border-dashed border-gray-300 hover:border-indigo-300
+                    text-gray-500 hover:text-indigo-600"
+                >
+                  <div
+                    className="w-20 h-20 rounded-2xl flex items-center justify-center
+                    bg-gradient-to-r from-gray-100 to-gray-200"
+                  >
+                    <FolderPlus className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <span className="font-medium">New Folder</span>
+                </motion.button>
+                </motion.div>
+              </AnimatePresence>
+            )}
+          </motion.div>
+        </div>
+      ) : view === "notes" && selectedSubject ? (
+        <div className="max-w-4xl mx-auto py-8 px-4">
+          <button
+            onClick={() => setView("list")}
+            className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-6"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Folders
+          </button>
+
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">
+                Notes in {selectedSubject}
+              </h2>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                onClick={() => handleCreateNote(selectedSubject)}
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg"
+              >
+                <Plus className="w-5 h-5" />
+                Create New Note
+              </motion.button>
+            </div>
+
+            {folders[selectedSubject].notes.length > 0 ? (
+              <div className="space-y-4">
+                {folders[selectedSubject].notes.map((note) => (
+                  <motion.div
+                    key={note.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="p-4 bg-gray-50 rounded-lg shadow-sm"
+                    onClick={() => handleViewNote(note)}
+                  >
+                    <h3 className="text-lg font-medium text-gray-800">{note.title}</h3>
+                    <div className="flex items-center gap-2 text-gray-500 text-sm mt-2">
+                      <Calendar className="w-4 h-4" />
+                      <span>{note.date}</span>
+                      <Clock className="w-4 h-4 ml-2" />
+                      <span>{note.lastModified}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No notes in this folder yet.</p>
+            )}
           </div>
         </div>
       ) : (
         <div className="max-w-4xl mx-auto py-8 px-4">
           <button
-            onClick={() => setView('list')}
-            className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 
-              transition-colors mb-6"
+            onClick={() => setView("notes")}
+            className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-6"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Back to Notes</span>
+            Back to Notes
           </button>
 
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                Create New Note - {selectedSubject}
-              </h2>
-              <div className="flex items-center gap-2 text-gray-500">
-                <Calendar className="w-4 h-4" />
-                <span className="text-sm">{new Date().toLocaleDateString()}</span>
-                <Clock className="w-4 h-4 ml-4" />
-                <span className="text-sm">{new Date().toLocaleTimeString()}</span>
-              </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Create New Note - {selectedSubject}
+            </h2>
+            <div className="flex items-center gap-2 text-gray-500 mb-6">
+              <Calendar className="w-4 h-4" />
+              <span>{new Date().toLocaleDateString()}</span>
             </div>
 
-            <div className="space-y-4">
-            <RichTextEditorDemo className="w-full rounded-xl bg-white text-gray-800"/>
+            <div className="space-y-4 rounded-sm">
+              <RichTextEditorDemo
+                className="w-full"
+                initialContent={noteContent}
+               onContentChange={handleOnContentChange}
+              />
               <div className="flex items-center gap-4">
                 <input
                   type="text"
-                  placeholder="Add tags (comma separated)"
-                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 
-                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="flex-1 px-4 py-2 rounded-lg border border-gray-500 bg-white text-gray-800"
                 />
-                <button className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 
-                  text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 
-                  transition-all duration-200 shadow-md hover:shadow-lg">
+                <button
+                  onClick={handleSaveNote}
+                  className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg"
+                >
                   Save Note
                 </button>
               </div>
@@ -417,5 +609,6 @@ function Notes() {
     </div>
   );
 }
+
 
 export default Notes;

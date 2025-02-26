@@ -114,7 +114,7 @@ export default function cardTimeTable({setOpen,open}: Props) {
     </motion.p>
 
     {/* Action Button */}
-    {open && (
+   
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -130,7 +130,7 @@ export default function cardTimeTable({setOpen,open}: Props) {
           <FiArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
         </Button>
       </motion.div>
-    )}
+    
   </motion.div>
 
   {/* Glowing Border Effect */}

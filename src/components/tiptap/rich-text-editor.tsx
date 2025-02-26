@@ -1,3 +1,4 @@
+// components/tiptap/rich-text-editor.tsx (unchanged from your version)
 "use client";
 import "./tiptap.css";
 import { cn } from "@/lib/utils";
@@ -13,29 +14,18 @@ import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
-import { EditorContent, type Extension, useEditor } from "@tiptap/react";
+import { EditorContent, type Extension, JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TipTapFloatingMenu } from "@/components/tiptap/extensions/floating-menu";
 import { FloatingToolbar } from "@/components/tiptap/extensions/floating-toolbar";
 import { EditorToolbar } from "./toolbars/editor-toolbar";
 import Placeholder from "@tiptap/extension-placeholder";
-import { content } from "@/lib/content";
 
 const extensions = [
   StarterKit.configure({
-    orderedList: {
-      HTMLAttributes: {
-        class: "list-decimal",
-      },
-    },
-    bulletList: {
-      HTMLAttributes: {
-        class: "list-disc",
-      },
-    },
-    heading: {
-      levels: [1, 2, 3, 4],
-    },
+    orderedList: { HTMLAttributes: { class: "list-decimal" } },
+    bulletList: { HTMLAttributes: { class: "list-disc" } },
+    heading: { levels: [1, 2, 3, 4] },
   }),
   Placeholder.configure({
     emptyNodeClass: "is-editor-empty",
@@ -46,7 +36,6 @@ const extensions = [
         case "detailsSummary":
           return "Section title";
         case "codeBlock":
-          // never show the placeholder when editing code
           return "";
         default:
           return "Write, type '/' for commands";
@@ -54,58 +43,64 @@ const extensions = [
     },
     includeChildren: false,
   }),
-  TextAlign.configure({
-    types: ["heading", "paragraph"],
-  }),
+  TextAlign.configure({ types: ["heading", "paragraph"] }),
   TextStyle,
   Subscript,
   Superscript,
   Underline,
   Link,
   Color,
-  Highlight.configure({
-    multicolor: true,
-  }),
+  Highlight.configure({ multicolor: true }),
   ImageExtension,
   ImagePlaceholder,
   SearchAndReplace,
   Typography,
 ];
 
-export function RichTextEditorDemo({ className }: { className?: string }) {
+type RichTextEditorDemoProps = {
+  className?: string;
+  initialContent?: JSONContent | string | null;
+  onContentChange?: (content: JSONContent) => void;
+  editable?: boolean;
+};
+
+export function RichTextEditorDemo({
+  className,
+  initialContent,
+  onContentChange,
+  editable = true,
+}: RichTextEditorDemoProps) {
   const editor = useEditor({
     immediatelyRender: false,
     extensions: extensions as Extension[],
-    content,
+    content:initialContent|| { type: "doc", content: [] },
+    editable,
     editorProps: {
-      attributes: {
-        class: "max-w-full focus:outline-none",
-      },
+      attributes: { class: "max-w-full focus:outline-none" },
     },
     onUpdate: ({ editor }) => {
-      // do what you want to do with output
-      // Update stats
-      // saving as text/json/hmtml
-      // const text = editor.getHTML();
-      console.log(editor.getText());
+      const jsonContent = editor.getJSON();
+      if (onContentChange) {
+        onContentChange(jsonContent);
+        console.log("Updated content:", jsonContent);
+      }
     },
   });
-
-  if (!editor) return null;
+console.log(initialContent,"this is content comming into editor page")
+  if (!editor) return <div className="text-gray-500">Loading editor...</div>;
 
   return (
     <div
       className={cn(
-        "relative max-h-[calc(100dvh-6rem)] text-black w-full overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0",
+        "relative max-h-[calc(100vh-6rem)] text-black w-full h-auto bg-white overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0 flex flex-col items-center",
         className
       )}
     >
       <EditorToolbar editor={editor} />
-      <FloatingToolbar editor={editor} />
       <TipTapFloatingMenu editor={editor} />
       <EditorContent
         editor={editor}
-        className=" min-h-[600px] w-full min-w-full cursor-text sm:p-6"
+        className="h-full w-full bg-white text-black cursor-text sm:p-3 prose prose-sm sm:prose-lg"
       />
     </div>
   );

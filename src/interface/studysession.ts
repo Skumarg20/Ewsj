@@ -9,10 +9,13 @@ export interface StudySession {
   }
   
   export interface StudyPlanInterface {
-    date?: string;
-    title?: string;
-    description?: string;
-    study_hours?: number;
-    schedule?: StudySession[];
-    quote?: string;
+    id: string;
+    date: string;
+    title: string;
+    description: string;
+    study_hours: number;
+    quote: string;
+    total_time_spent: number;
+    completion_rate: string;
+    schedule: StudySession[];
   }

@@ -2,44 +2,26 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"; // Assuming you have a Button component
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Import arrow icons
+import { Button } from "@/components/ui/button";
+import { FaArrowLeft, FaArrowRight, FaStickyNote, FaClock, FaBook } from "react-icons/fa";
+import { FaRegCalendarTimes } from "react-icons/fa";
+import { CheckCircle } from "lucide-react";
 import useStudyPlanStore from "@/state/store/timetablestore";
 import { useLoading } from "../loader/context/loadingprovider";
-import { StudySession } from "@/state/store/timetablestore";
-import {
-  HiArrowNarrowRight,
-  HiChevronDown,
-  HiOutlineBookOpen,
-} from "react-icons/hi";
-import { FaCheckCircle, FaStickyNote, FaClock, FaBook } from "react-icons/fa";
-import { FaRegCalendarTimes } from "react-icons/fa";
-import { CalendarX, CheckCircle } from "lucide-react";
-// interface Session {
-//   id: string;
-//   time: string;
-//   subject: string;
-//   topic?: string | null;
-//   activity: string;
-//   notes?: string | null;
-//   completed?: boolean;
-// }
+import { StudySession } from "@/interface/studysession";
+import { motion } from "framer-motion";
+
 type Props = {
   data: StudySession[] | undefined;
 };
 
 const SessionUI = ({ data }: Props) => {
-  const [currentSession, setCurrentSession] = useState<StudySession | null>(
-    null
-  );
+  const [currentSession, setCurrentSession] = useState<StudySession | null>(null);
   const [upcomingSessions, setUpcomingSessions] = useState<StudySession[]>([]);
   const [pastSessions, setPastSessions] = useState<StudySession[]>([]);
   const { currentStudyPlan, updateSession } = useStudyPlanStore();
   const { setLoading } = useLoading();
-  const [viewMode, setViewMode] = useState<"current" | "upcoming" | "past">(
-    "current"
-  );
-
+  const [viewMode, setViewMode] = useState<"current" | "upcoming" | "past">("current");
   const [upcomingIndex, setUpcomingIndex] = useState(0);
   const [pastIndex, setPastIndex] = useState(0);
 
@@ -65,351 +47,272 @@ const SessionUI = ({ data }: Props) => {
     setCurrentSession(currentSessionFound);
     setUpcomingSessions(upcoming);
     setPastSessions(past);
-  }, []);
+  }, [currentStudyPlan]);
 
   const handleNextUpcoming = () => {
     setUpcomingIndex((prev) => (prev + 1) % upcomingSessions.length);
   };
 
   const handlePrevUpcoming = () => {
-    setUpcomingIndex(
-      (prev) => (prev - 1 + upcomingSessions.length) % upcomingSessions.length
-    );
+    setUpcomingIndex((prev) => (prev - 1 + upcomingSessions.length) % upcomingSessions.length);
   };
 
-  // Handle navigation for past sessions
   const handleNextPast = () => {
     setPastIndex((prev) => (prev + 1) % pastSessions.length);
   };
 
   const handlePrevPast = () => {
-    setPastIndex(
-      (prev) => (prev - 1 + pastSessions.length) % pastSessions.length
-    );
+    setPastIndex((prev) => (prev - 1 + pastSessions.length) % pastSessions.length);
   };
 
   return (
-    <div className="h-auto md:h[55vh] flex-col items-center justify-center bg-gradient-to-br bg-white rounded-2xl shadow-xl">
-      <div className="max-w-md w-full flex overflow-hidden p-5 gap-4 bg-white shadow-md rounded-lg">
-        <Button
-          variant={viewMode === "current" ? "default" : "outline"}
-          onClick={() => setViewMode("current")}
-          className={`rounded-xl px-6 py-2 font-semibold transition-all ${
-            viewMode === "current"
-              ? "bg-blue-600 text-white shadow-md"
-              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-          }`}
-        >
-          Current
-        </Button>
-        <Button
-          variant={viewMode === "upcoming" ? "default" : "outline"}
-          onClick={() => setViewMode("upcoming")}
-          className={`rounded-xl px-6 py-2 font-semibold transition-all ${
-            viewMode === "upcoming"
-              ? "bg-green-600 text-white shadow-md"
-              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-          }`}
-        >
-          Upcoming
-        </Button>
-        <Button
-          variant={viewMode === "past" ? "default" : "outline"}
-          onClick={() => setViewMode("past")}
-          className={`rounded-xl px-6 py-2 font-semibold transition-all ${
-            viewMode === "past"
-              ? "bg-purple-600 text-white shadow-md"
-              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-          }`}
-        >
-          Past
-        </Button>
+    <div className="min-h-[50vh] w-full bg-gradient-to-br from-gray-50 to-gray-200 p-4 md:p-6 rounded-2xl shadow-xl flex flex-col items-center justify-center">
+      {/* Tab Navigation */}
+      <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-6 w-full max-w-3xl">
+        {["current", "upcoming", "past"].map((mode) => (
+          <motion.button
+            key={mode}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setViewMode(mode as "current" | "upcoming" | "past")}
+            className={`flex-1 min-w-[100px] md:min-w-[120px] px-4 py-2 rounded-full font-semibold text-sm md:text-base shadow-md transition-all duration-300 ${
+              viewMode === mode
+                ? mode === "current"
+                  ? "bg-blue-600 text-white"
+                  : mode === "upcoming"
+                  ? "bg-green-600 text-white"
+                  : "bg-purple-600 text-white"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            {mode.charAt(0).toUpperCase() + mode.slice(1)}
+          </motion.button>
+        ))}
       </div>
 
-      {/* Current Session */}
-      {viewMode === "current" && (
-        <div className="rounded-lg shadow-md w-full bg-white p-6 h-full flex flex-col items-center justify-center">
-          {currentSession ? (
-            <Card className="bg-white shadow-xl rounded-xl p-5 border border-gray-200">
-              <CardContent className="flex flex-col items-start justify-center space-y-3">
-                <p className="text-sm text-gray-600 flex items-center">
-                  <CheckCircle className="mr-2 text-green-500" />{" "}
-                  {currentSession.time}
-                </p>
-                <p className="font-semibold text-lg text-gray-800">
-                  {currentSession.subject}
-                </p>
-                <p className="text-sm text-gray-700">
-                  {currentSession.activity}
-                </p>
-                {currentSession.notes && (
-                  <div className="text-gray-800 bg-gray-100 p-4 rounded-lg w-full">
-                    <p>{currentSession.notes}</p>
+      {/* Content Area */}
+      <div className="w-full max-w-3xl flex-1 flex items-center justify-center">
+        {/* Current Session */}
+        {viewMode === "current" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full"
+          >
+            {currentSession ? (
+              <Card className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span className="text-sm md:text-base">{currentSession.time}</span>
                   </div>
-                )}
-                <div className="flex items-center mt-3">
-                  <input
-                    type="checkbox"
-                    id={`complete-${currentSession.id}`}
-                    checked={currentSession.completed || false}
-                    onChange={async (e) => {
-                      const isChecked = e.target.checked;
-                      setCurrentSession({
-                        ...currentSession,
-                        completed: isChecked,
-                      });
-                      try {
-                        await updateSession(
-                          currentSession.id,
-                          { completed: isChecked },
-                          setLoading
-                        );
-                      } catch (error) {
-                        console.error("Failed to update session:", error);
-                        setCurrentSession({
-                          ...currentSession,
-                          completed: !isChecked,
-                        });
-                      }
-                    }}
-                    className="w-5 h-5 mr-2 accent-green-500"
-                  />
-                  <label
-                    htmlFor={`complete-${currentSession.id}`}
-                    className="text-sm text-gray-700"
-                  >
-                    Mark as Complete
-                  </label>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="bg-white shadow-xl rounded-xl p-5 flex flex-col items-center">
-              <FaRegCalendarTimes className="text-gray-500 text-3xl" />
-              <p className="font-semibold text-gray-800 mt-3">
-                No Current Session
-              </p>
-              <p className="text-sm text-gray-600">You have free time!</p>
-            </Card>
-          )}
-        </div>
-      )}
-
-      {/* Upcoming Sessions */}
-      {viewMode === "upcoming" && (
-        <div className="rounded-lg shadow-md w-full h-full relative flex items-center justify-center">
-          {upcomingSessions.length > 0 ? (
-            <>
-              <button
-                onClick={handlePrevUpcoming}
-                disabled={upcomingSessions.length <= 1}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-400 to-blue-600 p-3 rounded-full shadow-md text-white hover:opacity-80 disabled:opacity-50"
-              >
-                <FaArrowLeft />
-              </button>
-
-              <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardContent className="flex flex-col items-start justify-center p-6">
-                  {/* Time */}
-                  <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                    <FaClock className="w-4 h-4 text-blue-500" />
-                    <p>{upcomingSessions[upcomingIndex].time}</p>
+                  <h3 className="text-lg md:text-xl font-bold text-gray-800">{currentSession.subject}</h3>
+                  <p className="text-sm md:text-base text-gray-600">{currentSession.activity}</p>
+                  {currentSession.notes && (
+                    <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-700 flex items-start gap-2">
+                      <FaStickyNote className="w-4 h-4 text-yellow-500 mt-1" />
+                      <p>{currentSession.notes}</p>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id={`complete-${currentSession.id}`}
+                      checked={currentSession.completed || false}
+                      onChange={async (e) => {
+                        const isChecked = e.target.checked;
+                        setCurrentSession({ ...currentSession, completed: isChecked });
+                        try {
+                          await updateSession(currentSession.id, { completed: isChecked }, setLoading);
+                        } catch (error) {
+                          console.error("Failed to update session:", error);
+                          setCurrentSession({ ...currentSession, completed: !isChecked });
+                        }
+                      }}
+                      className="w-5 h-5 accent-green-500 rounded"
+                    />
+                    <label htmlFor={`complete-${currentSession.id}`} className="text-sm md:text-base text-gray-700">
+                      Mark as Complete
+                    </label>
                   </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center">
+                <FaRegCalendarTimes className="text-gray-400 text-4xl mb-3" />
+                <h3 className="text-lg md:text-xl font-semibold text-gray-800">No Current Session</h3>
+                <p className="text-sm md:text-base text-gray-600">Enjoy your free time!</p>
+              </Card>
+            )}
+          </motion.div>
+        )}
 
-                  {/* Subject */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <FaBook className="w-5 h-5 text-purple-500" />
-                    <p className="font-semibold text-lg text-gray-800">
+        {/* Upcoming Sessions */}
+        {viewMode === "upcoming" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative w-full flex items-center justify-center"
+          >
+            {upcomingSessions.length > 0 ? (
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handlePrevUpcoming}
+                  disabled={upcomingSessions.length <= 1}
+                  className="absolute left-0 md:-left-12 top-1/2 -translate-y-1/2 bg-green-500 text-white p-3 rounded-full shadow-md hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed z-10"
+                >
+                  <FaArrowLeft />
+                </motion.button>
+                <Card className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl shadow-lg p-6 border border-green-100 w-full max-w-md">
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <FaClock className="w-5 h-5 text-green-500" />
+                      <span className="text-sm md:text-base">{upcomingSessions[upcomingIndex].time}</span>
+                    </div>
+                    <h3 className="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
+                      <FaBook className="w-5 h-5 text-blue-500" />
                       {upcomingSessions[upcomingIndex].subject}
-                    </p>
-                  </div>
-
-                  {/* Activity */}
-                  <p className="text-sm text-gray-600 mb-4">
-                    {upcomingSessions[upcomingIndex].activity}
-                  </p>
-
-                  {/* Notes */}
-                  {upcomingSessions[upcomingIndex].notes && (
-                    <div className="w-full bg-white/80 backdrop-blur-sm rounded-lg p-3 mb-4 border border-gray-100">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <FaStickyNote className="w-4 h-4 text-yellow-500" />
-                        <p className="text-sm">
-                          {upcomingSessions[upcomingIndex].notes}
-                        </p>
+                    </h3>
+                    <p className="text-sm md:text-base text-gray-600">{upcomingSessions[upcomingIndex].activity}</p>
+                    {upcomingSessions[upcomingIndex].notes && (
+                      <div className="bg-white/80 p-3 rounded-lg text-sm text-gray-700 flex items-start gap-2">
+                        <FaStickyNote className="w-4 h-4 text-yellow-500 mt-1" />
+                        <p>{upcomingSessions[upcomingIndex].notes}</p>
                       </div>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id={`complete-${upcomingSessions[upcomingIndex].id}`}
+                        checked={upcomingSessions[upcomingIndex].completed || false}
+                        onChange={async (e) => {
+                          const isChecked = e.target.checked;
+                          const updatedSessions = [...upcomingSessions];
+                          updatedSessions[upcomingIndex].completed = isChecked;
+                          setUpcomingSessions(updatedSessions);
+                          try {
+                            await updateSession(upcomingSessions[upcomingIndex].id, { completed: isChecked }, setLoading);
+                          } catch (error) {
+                            console.error("Failed to update session:", error);
+                          }
+                        }}
+                        className="w-5 h-5 accent-green-500 rounded"
+                      />
+                      <label
+                        htmlFor={`complete-${upcomingSessions[upcomingIndex].id}`}
+                        className="text-sm md:text-base text-gray-600"
+                      >
+                        Mark as Complete
+                      </label>
                     </div>
-                  )}
-
-                  {/* Mark as Complete */}
-                  <div className="flex items-center mt-3">
-                    <input
-                      type="checkbox"
-                      id={`complete-${upcomingSessions[upcomingIndex].id}`}
-                      checked={
-                        upcomingSessions[upcomingIndex].completed || false
-                      }
-                      onChange={async (e) => {
-                        const isChecked = e.target.checked;
-                        const sessionId = upcomingSessions[upcomingIndex].id;
-                        const updatedSessions = [...upcomingSessions];
-                        upcomingSessions[upcomingIndex].completed = isChecked;
-
-                        try {
-                          await updateSession(
-                            sessionId,
-                            { completed: isChecked },
-                            setLoading
-                          );
-                        } catch (error) {
-                          console.error("Failed to update session:", error);
-                        }
-                        setUpcomingSessions(updatedSessions);
-                      }}
-                      className="w-5 h-5 mr-2 rounded-md border-2 border-blue-500 text-blue-500 focus:ring-blue-500 cursor-pointer"
-                    />
-                    <label
-                      htmlFor={`complete-${upcomingSessions[upcomingIndex].id}`}
-                      className="text-sm text-gray-600 cursor-pointer"
-                    >
-                      Mark as Complete
-                    </label>
-                  </div>
-                </CardContent>
+                  </CardContent>
+                </Card>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleNextUpcoming}
+                  disabled={upcomingSessions.length <= 1}
+                  className="absolute right-0 md:-right-12 top-1/2 -translate-y-1/2 bg-green-500 text-white p-3 rounded-full shadow-md hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed z-10"
+                >
+                  <FaArrowRight />
+                </motion.button>
+              </>
+            ) : (
+              <Card className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center w-full max-w-md">
+                <FaRegCalendarTimes className="text-gray-400 text-4xl mb-3" />
+                <h3 className="text-lg md:text-xl font-semibold text-gray-800">No Upcoming Sessions</h3>
+                <p className="text-sm md:text-base text-gray-600">Plan something exciting!</p>
               </Card>
+            )}
+          </motion.div>
+        )}
 
-              <button
-                onClick={handleNextUpcoming}
-                disabled={upcomingSessions.length <= 1}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-400 to-blue-600 p-3 rounded-full shadow-md text-white hover:opacity-80 disabled:opacity-50"
-              >
-                <FaArrowRight />
-              </button>
-            </>
-          ) : (
-            <Card className="rounded-lg shadow-md w-full bg-white p-6 h-full flex flex-col items-center justify-center">
-              <FaRegCalendarTimes className="text-gray-500 text-3xl" />
-              <p className="font-semibold text-gray-800 mt-3">
-                No Upcomming Session
-              </p>
-              <p className="text-sm text-gray-600">You have free time!</p>
-            </Card>
-          )}
-        </div>
-      )}
-
-      {/* Past Sessions */}
-      {viewMode === "past" && (
-        <div className="rounded-lg shadow-md w-fullbg-white h-full relative">
-          {pastSessions.length > 0 ? (
-            <>
-              {/* Left Arrow */}
-              <button
-                onClick={handlePrevPast}
-                disabled={pastSessions.length <= 1}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <FaArrowLeft className="text-gray-600" />
-              </button>
-
-              {/* Card */}
-
-              <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardContent className="flex flex-col items-start justify-center p-6">
-                  {/* Time */}
-                  <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                    <FaClock className="w-4 h-4 text-blue-500" />
-                    <p>{pastSessions[pastIndex].time}</p>
-                  </div>
-
-                  {/* Subject */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <FaBook className="w-5 h-5 text-purple-500" />
-                    <p className="font-semibold text-lg text-gray-800">
+        {/* Past Sessions */}
+        {viewMode === "past" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative w-full flex items-center justify-center"
+          >
+            {pastSessions.length > 0 ? (
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handlePrevPast}
+                  disabled={pastSessions.length <= 1}
+                  className="absolute left-0 md:-left-12 top-1/2 -translate-y-1/2 bg-purple-500 text-white p-3 rounded-full shadow-md hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed z-10"
+                >
+                  <FaArrowLeft />
+                </motion.button>
+                <Card className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl shadow-lg p-6 border border-purple-100 w-full max-w-md">
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <FaClock className="w-5 h-5 text-purple-500" />
+                      <span className="text-sm md:text-base">{pastSessions[pastIndex].time}</span>
+                    </div>
+                    <h3 className="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
+                      <FaBook className="w-5 h-5 text-blue-500" />
                       {pastSessions[pastIndex].subject}
-                    </p>
-                  </div>
-
-                  {/* Activity */}
-                  <p className="text-sm text-gray-600 mb-4">
-                    {pastSessions[pastIndex].activity}
-                  </p>
-
-                  {/* Notes */}
-                  {pastSessions[pastIndex].notes && (
-                    <div className="w-full bg-white/80 backdrop-blur-sm rounded-lg p-3 mb-4 border border-gray-100">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <FaStickyNote className="w-4 h-4 text-yellow-500" />
-                        <p className="text-sm">
-                          {pastSessions[pastIndex].notes}
-                        </p>
+                    </h3>
+                    <p className="text-sm md:text-base text-gray-600">{pastSessions[pastIndex].activity}</p>
+                    {pastSessions[pastIndex].notes && (
+                      <div className="bg-white/80 p-3 rounded-lg text-sm text-gray-700 flex items-start gap-2">
+                        <FaStickyNote className="w-4 h-4 text-yellow-500 mt-1" />
+                        <p>{pastSessions[pastIndex].notes}</p>
                       </div>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id={`complete-${pastSessions[pastIndex].id}`}
+                        checked={pastSessions[pastIndex].completed || false}
+                        onChange={async (e) => {
+                          const isChecked = e.target.checked;
+                          const updatedSessions = [...pastSessions];
+                          updatedSessions[pastIndex].completed = isChecked;
+                          setPastSessions(updatedSessions);
+                          try {
+                            await updateSession(pastSessions[pastIndex].id, { completed: isChecked }, setLoading);
+                          } catch (error) {
+                            console.error("Failed to update session:", error);
+                          }
+                        }}
+                        className="w-5 h-5 accent-purple-500 rounded"
+                      />
+                      <label
+                        htmlFor={`complete-${pastSessions[pastIndex].id}`}
+                        className="text-sm md:text-base text-gray-600"
+                      >
+                        Mark as Complete
+                      </label>
                     </div>
-                  )}
-
-                  {/* Mark as Complete */}
-                  <div className="flex items-center mt-3">
-                    <input
-                      type="checkbox"
-                      id={`complete-${pastSessions[pastIndex].id}`}
-                      checked={pastSessions[pastIndex].completed || false}
-                      onChange={async (e) => {
-                        const isChecked = e.target.checked;
-                        const sessionId = pastSessions[pastIndex].id;
-                        const updatedSessions = [...pastSessions];
-                        updatedSessions[pastIndex].completed = isChecked;
-
-                        try {
-                          await updateSession(
-                            sessionId,
-                            { completed: isChecked },
-                            setLoading
-                          );
-                        } catch (error) {
-                          console.error("Failed to update session:", error);
-                        }
-                        setPastSessions(updatedSessions);
-                      }}
-                      className="w-5 h-5 mr-2 rounded-md border-2 border-blue-500 text-blue-500 focus:ring-blue-500 cursor-pointer"
-                    />
-                    <label
-                      htmlFor={`complete-${pastSessions[pastIndex].id}`}
-                      className="text-sm text-gray-600 cursor-pointer"
-                    >
-                      Mark as Complete
-                    </label>
-                  </div>
-                </CardContent>
+                  </CardContent>
+                </Card>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleNextPast}
+                  disabled={pastSessions.length <= 1}
+                  className="absolute right-0 md:-right-12 top-1/2 -translate-y-1/2 bg-purple-500 text-white p-3 rounded-full shadow-md hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed z-10"
+                >
+                  <FaArrowRight />
+                </motion.button>
+              </>
+            ) : (
+              <Card className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center w-full max-w-md">
+                <FaRegCalendarTimes className="text-gray-400 text-4xl mb-3" />
+                <h3 className="text-lg md:text-xl font-semibold text-gray-800">No Past Sessions</h3>
+                <p className="text-sm md:text-base text-gray-600">Nothing to look back on yet!</p>
               </Card>
-              {/* Right Arrow */}
-              <button
-                onClick={handleNextPast}
-                disabled={pastSessions.length <= 1}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <FaArrowRight className="text-gray-600" />
-              </button>
-            </>
-          ) : (
-            <Card className="bg-white shadow-xl rounded-xl p-5 flex flex-col items-center">
-              <FaRegCalendarTimes className="text-gray-500 text-3xl" />
-              <p className="font-semibold text-gray-800 mt-3">
-                No Past Session
-              </p>
-              <p className="text-sm text-gray-600">You have free time!</p>
-            </Card>
-          )}
-        </div>
-      )}
-
-      <div className="flex justify-center mb-4 pb-5">
-        <button
-          onClick={() => (window.location.href = "/session")}
-          className="px-6 py-2 mt-4 flex items-center justify-center text-white bg-blue-600 rounded-full shadow-md hover:bg-blue-700 transition-all duration-300 hover:scale-105"
-        >
-          <HiOutlineBookOpen className="w-5 h-5 mr-2" />
-          <span>Explore Study Sessions</span>
-        </button>
+            )}
+          </motion.div>
+        )}
       </div>
     </div>
   );

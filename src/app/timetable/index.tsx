@@ -11,168 +11,229 @@ import CardTimeTable from "./cardTimeTable";
 import { StudyPlanInterface } from "@/interface/studysession";
 import SessionUI from "../components/sessionui";
 import { motion } from "framer-motion";
-import { FaChartLine, FaCalendarAlt, FaChevronRight } from "react-icons/fa";
+import { FaChartLine, FaCalendarAlt, FaChevronRight, FaPlus } from "react-icons/fa";
+import ViewAnalysisTimetable from "@/components/ViewAnalysistimetable";
+import axios from "axios";
+import { getAuthHeader } from "@/lib/api";
+
 function TimeTablePlan() {
-  const [open, setOpen] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
   const [openTimeTable, setOpenTimeTable] = useState(false);
-  const [passData,setPassData]=useState<StudyPlanInterface|null>(null);
-  const [viewAnalysis,setViewAnalysis]=useState(false);
-  const { formData, studyPlan, setFormData, fetchStudyPlan, saveStudyPlan,getTimeTable,currentStudyPlan} = useStudyPlanStore();
+  const [openAnalysis, setOpenAnalysis] = useState(false);
+  const [openGenerated, setOpenGenerated] = useState(false);
+  const [passData, setPassData] = useState<StudyPlanInterface | null>(null);
+  const [generatedData, setGeneratedData] = useState<StudyPlanInterface | null>(null);
+  const [savedDate, setSavedDate] = useState<string | null>(null);
+  const { formData, studyPlan, setFormData, saveStudyPlan, getTimeTable, currentStudyPlan } = useStudyPlanStore();
   const { setLoading } = useLoading();
   const [showSaveButton, setShowSaveButton] = useState<boolean>(false);
+
   const getCurrentDate = () => {
     const now = new Date();
     return [
       now.getFullYear(),
-      String(now.getMonth() + 1).padStart(2, '0'), // Months are 0-indexed
-      String(now.getDate()).padStart(2, '0')
-    ].join('-');
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("-");
   };
-  
-  console.log(getCurrentDate(),"current date menas aaj ki date");
-   const hasCurrentDate = (currentStudyPlan: any) => {
-     if (!currentStudyPlan || !currentStudyPlan.date) return false;
-     console.log(currentStudyPlan.date,getCurrentDate(),"this is for date check");
-     return currentStudyPlan.date === getCurrentDate();
-   };
-   console.log(currentStudyPlan,"this is current study plan");
-   console.log(hasCurrentDate(currentStudyPlan),"this is hasCurrent");
-   const handleOpenTimeTable = async () => {
-    await getTimeTable(setLoading); 
-    setOpenTimeTable(true);
+
+  const hasCurrentDate = (data: StudyPlanInterface | null) => {
+    if (!data || !data.date) return false;
+    return data.date === getCurrentDate();
   };
-  const handleViewAnalyiss=async()=>{
-    await getTimeTable(setLoading);
-    setViewAnalysis(true);
-  }
-   useEffect(() => {
-     const fetchTimeTable = async () => {
-      console.log(hasCurrentDate(currentStudyPlan),"this is form button on and off");
-       if (hasCurrentDate(currentStudyPlan)) {
-         setShowSaveButton(false);
-         setPassData(currentStudyPlan);
-       } else if (!studyPlan) {
-         setShowSaveButton(false);
-         setPassData(currentStudyPlan);
-       } else {
-         setShowSaveButton(true);
-         setPassData(studyPlan);
-       }
-     };
- 
-     fetchTimeTable();
-   }, [studyPlan, currentStudyPlan]);
- 
-   const handleSaveConfirmedData = async () => {
-    setLoading(true);
-    const savedData:any = await saveStudyPlan(setLoading);
-    setLoading(false);
-    if (savedData) {
-      setShowSaveButton(false);
+
+  // Initial fetch on mount
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      setLoading(true);
+      await getTimeTable(setLoading);
+      setPassData(currentStudyPlan || studyPlan); // Set initial data
+      setLoading(false);
+    };
+    fetchInitialData();
+  }, [getTimeTable, setLoading]);
+
+  // Update passData when currentStudyPlan or studyPlan changes
+  useEffect(() => {
+    setPassData(currentStudyPlan || studyPlan);
+    setShowSaveButton(!!studyPlan && !hasCurrentDate(currentStudyPlan));
+  }, [currentStudyPlan, studyPlan]);
+
+  const handleGenerateTimetable = async (formData: StudyPlanInterface) => {
+    try {
+      setLoading(true);
+      const response = await axios.post("http://localhost:5000/timetables/generatetimetable", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeader(),
+        },
+      });
+
+      if (response.data) {
+        const generatedPlan = response.data.data;
+        setGeneratedData(generatedPlan);
+        setOpenGenerated(true);
+        setOpenForm(false); // Close the form after generating
+      }
+    } catch (error) {
+      console.error("Error generating timetable:", error);
+      alert("Failed to generate timetable. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  
- 
+  const handleOpenTimeTable = async () => {
+    setLoading(true);
+    await getTimeTable(setLoading);
+    setPassData(currentStudyPlan || studyPlan);
+    setOpenTimeTable(true);
+    setOpenAnalysis(false);
+    setLoading(false);
+  };
+
+  const handleViewAnalysis = async () => {
+    setLoading(true);
+    await getTimeTable(setLoading);
+    setPassData(currentStudyPlan || studyPlan);
+    setOpenAnalysis(true);
+    setOpenTimeTable(false);
+    setLoading(false);
+  };
+
+  const handleSaveConfirmedData = async () => {
+    if (!generatedData) return;
+    setLoading(true);
+    const savedData = await saveStudyPlan(setLoading, generatedData);
+    setLoading(false);
+    if (savedData) {
+      setFormData(savedData);
+      setPassData(savedData);
+      setOpenGenerated(false);
+      setSavedDate(getCurrentDate());
+    }
+  };
+
+  const handleOpenForm = () => {
+    setOpenForm(true); 
+  };
 
   const memoizedTimeTable = useMemo(() => {
-    return passData ? <TimeTable data={passData} /> : null;
+    return passData ? <TimeTable data={passData} /> : <h1>No Timetable Available</h1>;
   }, [passData]);
 
-  // const memoizedViewAnalysisdata=useMemo(()=>{
-  //   return analysizedData?<></>
-  // },analysizedData);
+  const memoizedViewAnalysisData = useMemo(() => {
+    return passData ? <ViewAnalysisTimetable data={passData} /> : <h1>No Analysis Available</h1>;
+  }, [passData]);
+
+  const memoizedGeneratedTimeTable = useMemo(() => {
+    return generatedData ? <TimeTable data={generatedData} /> : <h1>No Generated Timetable</h1>;
+  }, [generatedData]);
+
   return (
     <div className="bg-slate-100 text-gray-800 h-auto p-3 relative">
-      <CardTimeTable setOpen={setOpen} open={showSaveButton} />
-       <SessionUI data={passData?.schedule}/>
-      
-       <div className="fixed bottom-5 right-5 z-50 flex gap-4">
-  {/* Floating Background Effect */}
-  <div className="absolute inset-0 -z-10">
-    <motion.div 
-      className="absolute -top-10 -left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-xl"
-      animate={{ rotate: 360 }}
-      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-    />
-  </div>
+      <CardTimeTable setOpen={setOpenForm} open={showSaveButton} />
+      <SessionUI data={passData?.schedule} />
 
-  <motion.div
-    initial={{ x: 100, opacity: 0 }}
-    animate={{ x: 0, opacity: 1 }}
-    transition={{ type: "spring", stiffness: 100 }}
-    whileHover={{ y: -5 }}
-    whileTap={{ scale: 0.95 }}
-  >
-    <button
-      className="bg-gradient-to-br from-[#14284f] to-blue-600 text-white px-6 py-3 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 group backdrop-blur-md"
-      onClick={() => setOpen(true)}
-    >
-      <FaChartLine className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-      View Time Analysis
-      <FaChevronRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
-    </button>
-  </motion.div>
+      {/* Floating Buttons */}
+      <div className="fixed bottom-5 right-5 z-50 flex gap-4">
+        <div className="absolute inset-0 -z-10">
+          <motion.div
+            className="absolute -top-10 -left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-xl"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
 
-  <motion.div
-    initial={{ x: 100, opacity: 0 }}
-    animate={{ x: 0, opacity: 1 }}
-    transition={{ type: "spring", stiffness: 100, delay: 0.1 }}
-    whileHover={{ y: -5 }}
-    whileTap={{ scale: 0.95 }}
-  >
-    <button
-      className="bg-gradient-to-br from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-3 group backdrop-blur-md"
-      onClick={handleOpenTimeTable}
-    >
-      <FaCalendarAlt className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-      View TimeTable
-      <FaChevronRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
-    </button>
-  </motion.div>
-</div>
-      
-     {/* view analysis toggle*/}
-     <Dialog open={openTimeTable} onClose={() => setOpenTimeTable(false)} fullScreen>
-        <DialogContent className="bg-slate-300 bg-opacity-50 text-white custom-scrollbar">
-          <button onClick={() => setOpenTimeTable(false)} className="absolute right-4 top-4 p-2">
-            <MdClose className="text-gray-300 text-xl" />
+        {/* Create Timetable Button */}
+       
+
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100 }}
+          whileHover={{ y: -5 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <button
+            className="bg-gradient-to-br from-[#14284f] to-blue-600 text-white px-6 py-3 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 group backdrop-blur-md"
+            onClick={handleViewAnalysis}
+          >
+            <FaChartLine className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            View Time Analysis
+            <FaChevronRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
           </button>
-          {memoizedTimeTable}
-          
-        </DialogContent>
-      </Dialog>
-      {/* Dialog for Time Table form */}
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="lg" >
+        </motion.div>
+
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, delay: 0.1 }}
+          whileHover={{ y: -5 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <button
+            className="bg-gradient-to-br from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-3 group backdrop-blur-md"
+            onClick={handleOpenTimeTable}
+          >
+            <FaCalendarAlt className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            View TimeTable
+            <FaChevronRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </motion.div>
+      </div>
+
+      {/* Dialog for TimeTable Form */}
+      <Dialog open={openForm} onClose={() => setOpenForm(false)} maxWidth="lg">
         <DialogContent className="bg-slate-100 relative max-h-[90vh] overflow-y-auto w-[100%] custom-scrollbar rounded-md">
-          <button onClick={() => setOpen(false)} className="absolute right-4 top-4 p-2">
+          <button onClick={() => setOpenForm(false)} className="absolute right-4 top-4 p-2">
             <MdClose className="text-gray-600 text-xl" />
           </button>
           <TimeTablePlanForm
             handleformdata={(newData, openState) => {
-              setFormData(newData);
-              setOpen(openState);
-              fetchStudyPlan(newData, setLoading);
+              setOpenForm(openState);
+              handleGenerateTimetable(newData);
             }}
           />
         </DialogContent>
       </Dialog>
 
-      {/* Dialog for TimeTable */}
+      {/* Dialog for Generated Timetable */}
+      <Dialog open={openGenerated} onClose={() => setOpenGenerated(false)} fullScreen>
+        <DialogContent className="bg-slate-300 bg-opacity-50 text-white custom-scrollbar">
+          <button onClick={() => setOpenGenerated(false)} className="absolute right-4 top-4 p-2">
+            <MdClose className="text-gray-300 text-xl" />
+          </button>
+          <div className="p-6">
+            <h3 className="text-2xl font-bold text-white mb-4">Generated Timetable</h3>
+            {memoizedGeneratedTimeTable}
+            <Button
+              onClick={handleSaveConfirmedData}
+              className="w-full mt-4 rounded-full border-2 border-green-400 bg-green-50 text-green-800 hover:bg-green-500 hover:text-white"
+            >
+              Save Timetable
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for Normal TimeTable */}
       <Dialog open={openTimeTable} onClose={() => setOpenTimeTable(false)} fullScreen>
         <DialogContent className="bg-slate-300 bg-opacity-50 text-white custom-scrollbar">
           <button onClick={() => setOpenTimeTable(false)} className="absolute right-4 top-4 p-2">
             <MdClose className="text-gray-300 text-xl" />
           </button>
           {memoizedTimeTable}
-          {showSaveButton && (
-        <Button
-          onClick={handleSaveConfirmedData}
-          className="w-full mt-4 rounded-full border-2 border-green-400 bg-green-50 text-green-800 hover:bg-green-500 hover:text-white"
-        >
-          Save Confirmed TimeTable
-        </Button>
-      )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for Analysis TimeTable */}
+      <Dialog open={openAnalysis} onClose={() => setOpenAnalysis(false)} fullScreen>
+        <DialogContent className="bg-slate-300 bg-opacity-50 text-white custom-scrollbar">
+          <button onClick={() => setOpenAnalysis(false)} className="absolute right-4 top-4 p-2">
+            <MdClose className="text-gray-300 text-xl" />
+          </button>
+          {memoizedViewAnalysisData}
         </DialogContent>
       </Dialog>
     </div>
@@ -180,5 +241,3 @@ function TimeTablePlan() {
 }
 
 export default TimeTablePlan;
-
-

@@ -333,7 +333,7 @@ export function TipTapFloatingMenu({ editor }: { editor: Editor }) {
         },
       }}
     >
-      <Command role="listbox" ref={commandRef} className="z-50 w-72 overflow-hidden rounded-lg border bg-popover shadow-lg">
+      <Command role="listbox" ref={commandRef} className="z-50 w-72 overflow-hidden bg-red-600 text-white rounded-lg border bg-popover shadow-lg">
         <ScrollArea className="max-h-[330px]">
           <CommandList>
             <CommandEmpty className="py-3 text-center text-sm text-muted-foreground">
