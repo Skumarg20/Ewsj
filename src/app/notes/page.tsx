@@ -79,7 +79,7 @@ function CreateFolderModal({
               value={folderName}
               onChange={(e) => setFolderName(e.target.value)}
               placeholder="Enter folder name..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 
+              className="bg-white w-full px-4 py-2 rounded-lg border border-gray-200 
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
@@ -92,7 +92,7 @@ function CreateFolderModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter description..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 
+              className="bg-white w-full px-4 py-2 rounded-lg border border-gray-200 
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
