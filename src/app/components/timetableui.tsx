@@ -1,14 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ActionAreaCard from "@/app/components/utils/card";
 import TimeTables from "./utils/table";
 import TypographyBlockquote from "./utils/quote";
-import { Button } from "@/components/ui/button";
-import studyplan from "./utils/studyplan.png";
-import { useLoading } from "../loader/context/loadingprovider";
-import useStudyPlanStore from "@/state/store/timetablestore";
-import useFetchData from "@/hooks/fetchDataHook";
-import { StudyPlanInterface } from "@/interface/studysession";
+
 
 
 type Props = {

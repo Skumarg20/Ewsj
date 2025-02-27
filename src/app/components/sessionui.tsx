@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { FaArrowLeft, FaArrowRight, FaStickyNote, FaClock, FaBook } from "react-icons/fa";
 import { FaRegCalendarTimes } from "react-icons/fa";
 import { CheckCircle } from "lucide-react";
@@ -15,7 +14,7 @@ type Props = {
   data: StudySession[] | undefined;
 };
 
-const SessionUI = ({ data }: Props) => {
+const SessionUI = ({ }: Props) => {
   const [currentSession, setCurrentSession] = useState<StudySession | null>(null);
   const [upcomingSessions, setUpcomingSessions] = useState<StudySession[]>([]);
   const [pastSessions, setPastSessions] = useState<StudySession[]>([]);

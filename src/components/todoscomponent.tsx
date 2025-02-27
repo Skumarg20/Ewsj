@@ -5,7 +5,6 @@ import { CheckCircleIcon, ClipboardIcon } from 'lucide-react'
 import { ArrowPathIcon } from '@heroicons/react/20/solid'
 import {
     Todo,
-    TodoFormInputs,
     TodoPriority,
     TodoStatus,
   } from "@/interface/todo";

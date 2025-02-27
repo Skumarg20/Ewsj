@@ -5,20 +5,11 @@ import {
   Folder,
   FolderOpen,
   Plus,
-  Book,
-  Notebook,
-  FlaskConical,
-  Calculator,
-  FileText,
   Calendar,
   Clock,
-  ChevronRight,
-  Search,
   ArrowLeft,
   FolderPlus,
-  Settings,
   Edit2,
-  Trash2,
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -28,11 +19,6 @@ import { getAuthHeader } from "@/lib/api";
 import { JSONContent } from "@tiptap/core";
 import {CreateFolder,Note,FolderData} from '@/interface/notesinterface'
 import NoteEditor from "./[noteId]/page";
-const spring = {
-  type: "spring",
-  stiffness: 300,
-  damping: 30,
-};
 
 
 
@@ -248,9 +234,7 @@ function Notes() {
   const [noteContent, setNoteContent] = useState<JSONContent|null>(null);
   const [title, setTitle] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
-  
+
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   console.log(selectedNote,"this is notes content selected note need to submit");
   useEffect(() => {
@@ -368,7 +352,9 @@ function Notes() {
     setNoteContent(null);
     setTitle("");
   };
-
+  const handlesetView=()=>{
+    setView("list");
+  }
   const handleSaveNote = async () => {
     console.log("Selected Subject:", selectedSubject, "Note Content:", noteContent, "this is for save notes api");
     if (!selectedSubject || !noteContent) {
@@ -379,9 +365,10 @@ function Notes() {
     try {
       const folderId = folders[selectedSubject].id;
       console.log("Folder ID:", folderId, "Title:", title,JSON.stringify(noteContent)); 
+      console.log(noteContent,"this is note content");
       const payload = {
         title: title || "Untitled",
-        content: JSON.stringify(noteContent || ""), // Ensure content is always a string
+        content: noteContent || "", // Ensure content is always a string
       };
       console.log(payload,"this is payload");
       const response = await axios.post(
@@ -401,6 +388,7 @@ function Notes() {
             {
               id: response.data.id,
               title: response.data.title,
+              content:response.data.content,
               preview: response.data.content.substring(0, 50) + "..." || "No preview",
               date: new Date().toISOString().split("T")[0],
               lastModified: "Just now",
@@ -446,6 +434,7 @@ if (view === "edit" && selectedNote) {
     <NoteEditor
       noteData={selectedNote}
       onContentChange={handleOnContentChange}
+      handleChangeView={handlesetView}
     />
   );
 }

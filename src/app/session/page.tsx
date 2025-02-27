@@ -1,14 +1,10 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
-import { 
-  Clock, 
+import {  
   BookOpen, 
   CheckCircle, 
   Calendar, 
-  ArrowRight,
-  GraduationCap,
   Timer,
-  ScrollText
 } from 'lucide-react';
 
 
@@ -44,12 +40,6 @@ const parseTimeRange = (timeRange: string) => {
 export function StudySessionCard({ session, updateSession }: { session: StudySession & { status: 'current' | 'upcoming' | 'past' }, updateSession: (id: string, data: Partial<StudySession>, setLoading: (loading: boolean) => void) => Promise<void> }) {
   const [currentSession, setCurrentSession] = useState(session);
   const [loading, setLoading] = useState(false);
-
-  const statusColors = {
-    current: 'from-green-500 to-emerald-600',
-    upcoming: 'from-blue-500 to-indigo-600',
-    past: 'from-purple-500 to-pink-600',
-  };
 
   const statusBg = {
     current: 'bg-green-50 text-green-700 border-green-200',

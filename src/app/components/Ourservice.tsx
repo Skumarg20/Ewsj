@@ -117,7 +117,7 @@ const Services: React.FC = () => {
   const displayedServices = showAll ? services : services.slice(0, 6);
 
   return (
-    <div className="bg-[#28282B] text-white py-16 px-6 w-full rounded-xl mt-5 relative overflow-hidden">
+    <div className="bg-[#28282B] text-white py-16 px-6 w-full rounded-xl mt-5 relative overflow-hidden" id='services'>
       {/* Background Graphics */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>

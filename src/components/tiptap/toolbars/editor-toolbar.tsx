@@ -22,7 +22,6 @@ import { ColorHighlightToolbar } from "./color-and-highlight";
 import { SearchAndReplaceToolbar } from "./search-and-replace-toolbar";
 import { CodeBlockToolbar } from "./code-block";
 import { motion } from 'framer-motion';
-import { FaUndo, FaRedo, FaHeading, FaQuoteRight, FaCode, FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaListUl, FaListOl, FaRulerHorizontal, FaAlignLeft, FaImage, FaHighlighter, FaSearch } from 'react-icons/fa';
 
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
   const toolbarVariants = {

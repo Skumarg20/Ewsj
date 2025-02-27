@@ -8,7 +8,7 @@ import {useLoading} from '@/app/loader/context/loadingprovider'
 type Props = {}
 
 function DashboardPage({}: Props) {
-  const {getTimeTable,currentStudyPlan} =useStudyPlanStore();
+  const {getTimeTable} =useStudyPlanStore();
   const {setLoading}=useLoading();
 
   useEffect(() => {

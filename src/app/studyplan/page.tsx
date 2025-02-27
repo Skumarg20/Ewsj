@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
   FaRocket,
-  FaCalendar,
   FaBullseye,
   FaPen,
   FaRegCalendarCheck,
@@ -12,7 +11,6 @@ import {
   FaStar,
   FaMagic,
   FaSpinner,
-  FaTimes,
   FaBookOpen,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -39,7 +37,7 @@ const StudyPlan = () => {
   const [showPopup, setShowPopup] = useState<string | null>(null); // "weekly" or "targeted" to track which plan to show
   const [generatedPlan, setGeneratedPlan] = useState<WeeklyStudyPlan | null>(null);
   const [generatedTargetPlan, setGeneratedTargetPlan] = useState<targetedStudyPlan | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  // const [isGenerating, setIsGenerating] = useState(false);
   const [isFromGenerated, setIsFromGenerated] = useState(false); // Controls "Save" button visibility
   const { targetPlan, targetloading, targeterror, getTargetPlan, postTargetPlan } = useTargetStudyPlanStore();
   const { weeklyPlan, loading, error, getWeeklyPlan, postWeeklyPlan } = useWeeklyStudyPlanStore();
@@ -75,7 +73,7 @@ const StudyPlan = () => {
   ];
 
   const handleGenerateWeeklyPlan = async (formData: FormData) => {
-    setIsGenerating(true);
+    // setIsGenerating(true);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/generate`,
@@ -113,13 +111,13 @@ const StudyPlan = () => {
       console.error("Error generating weekly plan:", err);
       alert("Failed to generate weekly plan. Please try again.");
     } finally {
-      setIsGenerating(false);
+      // setIsGenerating(false);
     }
   };
 
   const handleGenerateTargetPlan = async (formData: TargetPlanData) => {
     try {
-      setIsGenerating(true);
+      // setIsGenerating(true);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/generate-targetplan`,
         formData,
@@ -156,7 +154,7 @@ const StudyPlan = () => {
       console.error("Error generating target plan:", err);
       alert("Failed to generate target plan. Please try again.");
     } finally {
-      setIsGenerating(false);
+      // setIsGenerating(false);
     }
   };
 

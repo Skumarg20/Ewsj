@@ -35,7 +35,7 @@ type FormData = {
 };
 
 const BookACall = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  
   const [loading, setLoading] = useState(false);
   // const [formData, setFormData] = useState<FormData | null>(null);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
@@ -91,10 +91,10 @@ const BookACall = () => {
             });
              console.log(verificationData.isOk,"thisis payment done",data);
             if (data) {
-              setIsSubmitted(true);
+              
               toast.success("Payment succeeded! Call scheduled successfully!");
               reset();
-              setTimeout(() => setIsSubmitted(false), 2000);
+             
             } else {
               toast.error(verificationData.message);
             }

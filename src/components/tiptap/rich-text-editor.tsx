@@ -61,20 +61,18 @@ type RichTextEditorDemoProps = {
   className?: string;
   initialContent?: JSONContent | string | null;
   onContentChange?: (content: JSONContent) => void;
-  editable?: boolean;
 };
 
 export function RichTextEditorDemo({
   className,
   initialContent,
   onContentChange,
-  editable = true,
+ 
 }: RichTextEditorDemoProps) {
   const editor = useEditor({
     immediatelyRender: false,
     extensions: extensions as Extension[],
     content:initialContent|| { type: "doc", content: [] },
-    editable,
     editorProps: {
       attributes: { class: "max-w-full focus:outline-none" },
     },

@@ -14,27 +14,7 @@ import {
   Hourglass
 } from 'lucide-react';
 import { StudyPlanInterface,StudySession } from '@/interface/studysession';
-// interface Schedule {
-//   id: string;
-//   time: string;
-//   subject: string;
-//   topic: string | null;
-//   activity: string;
-//   notes: string | null;
-//   completed: boolean;
-// }
 
-// interface TimeTableData {
-//   id: string;
-//   date: string;
-//   title: string;
-//   description: string;
-//   study_hours: number;
-//   quote: string;
-//   total_time_spent: number;
-//   completion_rate: string;
-//   schedule: Schedule[];
-// }
 
 function TimeBlock({ session }: { session: StudySession }) {
   const getSubjectColor = (subject: string) => {

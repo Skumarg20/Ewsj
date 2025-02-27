@@ -12,8 +12,6 @@ import {
   ExclamationCircleIcon,
   PencilIcon,
   BookOpenIcon,
-  ChevronDownIcon,
-  TrashIcon,
 } from "@heroicons/react/24/solid";
 import { useTodoStore } from "@/state/store/todosstore";
 import { useLoading } from "@/app/loader/context/loadingprovider";
@@ -43,8 +41,8 @@ export default function TodoApp() {
     useTodoStore();
   const { setLoading } = useLoading();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [statusMenuOpen, setStatusMenuOpen] = useState<string | null>(null);
-  const [priorityMenuOpen, setPriorityMenuOpen] = useState<string | null>(null);
+  // const [statusMenuOpen, setStatusMenuOpen] = useState<string | null>(null);
+  // const [priorityMenuOpen, setPriorityMenuOpen] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -74,8 +72,8 @@ export default function TodoApp() {
     if (updates.priority) updateData.priority = updates.priority;
 
     await updateTodo(todoId, updateData, setLoading);
-    setStatusMenuOpen(null);
-    setPriorityMenuOpen(null);
+    // setStatusMenuOpen(null);
+    // setPriorityMenuOpen(null);
     fetchTodos(setLoading);
   };
   const handleDelete = async (todoId: string) => {
@@ -87,31 +85,9 @@ export default function TodoApp() {
 
   const toggleForm = () => setIsFormOpen(!isFormOpen);
 
-  const getPriorityColor = (priority: Todo["priority"]) => {
-    switch (priority) {
-      case "low":
-        return "bg-green-500";
-      case "medium":
-        return "bg-yellow-500";
-      case "high":
-        return "bg-red-500";
-    }
-  };
+ 
 
-  const getStatusIcon = (status: Todo["status"]) => {
-    switch (status) {
-      case "pending":
-        return <ClockIcon className="w-5 h-5 text-gray-500" />;
-      case "in-progress":
-        return <ExclamationCircleIcon className="w-5 h-5 text-blue-500" />;
-      case "completed":
-        return <CheckCircleIcon className="w-5 h-5 text-green-500" />;
-      case "postponed":
-        return <CalendarIcon className="w-5 h-5 text-yellow-500" />;
-      case "rejected":
-        return <XMarkIcon className="w-5 h-5 text-red-500" />;
-    }
-  };
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
