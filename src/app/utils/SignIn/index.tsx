@@ -121,7 +121,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="h-auto mt-5 bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col md:flex-row w-[80%] justify-center m-auto p-auto rounded-3xl shadow-xl">
+    <div className="my-5 bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col md:flex-row w-[80%] justify-center m-auto p-auto rounded-3xl shadow-xl">
       <Toaster />
       <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-[10%] p-5">
         <motion.div 
