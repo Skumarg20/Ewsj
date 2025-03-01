@@ -2,10 +2,10 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
-import study1 from '@/animations/study1.jpg'
+
 import { motion } from "framer-motion";
 import { FaBookOpen, FaBrain, FaGraduationCap, FaLightbulb, FaChartLine } from "react-icons/fa";
 type ActionCard={
@@ -14,7 +14,7 @@ type ActionCard={
     paragraph:string
 
 }
-export default function ActionAreaCard({ image, title, paragraph }: ActionCard) {
+export default function ActionAreaCard({  title, paragraph }: ActionCard) {
   const [mainTitle, subTitle] = title.split(" - ");
     return (
       <Card 

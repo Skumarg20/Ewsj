@@ -5,34 +5,20 @@ import {
   Folder,
   FolderOpen,
   Plus,
-  Book,
-  Notebook,
-  FlaskConical,
-  Calculator,
-  FileText,
   Calendar,
   Clock,
-  ChevronRight,
-  Search,
   ArrowLeft,
   FolderPlus,
-  Settings,
   Edit2,
-  Trash2,
   X,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 import { RichTextEditorDemo } from "@/components/tiptap/rich-text-editor";
 import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
 import { JSONContent } from "@tiptap/core";
 import {CreateFolder,Note,FolderData} from '@/interface/notesinterface'
 import NoteEditor from "./[noteId]/page";
-const spring = {
-  type: "spring",
-  stiffness: 300,
-  damping: 30,
-};
 
 
 
@@ -60,7 +46,7 @@ function CreateFolderModal({
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed max-h-full bg-white inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md m-4">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-bold text-gray-800">Create New Folder</h3>
@@ -248,9 +234,7 @@ function Notes() {
   const [noteContent, setNoteContent] = useState<JSONContent|null>(null);
   const [title, setTitle] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
-  
+
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   console.log(selectedNote,"this is notes content selected note need to submit");
   useEffect(() => {
@@ -368,7 +352,9 @@ function Notes() {
     setNoteContent(null);
     setTitle("");
   };
-
+  const handlesetView=()=>{
+    setView("list");
+  }
   const handleSaveNote = async () => {
     console.log("Selected Subject:", selectedSubject, "Note Content:", noteContent, "this is for save notes api");
     if (!selectedSubject || !noteContent) {
@@ -379,9 +365,10 @@ function Notes() {
     try {
       const folderId = folders[selectedSubject].id;
       console.log("Folder ID:", folderId, "Title:", title,JSON.stringify(noteContent)); 
+      console.log(noteContent,"this is note content");
       const payload = {
         title: title || "Untitled",
-        content: JSON.stringify(noteContent || ""), // Ensure content is always a string
+        content: noteContent || "", // Ensure content is always a string
       };
       console.log(payload,"this is payload");
       const response = await axios.post(
@@ -401,6 +388,7 @@ function Notes() {
             {
               id: response.data.id,
               title: response.data.title,
+              content:response.data.content,
               preview: response.data.content.substring(0, 50) + "..." || "No preview",
               date: new Date().toISOString().split("T")[0],
               lastModified: "Just now",
@@ -446,6 +434,7 @@ if (view === "edit" && selectedNote) {
     <NoteEditor
       noteData={selectedNote}
       onContentChange={handleOnContentChange}
+      handleChangeView={handlesetView}
     />
   );
 }
@@ -513,7 +502,7 @@ if (view === "edit" && selectedNote) {
           </motion.div>
         </div>
       ) : view === "notes" && selectedSubject ? (
-        <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="max-w-4xl min-h-screen mx-auto py-8 px-4">
           <button
             onClick={() => setView("list")}
             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-6"
@@ -522,7 +511,7 @@ if (view === "edit" && selectedNote) {
             Back to Folders
           </button>
 
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="min-h-screen bg-white rounded-xl shadow-lg p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-800">
                 Notes in {selectedSubject}
@@ -544,7 +533,7 @@ if (view === "edit" && selectedNote) {
                     key={note.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="p-4 bg-gray-50 rounded-lg shadow-sm"
+                    className="p-4 bg-gray-100 rounded-xl shadow-sm"
                     onClick={() => handleViewNote(note)}
                   >
                     <h3 className="text-lg font-medium text-gray-800">{note.title}</h3>
@@ -563,7 +552,7 @@ if (view === "edit" && selectedNote) {
           </div>
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="max-w-4xl max-h-[100%] mx-auto py-8 px-4">
           <button
             onClick={() => setView("notes")}
             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-6"
@@ -580,14 +569,7 @@ if (view === "edit" && selectedNote) {
               <Calendar className="w-4 h-4" />
               <span>{new Date().toLocaleDateString()}</span>
             </div>
-
-            <div className="space-y-4 rounded-sm">
-              <RichTextEditorDemo
-                className="w-full"
-                initialContent={noteContent}
-               onContentChange={handleOnContentChange}
-              />
-              <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mb-5">
                 <input
                   type="text"
                   placeholder="Title"
@@ -597,11 +579,18 @@ if (view === "edit" && selectedNote) {
                 />
                 <button
                   onClick={handleSaveNote}
-                  className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg"
+                  className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl"
                 >
                   Save Note
                 </button>
               </div>
+            <div className="space-y-4 rounded-sm">
+              <RichTextEditorDemo
+                className="w-full max-h-[100%]"
+                initialContent={noteContent}
+               onContentChange={handleOnContentChange}
+              />
+             
             </div>
           </div>
         </div>

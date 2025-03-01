@@ -1,10 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { LuTimerReset } from "react-icons/lu";
-import { RiResetLeftLine } from "react-icons/ri";
 import { motion } from 'framer-motion';
-import { CgSandClock } from "react-icons/cg";
-import { FaPlay, FaStop, FaRedoAlt, FaHourglass, FaRegClock } from 'react-icons/fa';
+import { FaPlay, FaStop, FaRedoAlt, FaHourglass} from 'react-icons/fa';
 
 type TimerProps = {
     time: number;
@@ -13,11 +10,6 @@ type TimerProps = {
     setIsRunning: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type TimeObject = {
-    hours: number,
-    minutes: number,
-    seconds: number
-};
 
 export default function Stopwatch({ time, setTime, isRunning, setIsRunning }: TimerProps) {
     const [hours, setHours] = useState(0);

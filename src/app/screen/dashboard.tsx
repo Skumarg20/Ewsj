@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 import { AppProvider, Router } from "@toolpad/core/AppProvider";
-import Profile from "../utils/Profile";
 import RightDashboard from "../components/RightDashboard";
 import TimeTable from "@/app/timetable/index";
 import StudyPlan from "../studyplan/page";
@@ -82,7 +81,7 @@ function PageContent({ pathname }: { pathname: string }) {
   );
 }
 
-// Navbar Item Component
+
 function NavbarItem({
   item,
   pathname,
@@ -142,7 +141,7 @@ function NavbarItem({
   );
 }
 
-// Main Dashboard Component
+
 export default function Dashboard(props: any) {
   const { window } = props;
   const router = useDemoRouter("/dashboard");
@@ -152,7 +151,7 @@ export default function Dashboard(props: any) {
 
   React.useEffect(() => {
     setIsMounted(true);
-    setIsNavbarOpen(true); // Show navbar after mount
+    setIsNavbarOpen(true); 
   }, []);
 
   const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
@@ -176,9 +175,8 @@ export default function Dashboard(props: any) {
         homeUrl: "/dashboard",
       }}
       router={router}
-      window={demoWindow}
     >
-      <div className="flex h-screen bg-white">
+      <div className="flex bg-white">
         {/* Left Navbar (Toggleable) */}
         {isMounted && (
           <motion.div
@@ -207,7 +205,7 @@ export default function Dashboard(props: any) {
           {/* Top Bar */}
           <div className="bg-white shadow-md p-2 flex justify-evenly items-center sticky top-0 z-30">
             <div className="flex justify-between items-center w-full">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 pl-4">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
@@ -221,7 +219,7 @@ export default function Dashboard(props: any) {
                   <img
                     src="https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png"
                     alt="Coginest"
-                    className="h-8 w-auto mr-2"
+                    className="h-8 w-auto "
                   />
                   <h1 className="text-lg font-bold text-indigo-600">
                     Coginest

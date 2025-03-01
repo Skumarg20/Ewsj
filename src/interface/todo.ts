@@ -18,7 +18,7 @@ export enum TodoPriority {
     description: string;
     subject: string;
     priority: TodoPriority;
-    dueDate: string;
+    due_date: string;
     status: TodoStatus;
   }
   

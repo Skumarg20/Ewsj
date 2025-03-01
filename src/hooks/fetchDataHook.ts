@@ -16,7 +16,7 @@ function useFetchData<T>({url,token,setLoading}:Props<T>) {
         const response = await fetch(url, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`,,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });

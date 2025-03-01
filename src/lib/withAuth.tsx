@@ -8,6 +8,7 @@ import toast from "react-hot-toast"; // or your preferred toast library
 const withAuth = (WrappedComponent: React.ComponentType) => {
   return function ProtectedRoute(props: any) {
     const [user, setUser] = useState<any>(null);
+    localStorage.setItem('user',JSON.stringify(user));
     const { setLoading } = useLoading();
     const router = useRouter();
 

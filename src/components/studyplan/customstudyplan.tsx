@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { FaSave, FaEdit, FaRegSmileBeam, FaTimes, FaMagic, FaRocket, FaStar } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import {RichTextEditorDemo }from '../tiptap/rich-text-editor';
 
 const CustomForm = () => {
   const [plan, setPlan] = useState('');
@@ -47,7 +48,7 @@ const CustomForm = () => {
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
-              className="bg-white p-8 rounded-2xl shadow-2xl max-w-2xl w-full border-2 border-purple-100 relative"
+              className="bg-white p-8 rounded-2xl shadow-2xl max-w-2xl w-full border-2 border-purple-100 custom-scrollbar overflow-y-auto relative h-screen"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
@@ -89,12 +90,7 @@ const CustomForm = () => {
                 <motion.div whileHover={{ scale: 1.01 }}>
                   <div className="relative group">
                     <FaEdit className="absolute top-4 left-3 text-purple-500 group-hover:text-purple-600 transition-colors" />
-                    <textarea
-                      value={plan}
-                      onChange={(e) => setPlan(e.target.value)}
-                      placeholder="✨ Write your masterpiece plan here...\n• 📘 Monday - Math Chapter 1 (2hrs)\n• 🧪 Tuesday - Physics Practicals (1.5hrs)\n• 📚 Wednesday - Literature Review\n• 🧠 Thursday - Practice Tests"
-                      className="w-full pl-10 pr-4 py-3 border-2 border-purple-100 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all resize-none min-h-[300px] bg-white text-gray-800 font-medium shadow-sm hover:shadow-purple-100 text-lg leading-relaxed"
-                    />
+                    <RichTextEditorDemo />
                     <div className="absolute right-3 top-3 text-purple-300">
                       💡
                     </div>

@@ -51,7 +51,7 @@ const WeeklyForm = ({onSubmit}:WeeklyFormProps) => {
       >
         <FaRocket className="text-lg animate-bounce" />
         <span className="font-bold">🚀 Weekly Planner</span>
-        <div className="absolute -top-2 -right-2 bg-yellow-400 tbg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-2 border-blue-100 relativeext-black px-2 rounded-full text-xs font-bold animate-bounce">
+        <div className="absolute -top-2 -right-2 bg-yellow-400 tbg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-2 border-blue-100 relativeext-black px-2  text-xs font-bold animate-bounce">
           NEW!
         </div>
       </motion.button>
@@ -70,7 +70,7 @@ const WeeklyForm = ({onSubmit}:WeeklyFormProps) => {
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
-              className=" bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-2 border-blue-100"
+              className=" bg-white p-8 h-screen rounded-2xl shadow-2xl max-w-md w-full border-2 border-blue-100 custom-scrollbar overflow-y-auto relative"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}

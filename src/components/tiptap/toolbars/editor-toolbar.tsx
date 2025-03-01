@@ -5,6 +5,7 @@ import { ToolbarProvider } from "./toolbar-provider";
 import { Editor } from "@tiptap/core";
 import { UndoToolbar } from "./undo";
 import { RedoToolbar } from "./redo";
+
 import { HeadingsToolbar } from "./headings";
 import { BlockquoteToolbar } from "./blockquote";
 import { CodeToolbar } from "./code";
@@ -21,8 +22,8 @@ import { ImagePlaceholderToolbar } from "./image-placeholder-toolbar";
 import { ColorHighlightToolbar } from "./color-and-highlight";
 import { SearchAndReplaceToolbar } from "./search-and-replace-toolbar";
 import { CodeBlockToolbar } from "./code-block";
+import { ChecklistToolbar } from "./check-list";
 import { motion } from 'framer-motion';
-import { FaUndo, FaRedo, FaHeading, FaQuoteRight, FaCode, FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaListUl, FaListOl, FaRulerHorizontal, FaAlignLeft, FaImage, FaHighlighter, FaSearch } from 'react-icons/fa';
 
 export const EditorToolbar = ({ editor }: { editor: Editor }) => {
   const toolbarVariants = {
@@ -55,7 +56,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 
               {/* Text Structure Group */}
               <motion.div className="flex items-center gap-1" variants={groupVariants} whileHover="hover">
-               
+                
                 <HeadingsToolbar />
                 <BlockquoteToolbar />
                 <CodeToolbar />
@@ -65,7 +66,6 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 
               {/* Basic Formatting Group */}
               <motion.div className="flex items-center gap-1" variants={groupVariants} whileHover="hover">
-                
                 <BoldToolbar />
                 <ItalicToolbar />
                 <UnderlineToolbar />
@@ -76,7 +76,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
 
               {/* Lists & Structure Group */}
               <motion.div className="flex items-center gap-1" variants={groupVariants} whileHover="hover">
-                
+               <ChecklistToolbar />
                 <BulletListToolbar />
                 <OrderedListToolbar />
                 <HorizontalRuleToolbar />

@@ -110,3 +110,7 @@
 .animate-float-delay {
   animation: float-delay 6s ease-in-out infinite;
 }
+
+.body {
+  background-color: white; /* Corrected */
+}

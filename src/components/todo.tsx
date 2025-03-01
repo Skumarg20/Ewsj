@@ -12,8 +12,6 @@ import {
   ExclamationCircleIcon,
   PencilIcon,
   BookOpenIcon,
-  ChevronDownIcon,
-  TrashIcon,
 } from "@heroicons/react/24/solid";
 import { useTodoStore } from "@/state/store/todosstore";
 import { useLoading } from "@/app/loader/context/loadingprovider";
@@ -43,8 +41,8 @@ export default function TodoApp() {
     useTodoStore();
   const { setLoading } = useLoading();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [statusMenuOpen, setStatusMenuOpen] = useState<string | null>(null);
-  const [priorityMenuOpen, setPriorityMenuOpen] = useState<string | null>(null);
+  // const [statusMenuOpen, setStatusMenuOpen] = useState<string | null>(null);
+  // const [priorityMenuOpen, setPriorityMenuOpen] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -74,8 +72,8 @@ export default function TodoApp() {
     if (updates.priority) updateData.priority = updates.priority;
 
     await updateTodo(todoId, updateData, setLoading);
-    setStatusMenuOpen(null);
-    setPriorityMenuOpen(null);
+    // setStatusMenuOpen(null);
+    // setPriorityMenuOpen(null);
     fetchTodos(setLoading);
   };
   const handleDelete = async (todoId: string) => {
@@ -87,31 +85,9 @@ export default function TodoApp() {
 
   const toggleForm = () => setIsFormOpen(!isFormOpen);
 
-  const getPriorityColor = (priority: Todo["priority"]) => {
-    switch (priority) {
-      case "low":
-        return "bg-green-500";
-      case "medium":
-        return "bg-yellow-500";
-      case "high":
-        return "bg-red-500";
-    }
-  };
+ 
 
-  const getStatusIcon = (status: Todo["status"]) => {
-    switch (status) {
-      case "pending":
-        return <ClockIcon className="w-5 h-5 text-gray-500" />;
-      case "in-progress":
-        return <ExclamationCircleIcon className="w-5 h-5 text-blue-500" />;
-      case "completed":
-        return <CheckCircleIcon className="w-5 h-5 text-green-500" />;
-      case "postponed":
-        return <CalendarIcon className="w-5 h-5 text-yellow-500" />;
-      case "rejected":
-        return <XMarkIcon className="w-5 h-5 text-red-500" />;
-    }
-  };
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
@@ -124,7 +100,7 @@ export default function TodoApp() {
         className="w-full p-4 mb-8 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl shadow-lg flex items-center justify-center gap-2"
       >
         <PlusIcon className="w-6 h-6" />
-        Add Todo
+        Study Goals
       </motion.button>
 
       {/* Todo Form Popup */}
@@ -145,7 +121,7 @@ export default function TodoApp() {
               {/* Header */}
               <div className="flex justify-between items-center mb-6 sticky top-0 bg-white/90 z-10 rounded-xl">
                 <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent ">
-                  Create Todo
+                  Create study goal
                 </h2>
                 <button
                   onClick={toggleForm}
@@ -256,7 +232,7 @@ export default function TodoApp() {
                   whileTap={{ scale: 0.95 }}
                   className="w-full lg:col-span-2 p-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
                 >
-                  Create Todo
+                  Create study goal
                 </motion.button>
               </form>
             </motion.div>

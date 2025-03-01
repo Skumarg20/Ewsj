@@ -6,7 +6,7 @@ type Props = {}
 
 function LoginAndSignUp({}: Props) {
   return (
-   <div className='h-screen flex items-center '>
+   <div className='max-h-full bg-white flex items-center '>
    <Login/>
    </div>
   )

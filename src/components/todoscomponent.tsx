@@ -5,7 +5,6 @@ import { CheckCircleIcon, ClipboardIcon } from 'lucide-react'
 import { ArrowPathIcon } from '@heroicons/react/20/solid'
 import {
     Todo,
-    TodoFormInputs,
     TodoPriority,
     TodoStatus,
   } from "@/interface/todo";
@@ -115,7 +114,7 @@ const TodoItem = ({ todo, handleUpdate, handleDelete }:TodoProps) => {
       </div>
       <div className="flex items-center gap-2 text-sm text-gray-500">
         <CalendarIcon className="w-4 h-4" />
-        <span>Due: {new Date(todo.dueDate).toLocaleDateString()}</span>
+        <span>Due: {new Date(todo.due_date).toLocaleDateString()}</span>
       </div>
       <div className="relative flex items-center gap-2 text-sm">
         {getStatusIcon(todo.status)}
@@ -132,7 +131,7 @@ const TodoItem = ({ todo, handleUpdate, handleDelete }:TodoProps) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg border z-10"
+              className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg border  overflow-y-auto custom-scrollbar z-50"
             >
               {statusOptions.map((status) => (
                 <button
@@ -141,7 +140,7 @@ const TodoItem = ({ todo, handleUpdate, handleDelete }:TodoProps) => {
                     handleUpdate(todo.id, { status })
                     setStatusMenuOpen(false)
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2"
+                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 "
                 >
                   {getStatusIcon(status)}
                   {status}
@@ -160,11 +159,12 @@ interface TodosProps {
     handleDelete: (id: string) => void
   }
 const Todos = ({ todos, handleUpdate, handleDelete }: TodosProps) => {
+  console.log(todos,"there are todos");
     return (
       <div className="relative z-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {todos
-            .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+            .sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime())
             .map((todo) => (
               <TodoItem
                 key={todo.id}

@@ -1,7 +1,7 @@
 "use client"
 
 import { CloseOutlined } from "@mui/icons-material";
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 
 
@@ -19,7 +19,6 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   showCrossIcon = true,
   children,
-  maxWidth = 520
 }) => {
 
   if (!isOpen) return null;

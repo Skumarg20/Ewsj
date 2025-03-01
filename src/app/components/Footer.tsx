@@ -14,7 +14,7 @@ import {
   FaRegClock
 } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { FiArrowUpRight } from "react-icons/fi";
+
 
 const Footer: FC = () => {
   const socialLinks = [
@@ -80,7 +80,7 @@ const Footer: FC = () => {
                 <FaGraduationCap className="w-8 h-8 text-cyan-400" />
               </motion.div>
               <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                EwSj Academy
+               CogeNist
               </span>
             </div>
             <p className="text-sm text-gray-300 max-w-xs">

@@ -9,15 +9,10 @@ import {
   Award,
   Users,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+
 
 const Hero = () => {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
+  
   return (
     <>
       <div className="min-h-screen bg-gray-50 rounded-xl mt-0">
