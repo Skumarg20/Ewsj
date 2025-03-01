@@ -6,9 +6,9 @@ type Props = {}
 
 function LoginAndSignUp({}: Props) {
   return (
-   <>
+   <div className='max-h-full bg-white flex items-center '>
    <Login/>
-   </>
+   </div>
   )
 }
 

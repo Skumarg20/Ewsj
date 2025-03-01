@@ -81,7 +81,7 @@ function PageContent({ pathname }: { pathname: string }) {
   );
 }
 
-// Navbar Item Component
+
 function NavbarItem({
   item,
   pathname,
@@ -141,7 +141,7 @@ function NavbarItem({
   );
 }
 
-// Main Dashboard Component
+
 export default function Dashboard(props: any) {
   const { window } = props;
   const router = useDemoRouter("/dashboard");
@@ -175,9 +175,8 @@ export default function Dashboard(props: any) {
         homeUrl: "/dashboard",
       }}
       router={router}
-      window={demoWindow}
     >
-      <div className="flex h-screen bg-white">
+      <div className="flex bg-white">
         {/* Left Navbar (Toggleable) */}
         {isMounted && (
           <motion.div

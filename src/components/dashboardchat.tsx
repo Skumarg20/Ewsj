@@ -4,8 +4,8 @@ type Props={
 }
 export default function DashBoardChat({ onStartChat }:Props) {
   return (
-    <div className="h-auto md:h-auto max-w-full flex items-center justify-center bg-gradient-to-br md:mt-5 md:pt-10 md:mb-6">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden p-6">
+  
+      <div className="w-[100%] bg-white rounded-2xl shadow-xl overflow-hidden p-6">
         <div className="flex items-center justify-center mb-4">
           <div className="bg-indigo-100 p-1 rounded-full">
             <MessageCircleQuestion className="w-8 h-8 text-indigo-600" />
@@ -28,12 +28,12 @@ export default function DashBoardChat({ onStartChat }:Props) {
         <div className="mt-6">
           <button
             onClick={onStartChat}
-            className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors duration-200 font-medium"
+            className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl hover:bg-indigo-700 transition-colors duration-200 font-medium"
           >
             Start Chat
           </button>
         </div>
       </div>
-    </div>
+   
   );
 }

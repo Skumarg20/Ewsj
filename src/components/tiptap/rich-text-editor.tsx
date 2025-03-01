@@ -20,6 +20,8 @@ import { TipTapFloatingMenu } from "@/components/tiptap/extensions/floating-menu
 import { FloatingToolbar } from "@/components/tiptap/extensions/floating-toolbar";
 import { EditorToolbar } from "./toolbars/editor-toolbar";
 import Placeholder from "@tiptap/extension-placeholder";
+import TaskItem from "@tiptap/extension-task-item";
+import TaskList from "@tiptap/extension-task-list";
 
 const extensions = [
   StarterKit.configure({
@@ -55,6 +57,8 @@ const extensions = [
   ImagePlaceholder,
   SearchAndReplace,
   Typography,
+  TaskList,
+  TaskItem.configure({ nested: true }),
 ];
 
 type RichTextEditorDemoProps = {
@@ -74,7 +78,7 @@ export function RichTextEditorDemo({
     extensions: extensions as Extension[],
     content:initialContent|| { type: "doc", content: [] },
     editorProps: {
-      attributes: { class: "max-w-full focus:outline-none" },
+      attributes: { class: "max-w-full max-h-full focus:outline-none" },
     },
     onUpdate: ({ editor }) => {
       const jsonContent = editor.getJSON();
@@ -90,7 +94,7 @@ console.log(initialContent,"this is content comming into editor page")
   return (
     <div
       className={cn(
-        "relative max-h-[calc(100vh-6rem)] text-black w-full h-auto bg-white overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0 flex flex-col items-center",
+        "relative max-h-[calc(100vh-6rem)] text-black w-full h-auto bg-white overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0 flex flex-col items-center custom-scrollbar",
         className
       )}
     >

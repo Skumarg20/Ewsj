@@ -15,9 +15,9 @@ function DashboardPage({}: Props) {
     getTimeTable(setLoading); 
   }, []);
   return (
-    <>
+    <div className='min-h-screen bg-white'>
     <Dashboard/>
-    </>
+    </div>
     
   )
 }

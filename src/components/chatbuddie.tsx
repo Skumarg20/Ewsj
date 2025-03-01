@@ -42,7 +42,7 @@ export default function ChatBuddie({ onClose }: Props) {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/study-plan/doubt",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/doubt`,
         { doubt: userMessage },
         {
           headers: { ...getAuthHeader(), "Content-Type": "application/json" },

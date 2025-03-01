@@ -12,7 +12,7 @@ import {
   Edit2,
   X,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 import { RichTextEditorDemo } from "@/components/tiptap/rich-text-editor";
 import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
@@ -46,7 +46,7 @@ function CreateFolderModal({
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed max-h-full bg-white inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md m-4">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-bold text-gray-800">Create New Folder</h3>
@@ -65,7 +65,7 @@ function CreateFolderModal({
               value={folderName}
               onChange={(e) => setFolderName(e.target.value)}
               placeholder="Enter folder name..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 
+              className="bg-white w-full px-4 py-2 rounded-lg border border-gray-200 
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
@@ -78,7 +78,7 @@ function CreateFolderModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter description..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 
+              className="bg-white w-full px-4 py-2 rounded-lg border border-gray-200 
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
@@ -502,7 +502,7 @@ if (view === "edit" && selectedNote) {
           </motion.div>
         </div>
       ) : view === "notes" && selectedSubject ? (
-        <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="max-w-4xl min-h-screen mx-auto py-8 px-4">
           <button
             onClick={() => setView("list")}
             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-6"
@@ -511,7 +511,7 @@ if (view === "edit" && selectedNote) {
             Back to Folders
           </button>
 
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="min-h-screen bg-white rounded-xl shadow-lg p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-800">
                 Notes in {selectedSubject}
@@ -533,7 +533,7 @@ if (view === "edit" && selectedNote) {
                     key={note.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="p-4 bg-gray-50 rounded-lg shadow-sm"
+                    className="p-4 bg-gray-100 rounded-xl shadow-sm"
                     onClick={() => handleViewNote(note)}
                   >
                     <h3 className="text-lg font-medium text-gray-800">{note.title}</h3>
@@ -552,7 +552,7 @@ if (view === "edit" && selectedNote) {
           </div>
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="max-w-4xl max-h-[100%] mx-auto py-8 px-4">
           <button
             onClick={() => setView("notes")}
             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-6"
@@ -569,14 +569,7 @@ if (view === "edit" && selectedNote) {
               <Calendar className="w-4 h-4" />
               <span>{new Date().toLocaleDateString()}</span>
             </div>
-
-            <div className="space-y-4 rounded-sm">
-              <RichTextEditorDemo
-                className="w-full"
-                initialContent={noteContent}
-               onContentChange={handleOnContentChange}
-              />
-              <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mb-5">
                 <input
                   type="text"
                   placeholder="Title"
@@ -586,11 +579,18 @@ if (view === "edit" && selectedNote) {
                 />
                 <button
                   onClick={handleSaveNote}
-                  className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg"
+                  className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl"
                 >
                   Save Note
                 </button>
               </div>
+            <div className="space-y-4 rounded-sm">
+              <RichTextEditorDemo
+                className="w-full max-h-[100%]"
+                initialContent={noteContent}
+               onContentChange={handleOnContentChange}
+              />
+             
             </div>
           </div>
         </div>

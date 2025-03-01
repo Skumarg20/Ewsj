@@ -389,6 +389,81 @@
   float: left;
   height: 0;
 } */
+/* Ensure task lists don't show list-style */
+/* Ensure task lists don't show list-style */
+/* Remove default list styles */
+/* Task List Styling */
+/* Ensure the task list container has no default list styling */
+/* Ensure the task list container has no default list styling */
+ul[data-type="taskList"] {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+
+/* Make each task list item a flex container */
+li[data-checked="false"],
+li[data-checked="true"] {
+  display: flex !important; /* Force flex layout */
+  align-items: center !important; /* Center items vertically */
+  gap: 0.5rem !important; /* Add spacing between checkbox and text */
+  margin: 0 !important; /* Remove default margin */
+  padding: 0 !important; /* Remove default padding */
+}
+
+/* Style the label (checkbox container) */
+li[data-checked="false"] label,
+li[data-checked="true"] label {
+  display: flex !important;
+  align-items: center !important; /* Center checkbox vertically */
+  margin: 0 !important;
+  padding: 0 !important;
+  cursor: pointer;
+}
+
+/* Style the checkbox */
+li[data-checked="false"] input[type="checkbox"],
+li[data-checked="true"] input[type="checkbox"] {
+  margin: 0 !important;
+  flex-shrink: 0; /* Prevent checkbox from shrinking */
+  cursor: pointer;
+}
+
+/* Style the text container */
+li[data-checked="false"] div,
+li[data-checked="true"] div {
+  flex-grow: 1; /* Allow text to take up remaining space */
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex; /* Make the text container a flex container */
+  align-items: center; /* Center text vertically */
+}
+
+/* Style the paragraph inside the text container */
+li[data-checked="false"] div p,
+li[data-checked="true"] div p {
+  margin: 0 !important;
+  padding: 0 !important;
+  word-break: break-word; /* Handle long text */
+}
+/* Adjust checkbox size and remove default styling */
+/* li[data-type="taskItem"] input[type="checkbox"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+} */
+
+/* Ensure the text content stays on the same line */
+/* li[data-type="taskItem"] p {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  flex-grow: 1;
+  word-break: break-word;
+} */
+
 
 /* Mobile Optimizations */
 @media (max-width: 640px) {

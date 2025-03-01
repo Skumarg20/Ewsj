@@ -89,14 +89,14 @@ const TargetedForm = ({ onSubmit }: TargetFormProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 "
             onClick={() => setIsOpen(false)}
           >
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
-              className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full border-2 border-emerald-100 relative"
+              className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full h-screen border-2 border-emerald-100 custom-scrollbar overflow-y-auto relative"
               onClick={(e) => e.stopPropagation()}
             >
               <motion.button

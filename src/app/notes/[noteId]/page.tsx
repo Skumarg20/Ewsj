@@ -78,7 +78,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({ noteData, onContentChange,handl
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-4xl min-h-[100%] bg-white mx-auto py-8 px-4">
       <button
         onClick={() => handleChangeView("notes")} 
         className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-6"
@@ -95,33 +95,33 @@ const NoteEditor: React.FC<NoteEditorProps> = ({ noteData, onContentChange,handl
           <Calendar className="w-4 h-4" />
           <span>{noteData.date || new Date().toLocaleDateString()}</span>
         </div>
+        <div className="flex items-center gap-4 mb-5">
+            <input
+              type="text"
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="flex-1 px-4 py-2 rounded-lg border border-gray-500 bg-white text-gray-800 rounded-r-xl"
 
-        <div className="space-y-4 rounded-sm">
+            />
+            <button
+              onClick={handleSaveNote}
+              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl"
+            >
+               Save
+            </button>
+          </div>
+        <div className="space-y-4 min-h-screen rounded-sm">
           {noteContent !== null ? (
             <RichTextEditorDemo
-              className="w-full"
+              className="w-full max-h-full"
               initialContent={noteContent} 
               onContentChange={handleOnContentChange}
             />
           ) : (
             <p className="text-gray-500">No content available</p>
           )}
-          <div className="flex items-center gap-4">
-            <input
-              type="text"
-              placeholder="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="flex-1 px-4 py-2 rounded-lg border border-gray-500 bg-white text-gray-800"
-
-            />
-            <button
-              onClick={handleSaveNote}
-              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg"
-            >
-               Save
-            </button>
-          </div>
+         
         </div>
       </div>
     </div>

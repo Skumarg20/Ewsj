@@ -33,6 +33,26 @@ type FormData = {
   date: string;
   message: string;
 };
+type RazorpayPaymentResponse = {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayPaymentError = {
+  error: {
+    code: string;
+    description: string;
+    source: string;
+    step: string;
+    reason: string;
+    metadata: {
+      order_id: string;
+      payment_id: string;
+    };
+  };
+};
+
 
 const BookACall = () => {
   
@@ -72,29 +92,32 @@ const BookACall = () => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     setLoading(true);
     try {
-      const orderId = await createOrderId(data);
-   console.log(orderId,"this is order id");
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY, // Ensure this is set in .env.local
-        amount: parseFloat('0.99') * 100, // Amount in paise
+      const orderId: string = await createOrderId(data);
+      console.log(orderId, "this is order id");
+  
+      const options: RazorpayOptions = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY as string,
+        amount: Math.round(parseFloat('0.99') * 100), 
         currency: 'INR',
         name: 'Mentorship Booking',
         description: 'One-on-One Call Booking',
         order_id: orderId,
-        handler: async function (response: any) {
+        handler: async (response: RazorpayPaymentResponse) => {
           try {
-            const { data: verificationData } = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/payments/verify-payment`, {
-              orderCreationId: orderId,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpayOrderId: response.razorpay_order_id,
-              razorpaySignature: response.razorpay_signature,
-            });
-             console.log(verificationData.isOk,"thisis payment done",data);
-            if (data) {
-              
+            const { data: verificationData } = await axios.post<{ isOk: boolean; message: string }>(
+              `${process.env.NEXT_PUBLIC_BASE_URL}/payments/verify-payment`,
+              {
+                orderCreationId: orderId,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpaySignature: response.razorpay_signature,
+              }
+            );
+            console.log(verificationData.isOk, "this is payment done", data);
+  
+            if (verificationData.isOk) {
               toast.success("Payment succeeded! Call scheduled successfully!");
               reset();
-             
             } else {
               toast.error(verificationData.message);
             }
@@ -112,9 +135,9 @@ const BookACall = () => {
           color: '#4F46E5', // Indigo-600
         },
       };
-
-      const paymentObject = new (window as any).Razorpay(options);
-      paymentObject.on('payment.failed', function (response: any) {
+  
+      const paymentObject = new Razorpay(options);
+      paymentObject.on('payment.failed', (response: RazorpayPaymentError) => {
         toast.error(response.error.description);
       });
       paymentObject.open();
@@ -125,7 +148,7 @@ const BookACall = () => {
       setLoading(false);
     }
   };
-
+  
   const benefits = [
     { icon: <Target className="w-8 h-8 text-indigo-500" />, title: "Personalized Strategy", description: "Get a study plan tailored just for you" },
     { icon: <BookOpen className="w-8 h-8 text-indigo-500" />, title: "Doubt Solving", description: "Clear all your conceptual doubts in real-time" },

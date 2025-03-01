@@ -100,7 +100,7 @@ export default function TodoApp() {
         className="w-full p-4 mb-8 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl shadow-lg flex items-center justify-center gap-2"
       >
         <PlusIcon className="w-6 h-6" />
-        Add Todo
+        Study Goals
       </motion.button>
 
       {/* Todo Form Popup */}
@@ -121,7 +121,7 @@ export default function TodoApp() {
               {/* Header */}
               <div className="flex justify-between items-center mb-6 sticky top-0 bg-white/90 z-10 rounded-xl">
                 <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent ">
-                  Create Todo
+                  Create study goal
                 </h2>
                 <button
                   onClick={toggleForm}
@@ -232,7 +232,7 @@ export default function TodoApp() {
                   whileTap={{ scale: 0.95 }}
                   className="w-full lg:col-span-2 p-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
                 >
-                  Create Todo
+                  Create study goal
                 </motion.button>
               </form>
             </motion.div>
