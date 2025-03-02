@@ -1,132 +1,101 @@
 "use client";
-import { useTodoStore } from "@/state/store/todosstore";
-import { Progress } from "@/components/ui/progress";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import {
-  CheckCircle,
-  BookOpen,
-  Video,
-  ClipboardCheck,
-  Edit,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-import Typography from "@mui/material/Typography";
-import CongratulationsPopup from "@/app/utils/CongratulationPop";
-import StickyNotes from "../StickyNotes";
+
+import { HiOutlineBookOpen } from "react-icons/hi";
+import { useState } from "react";
+import SessionUI from "../sessionui";
+import DashBoardChat from "@/components/dashboardchat";
+import ChatBuddie from "@/components/chatbuddie";
+import useStudyPlanStore from "@/state/store/timetablestore";
+import TodoApp from "@/components/todo";
+import { motion } from "framer-motion";
 
 const RightDashboard = () => {
-  const { todos, addTodo, toggleTodo, removeTodo, updateTodo } = useTodoStore();
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [newText, setNewText] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-
-  const completedCount: number = todos.reduce(
-    (count, items) => (items.completed ? count + 1 : count),
-    0
-  );
-  const taskCompletedPercentage: number = todos.length
-  ? (completedCount / todos.length) * 100
-  : 0;
- 
-  const handleUpdate = () => {
-    if (editingId !== null && newText.trim() !== "") {
-      updateTodo(editingId, newText);
-    }
-    setEditingId(null);
-    setNewText("");
-  };
-
-  const handleEdit = (id: number, text: string) => {
-    setEditingId(id);
-    setNewText(text);
-  };
-
-  useEffect(() => {
-    if (taskCompletedPercentage === 100) {
-      setShowPopup(true);
-    }
-  }, [taskCompletedPercentage]);
-
-  const performanceData = [
-    { subject: "Physics", score: 80 },
-    { subject: "Maths", score: 75 },
-    { subject: "Chemistry", score: 85 },
-  ];
-
+  const [showChat, setShowChat] = useState(false);
+  const { currentStudyPlan } = useStudyPlanStore();
+  // const user=localStorage.getItem('user');
+  // const fullname=JSON.parse(user)?.fullname.split(" ")[0];
+  
   return (
-    <div className="h-auto bg-slate-100 text-gray-900 p-6">
- 
-  <div className="text-2xl font-bold mb-4">Welcome Back, Sanjeev! 🚀</div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-gray-200 text-gray-900 p-4 md:p-6 lg:p-8">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-2xl md:text-3xl font-bold mb-6 md:mb-8"
+      >
+        Welcome Back 🚀
+      </motion.div>
 
- 
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
- 
-  <Card className="bg-slate-100 p-4 rounded-xl h-auto w-full">
-    <h2 className="text-lg font-semibold mb-3">📌 To-Do List</h2>
-    <ul>
-      {todos.map((task) => (
-        <li key={task.id} className="flex items-center gap-2 mb-2">
-          <button onClick={() => toggleTodo(task.id)}>
-            <CheckCircle
-              className={`w-5 h-5 ${task.completed ? "text-green-400" : "text-gray-500"}`}
-            />
-          </button>
-          {editingId === task.id ? (
-            <input
-              className="bg-slate-100 text-white p-1 rounded"
-              value={newText}
-              onChange={(e) => setNewText(e.target.value)}
-              onBlur={handleUpdate}
-              autoFocus
-            />
-          ) : (
-            <span className={task.completed ? "line-through text-gray-400" : ""}>
-              {task.text}
-            </span>
-          )}
-          <button onClick={() => handleEdit(task.id, task.text)} className="ml-2 text-yellow-400">
-            <Edit className="w-4 h-4" />
-          </button>
-          <button onClick={() => removeTodo(task.id)} className="ml-auto text-red-500">
-            X
-          </button>
-        </li>
-      ))}
-    </ul>
-    <Button className="mt-2 w-full sm:w-full bg-blue-600" onClick={() => addTodo("New Task")}>
-      Add Task
-    </Button>
-  </Card>
+      {/* Main Grid - Single Column */}
+      <div className="grid grid-cols-1 gap-6">
+        {/* Chat Section */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="w-full flex flex-col"
+        >
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            {showChat ? (
+              <ChatBuddie onClose={() => setShowChat(false)} />
+            ) : (
+              <DashBoardChat onStartChat={() => setShowChat(true)} />
+            )}
+          </div>
+        </motion.div>
 
-  {/* Learning Progress */}
-  <Card className="bg-slate-100 p-4 rounded-xl h-auto w-full">
-    <h2 className="text-lg font-semibold mb-3">📖 Learning Progress</h2>
-    <p>Today's Goal: Complete {completedCount} Topics</p>
-    <Progress value={taskCompletedPercentage} className="mt-2" />
-    <Typography variant="h6" component="h4" className="font-semibold text-lg mt-3">
-      Completed: <span className="text-green-400">{taskCompletedPercentage.toFixed()} %</span>
-    </Typography>
-    {showPopup && <CongratulationsPopup onClose={() => setShowPopup(false)} />}
-  </Card>
+        {/* SessionUI Section */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-full flex flex-col"
+        >
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <SessionUI data={currentStudyPlan?.schedule} />
+          </div>
+          <div className="flex justify-center mt-4">
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={() => (window.location.href = "/session")}
+    className="px-6 py-3 flex items-center justify-center text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full shadow-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 relative overflow-hidden"
+  >
+    {/* Shine effect on hover */}
+    <motion.div
+      className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-300"
+      style={{ borderRadius: '9999px' }}
+    />
+
+    {/* Icon and text */}
+    <HiOutlineBookOpen className="w-5 h-5 mr-2" />
+    <span className="font-semibold">Explore Study Sessions</span>
+
+    {/* Animated border */}
+    <motion.div
+      className="absolute inset-0 border-2 border-white/20 rounded-full"
+      initial={{ scale: 1 }}
+      animate={{ scale: 1.1, opacity: 0 }}
+      transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+    />
+  </motion.button>
 </div>
+        </motion.div>
 
-  <Card className="bg-slate-100 p-4 rounded-none h-auto self-start mt-5">
-      <StickyNotes />
-    </Card>
-
-  {/* Performance Analytics */}
- 
-</div>
-
+        {/* Todo Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="w-full"
+        >
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <TodoApp />
+          </div>
+        </motion.div>
+      </div>
+    </div>
   );
 };
 

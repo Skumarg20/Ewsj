@@ -1,13 +1,15 @@
+'use client'
 import React from 'react'
 import Login from '../utils/SignIn';
 
-type Props = {}
+// Use 'object' instead of '{}'
+// type Props = object;
 
-function LoginAndSignUp({}: Props) {
+function LoginAndSignUp() {
   return (
-   <>
-   <Login/>
-   </>
+    <div className='max-h-full bg-white flex items-center'>
+      <Login/>
+    </div>
   )
 }
 

@@ -1,181 +1,201 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { LuTimerReset } from "react-icons/lu";
-import { RiResetLeftLine } from "react-icons/ri";
-import { CgSandClock } from "react-icons/cg";
+import { motion } from 'framer-motion';
+import { FaPlay, FaStop, FaRedoAlt, FaHourglass } from 'react-icons/fa';
 
 type TimerProps = {
-    time: number;
-    setTime: React.Dispatch<React.SetStateAction<number>>;
-    isRunning: boolean;
-    setIsRunning: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-type TimeObject = {
-    hours: number,
-    minutes: number,
-    seconds: number
+  time: number;
+  setTime: React.Dispatch<React.SetStateAction<number>>;
+  isRunning: boolean;
+  setIsRunning: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Stopwatch({ time, setTime, isRunning, setIsRunning }: TimerProps) {
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    const [seconds, setSeconds] = useState(0);
-    const [isVisible, setIsVisible] = useState(false);
-    const [isTimerMode, setTimerMode] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isTimerMode, setTimerMode] = useState(false);
+  const [hours, setHours] = useState(0); // State for hours
+  const [minutes, setMinutes] = useState(0); // State for minutes
+  const [seconds, setSeconds] = useState(0); // State for seconds
 
-    useEffect(() => {
-        let timer: NodeJS.Timeout;
-        if (isRunning) {
-            timer = setInterval(() => {
-                setTime(prev => {
-                    if (isTimerMode) {
-                        const newTime = prev - 1000;
-                        if (newTime <= 0) {
-                            setIsRunning(false);
-                            return 0;
-                        }
-                        return newTime;
-                    }
-                    return prev + 1000;
-                });
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [isRunning, isTimerMode]);
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isRunning) {
+      timer = setInterval(() => {
+        setTime((prev) => {
+          if (isTimerMode) {
+            const newTime = prev - 1000;
+            if (newTime <= 0) {
+              setIsRunning(false);
+              return 0;
+            }
+            return newTime;
+          }
+          return prev + 1000;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isRunning, isTimerMode, setTime, setIsRunning]);
 
-    const formatTime = (time: number) => {
-        const seconds = Math.floor(time / 1000) % 60;
-        const minutes = Math.floor(time / 60000) % 60;
-        const hours = Math.floor(time / 3600000);
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
+  const formatTime = (time: number) => {
+    const seconds = Math.floor(time / 1000) % 60;
+    const minutes = Math.floor(time / 60000) % 60;
+    const hours = Math.floor(time / 3600000);
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const totalMilliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
-        setTime(totalMilliseconds);
-        setTimerMode(true);
-        setIsRunning(true);
-        setIsVisible(false);
-    };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const totalMilliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
+    setTime(totalMilliseconds);
+    setTimerMode(true);
+    setIsRunning(true);
+    setIsVisible(false);
+  };
 
-    const toggleFormAndTimer = () => {
-        setIsVisible(!isVisible);
-      
-    };
+  const toggleFormAndTimer = () => {
+    setIsVisible(!isVisible);
+  };
 
-    return (
-        <div className="flex flex-col items-center justify-center bg-slate-100 text-gray-800 p-6 rounded-lg shadow-lg h-full w-full">
-            <div className="w-full h-[60%] flex items-center justify-center text-[22vw] font-bold leading-none whitespace-nowrap">
-                {formatTime(time)}
-            </div>
-    
-            {isVisible && (
-    <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex gap-3 justify-center">
-            <div className="flex items-center space-x-1">
-                <input
-                    type="number"
-                    name="hours"
-                    value={hours}
-                    onChange={(e) => setHours(Math.max(0, parseInt(e.target.value) || 0))}
-                    className={`w-16 px-1 py-1 mr-0 border rounded-3xl text-center bg-slate-200 font-bold transition-colors ${
-                        hours > 0 ? "text-blue-600 border-blue-400" : "text-gray-700 border-blue-400"
-                    }`}
-                    min="0"
-                    placeholder="0"
-                    disabled={isRunning}
-                />
-                <span className={`text-lg font-semibold transition-colors ${hours > 0 ? "text-blue-600" : "text-gray-800"}`}>
-                    <sub>hr</sub>
-                </span>
-            </div>
+  return (
+    <div className="relative flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100 text-gray-800 p-8 rounded-3xl shadow-2xl h-full w-full overflow-hidden">
+      {/* Floating Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div
+          className="absolute top-20 left-20 w-32 h-32 bg-blue-200 rounded-full blur-xl opacity-30"
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-20 w-24 h-24 bg-purple-200 rounded-full blur-xl opacity-30"
+          animate={{ y: [0, 40, 0] }}
+          transition={{ duration: 6, repeat: Infinity }}
+        />
+      </div>
 
-            <div className="flex items-center space-x-1">
-                <input
-                    type="number"
-                    name="minutes"
-                    value={minutes}
-                    onChange={(e) => setMinutes(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
-                    className={`w-16 px-1 py-1 mr-0 border rounded-3xl text-center bg-slate-200 font-bold transition-colors ${
-                        minutes > 0 ? "text-blue-600 border-blue-400" : "text-gray-700 border-blue-400"
-                    }`}
-                    min="0"
-                    max="59"
-                    placeholder="0"
-                    disabled={isRunning}
-                />
-                <span className={`text-lg font-semibold transition-colors ${minutes > 0 ? "text-blue-600" : "text-gray-800"}`}>
-                    <sub>m</sub>
-                </span>
-            </div>
-
-            <div className="flex items-center space-x-1">
-                <input
-                    type="number"
-                    name="seconds"
-                    value={seconds}
-                    onChange={(e) => setSeconds(Math.min(59, Math.max(0, parseInt(e.target.value) || 0)))}
-                    className={`w-16 px-1 py-1 mr-0 border rounded-3xl text-center bg-slate-200 font-bold transition-colors ${
-                        seconds > 0 ? "text-blue-600 border-blue-400" : "text-gray-700 border-blue-400"
-                    }`}
-                    min="0"
-                    max="59"
-                    placeholder="0"
-                    disabled={isRunning}
-                />
-                <span className={`text-lg font-semibold transition-colors ${seconds > 0 ? "text-blue-600" : "text-gray-800"}`}>
-                    <sub>s</sub>
-                </span>
-            </div>
-        </div>
-
-        {/* Submit Button */}
-        <button 
-            type="submit"
-            className="w-full py-2 mt-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-3xl transition-all duration-300 ease-in-out"
+      {/* Timer Display */}
+      <motion.div
+        className="w-full h-[60%] flex items-center justify-center text-[22vw] font-bold leading-none bg-white/20 backdrop-blur-sm rounded-2xl mb-6"
+        animate={{ scale: isRunning ? [1, 1.05, 1] : 1 }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <motion.span
+          className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+          animate={{ opacity: [0.9, 1, 0.9] }}
+          transition={{ duration: 2, repeat: Infinity }}
         >
-            Submit
-        </button>
-    </form>
-)}    
-    
-            <div className="flex flex-col gap-4 mt-6 w-[30%]">
-                <div className="flex justify-between w-full">
-                    <button 
-                        onClick={() => setIsRunning(!isRunning)} 
-                        className={`px-5 py-3 rounded-3xl transition-all duration-300 shadow-md ${
-                           ( isRunning && !isTimerMode)
-                                ? "bg-red-600 hover:bg-red-700 shadow-red-500/50"
-                                : "bg-green-600 hover:bg-green-700 shadow-green-500/50"
-                        }`}
-                    >
-                        <LuTimerReset className="text-2xl text-white drop-shadow-lg" />
-                       
-                    </button>
-    
-                    <button 
-                        onClick={() => { setTime(0); setIsRunning(false); setTimerMode(false) }} 
-                        className="px-5 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl shadow-lg shadow-blue-500/50 transition-all duration-300"
-                    >
-                        
-                        <RiResetLeftLine className="text-2xl text-white drop-shadow-lg" />
-                        
-                    </button>
+          {formatTime(time)}
+        </motion.span>
+      </motion.div>
 
-    
-                    <button 
-                        onClick={toggleFormAndTimer}
-                        className="px-5 py-3 bg-gray-700 hover:bg-gray-800 rounded-3xl shadow-lg shadow-gray-500/50 transition-all duration-300"
-                    >
-                        
-                        <CgSandClock className="text-2xl text-white drop-shadow-lg" />
-                       
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-    
+      {isVisible && (
+        <motion.form
+          onSubmit={handleSubmit}
+          className="space-y-4 w-full max-w-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="flex gap-3 justify-center">
+            {[
+              { type: 'hours', value: hours, setter: setHours },
+              { type: 'minutes', value: minutes, setter: setMinutes },
+              { type: 'seconds', value: seconds, setter: setSeconds },
+            ].map(({ type, value, setter }) => (
+              <motion.div
+                key={type}
+                className="flex items-center space-x-1"
+                whileHover={{ y: -3 }}
+              >
+                <motion.input
+                  type="number"
+                  name={type}
+                  value={value}
+                  onChange={(e) => {
+                    const newValue = Math.max(0, parseInt(e.target.value)) || 0;
+                    if (type === 'minutes' || type === 'seconds') {
+                      setter(Math.min(59, newValue));
+                    } else {
+                      setter(newValue);
+                    }
+                  }}
+                  className={`w-16 px-1 py-2 border-2 rounded-3xl text-center font-bold transition-all ${
+                    value > 0
+                      ? 'text-blue-600 border-blue-400 bg-blue-50'
+                      : 'text-gray-700 border-blue-200 bg-white'
+                  }`}
+                  min="0"
+                  max={type !== 'hours' ? '59' : undefined}
+                  placeholder="0"
+                  disabled={isRunning}
+                />
+                <span
+                  className={`text-sm font-semibold ${
+                    value > 0 ? 'text-blue-600' : 'text-gray-600'
+                  }`}
+                >
+                  {type.charAt(0)}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.button
+            type="submit"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold text-lg rounded-3xl shadow-lg transition-all"
+          >
+            Start Timer
+          </motion.button>
+        </motion.form>
+      )}
+
+      {/* Control Buttons */}
+      <motion.div className="flex gap-4 mt-6 w-full max-w-md justify-center">
+        {[
+          {
+            action: () => setIsRunning(!isRunning),
+            icon: isRunning ? <FaStop /> : <FaPlay />,
+            color: isRunning ? 'bg-red-500' : 'bg-green-500',
+            label: isRunning ? 'Stop' : 'Start',
+          },
+          {
+            action: () => {
+              setTime(0);
+              setIsRunning(false);
+              setTimerMode(false);
+            },
+            icon: <FaRedoAlt />,
+            color: 'bg-blue-500',
+            label: 'Reset',
+          },
+          {
+            action: toggleFormAndTimer,
+            icon: <FaHourglass />,
+            color: 'bg-purple-500',
+            label: 'Mode',
+          },
+        ].map((btn) => (
+          <motion.button
+            key={btn.label}
+            onClick={btn.action}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className={`p-4 rounded-2xl text-white shadow-xl transition-colors ${btn.color} hover:${btn.color.replace('500', '600')}`}
+          >
+            <span className="text-2xl">{btn.icon}</span>
+          </motion.button>
+        ))}
+      </motion.div>
+
+      {/* Progress Indicator */}
+      <div className="absolute bottom-0 left-0 right-0 h-2 bg-gray-200">
+        <motion.div
+          className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+          animate={{ width: isRunning ? '100%' : '0%' }}
+          transition={{ duration: time }}
+        />
+      </div>
+    </div>
+  );
 }

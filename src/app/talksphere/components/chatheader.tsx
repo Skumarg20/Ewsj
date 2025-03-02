@@ -11,7 +11,7 @@ interface ChatHeaderProps {
   name:string,
   image?:string
 }
-const ChatHeader = ({ isNavOpen, setIsNavOpen,name,image }: ChatHeaderProps) => {
+const ChatHeader = ({ name }: ChatHeaderProps) => {
   return (
     <div className="flex items-center justify-between p-4 border-b bg-white">
       <div className="flex items-center space-x-3">
