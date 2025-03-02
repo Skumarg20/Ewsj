@@ -1,20 +1,34 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { useLoading } from "@/app/loader/context/loadingprovider";
-import toast from "react-hot-toast"; // or your preferred toast library
+import toast from "react-hot-toast";
 
-const withAuth = (WrappedComponent: React.ComponentType) => {
-  return function ProtectedRoute(props: any) {
-    const [user, setUser] = useState<any>(null);
-    localStorage.setItem('user',JSON.stringify(user));
+
+interface JwtUser {
+  sub: string;           
+  username: string;      
+  fullname: string;     
+  email?: string;         
+  phonenumber?: string;   
+  studentclass?: string;  
+  exam?: string;          
+  iat: number;          
+  exp: number;          
+}
+
+
+const withAuth = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+  return function ProtectedRoute(props: P) {
+    const [user, setUser] = useState<JwtUser | null>(null);
     const { setLoading } = useLoading();
     const router = useRouter();
 
-    const checkTokenValidity = (token: string) => {
+   
+   const checkTokenValidity = useCallback((token: string): boolean => {
       try {
-        const decodedUser: any = jwtDecode(token);
+        const decodedUser: JwtUser = jwtDecode<JwtUser>(token);
         const isTokenExpired = decodedUser.exp * 1000 < Date.now();
 
         if (isTokenExpired) {
@@ -25,14 +39,15 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
         }
 
         setUser(decodedUser);
+        localStorage.setItem("user", JSON.stringify(decodedUser));
         return true;
-      } catch (error) {
+      } catch {
         toast.error("Invalid session. Please log in again.");
         localStorage.removeItem("token");
         router.replace("/login");
         return false;
       }
-    };
+    }, [router]);
 
     useEffect(() => {
       const token = localStorage.getItem("token");
@@ -47,7 +62,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
 
       const isValid = checkTokenValidity(token);
       setLoading(!isValid);
-    }, [router, setLoading]);
+    }, [router, setLoading, checkTokenValidity]);
 
     useEffect(() => {
       const token = localStorage.getItem("token");
@@ -62,7 +77,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
       }, 60000);
 
       return () => clearInterval(interval);
-    }, [router]);
+    }, [router, checkTokenValidity]);
 
     return user ? <WrappedComponent {...props} /> : null;
   };

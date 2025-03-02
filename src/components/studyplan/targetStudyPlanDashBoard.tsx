@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FaBook, FaRunning, FaClock, FaSchool, FaCalendarAlt, FaBullseye } from 'react-icons/fa';
+import { FaBook, FaRunning, FaClock, FaSchool, FaCalendarAlt } from 'react-icons/fa';
 import { targetedStudyPlan } from '@/interface/studyPlan';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 const TargetedStudyDashboard = ({ data }: Props) => {
     console.log(data,"this is targeted data");
-    const { dailyHours, dailyPlan, chapters, schoolSchedule, subjects, dueDate } = data;
+    const { dailyHours, dailyPlan, chapters, schoolSchedule, subjects, due_date } = data;
   
     const containerVariants = {
       hidden: { opacity: 0 },
@@ -37,12 +37,12 @@ const TargetedStudyDashboard = ({ data }: Props) => {
               <FaCalendarAlt className="w-12 h-12 text-emerald-200" />
               <div>
                 <h1 className="text-3xl font-bold tracking-tight">Targeted Study Plan</h1>
-                <p className="mt-2 opacity-90 text-emerald-100">"Precision in planning leads to perfection."</p>
+                <p className="mt-2 opacity-90 text-emerald-100">&quot;Precision in planning leads to perfection.&quot;</p>
               </div>
             </div>
             <div className="bg-emerald-800/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-emerald-400/30">
               <p className="text-sm text-emerald-100">Due Date</p>
-              <p className="font-semibold text-lg text-white">{new Date(dueDate).toLocaleDateString()}</p>
+              {/* <p className="font-semibold text-lg text-white">{new Date(due_date).toLocaleDateString()}</p> */}
             </div>
           </div>
         </motion.header>

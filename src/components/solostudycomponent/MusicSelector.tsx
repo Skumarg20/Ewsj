@@ -44,24 +44,25 @@ const MusicSelector: React.FC<MusicSelectorProps> = ({ currentMusic, onSelect, o
   const [previewMusic, setPreviewMusic] = React.useState<string | null>(null);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
-  // Handle preview playback
+  // Handle preview playback with proper ref handling
   React.useEffect(() => {
-    if (audioRef.current) {
+    const audio = audioRef.current; // Capture the current audio element
+    if (audio) {
       if (previewMusic) {
-        audioRef.current.src = previewMusic;
-        audioRef.current.volume = 0.5;
-        audioRef.current.play().catch(e => {
+        audio.src = previewMusic;
+        audio.volume = 0.5;
+        audio.play().catch(e => {
           console.log("Trying to play audio:", previewMusic);
           console.error("Audio preview failed:", e);
         });
       } else {
-        audioRef.current.pause();
+        audio.pause();
       }
     }
     
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
+      if (audio) { // Use the captured audio variable in cleanup
+        audio.pause();
       }
     };
   }, [previewMusic]);
@@ -152,7 +153,6 @@ const MusicSelector: React.FC<MusicSelectorProps> = ({ currentMusic, onSelect, o
           </div>
         </div>
         
-        {/* Hidden audio element for preview */}
         <audio ref={audioRef} />
       </div>
     </div>

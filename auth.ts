@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -22,7 +22,7 @@ export const { auth, signIn, signOut } = NextAuth({
 
         try {
           const { data } = await axios.post(
-            'http://localhost:5000/auth/signin',
+            `${process.env.NEXT_PUBLIC_BASE_URL}/auth/signin`,
             { email, password }, 
             { headers: { 'Content-Type': 'application/json' } }
           );
@@ -39,7 +39,11 @@ export const { auth, signIn, signOut } = NextAuth({
             token: data.token, 
           };
         } catch (error) {
-          console.error('Error during authentication:', error?.response?.data || error.message);
+          const axiosError = error as AxiosError;
+          console.error(
+            'Error during authentication:', 
+            axiosError.response?.data || axiosError.message
+          );
           return null;
         }
       },

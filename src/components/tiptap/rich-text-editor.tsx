@@ -99,6 +99,7 @@ console.log(initialContent,"this is content comming into editor page")
       )}
     >
       <EditorToolbar editor={editor} />
+      <FloatingToolbar editor={editor} />
       <TipTapFloatingMenu editor={editor} />
       <EditorContent
         editor={editor}

@@ -1,21 +1,36 @@
-'use client';
-
-import { useState } from 'react';
-import { FaSave, FaEdit, FaRegSmileBeam, FaTimes, FaMagic, FaRocket, FaStar } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
-import {RichTextEditorDemo }from '../tiptap/rich-text-editor';
+"use client";
+import { useState } from "react";
+import { FaSave, FaEdit, FaRegSmileBeam, FaTimes, FaMagic, FaRocket, FaStar } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
+import { RichTextEditorDemo } from "../tiptap/rich-text-editor";
+import { useToast } from "@/hooks/use-toast"; // Ensure this path is correct
 
 const CustomForm = () => {
-  const [plan, setPlan] = useState('');
+  const [plan, setPlan] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast(); // Destructure toast from useToast hook
 
   const handleSave = async () => {
     setLoading(true);
-    await axios.post('http://localhost:3000/api/custom-plan', { plan });
-    setLoading(false);
-    alert('Plan saved successfully! 🎉');
+    try {
+      await axios.post("http://localhost:3000/api/custom-plan", { plan });
+      // toast({
+      //   title: "Success!",
+      //   description: "Plan saved successfully! 🎉",
+      //   variant: "success", // Corrected typo from 'varient' to 'variant'
+      // });
+    } catch (error) {
+      console.error("Failed to save plan:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save plan.",
+        variant: "destructive", // Corrected typo from 'varient' to 'variant'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -48,7 +63,7 @@ const CustomForm = () => {
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
-              className="bg-white p-8 rounded-2xl shadow-2xl max-w-2xl w-full border-2 border-purple-100 custom-scrollbar overflow-y-auto relative h-screen"
+              className="bg-white p-8 rounded-2xl shadow-2xl max-w-2xl w-full border-2 border-purple-100 custom-scrollbar overflow-y-auto relative max-h-[90vh]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
@@ -80,7 +95,7 @@ const CustomForm = () => {
                 <p className="text-gray-600 mt-2 flex items-center justify-center gap-2">
                   <FaRegSmileBeam className="text-yellow-400 animate-bounce" />
                   <span className="bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 rounded-full">
-                    "Craft your path to success!"
+                  &quot;Craft your path to success!&quot;
                   </span>
                 </p>
               </div>
@@ -90,7 +105,10 @@ const CustomForm = () => {
                 <motion.div whileHover={{ scale: 1.01 }}>
                   <div className="relative group">
                     <FaEdit className="absolute top-4 left-3 text-purple-500 group-hover:text-purple-600 transition-colors" />
-                    <RichTextEditorDemo />
+                    {/* <RichTextEditorDemo
+                      value={plan}
+                      onChange={(content: string) => setPlan(content)}
+                    /> */}
                     <div className="absolute right-3 top-3 text-purple-300">
                       💡
                     </div>
@@ -133,7 +151,7 @@ const CustomForm = () => {
                     <h4 className="text-xl font-bold">Masterpiece Preview</h4>
                   </div>
                   <div className="space-y-3">
-                    {plan.split('\n').map((line, index) => (
+                    {plan.split("\n").map((line, index) => (
                       <motion.div
                         key={index}
                         initial={{ x: -20 }}
@@ -141,7 +159,7 @@ const CustomForm = () => {
                         className="flex items-start gap-2 p-3 bg-white rounded-lg shadow-sm border border-purple-100"
                       >
                         <div className="text-purple-500 pt-1">
-                          {index % 4 === 0 ? '📝' : index % 4 === 1 ? '🎯' : index % 4 === 2 ? '📌' : '✅'}
+                          {index % 4 === 0 ? "📝" : index % 4 === 1 ? "🎯" : index % 4 === 2 ? "📌" : "✅"}
                         </div>
                         <span className="font-medium text-gray-700">{line}</span>
                       </motion.div>
@@ -158,7 +176,7 @@ const CustomForm = () => {
               <div className="mt-8 text-center text-sm text-gray-600 flex flex-col items-center gap-2">
                 <div className="flex items-center gap-2 bg-purple-100 px-4 py-2 rounded-full">
                   <FaRegSmileBeam className="text-yellow-500" />
-                  <span>"Your imagination is the limit! 💫</span>
+                  <span>&quot;Your imagination is the limit! 💫&quot;</span>
                 </div>
                 <motion.div
                   animate={{ rotate: [0, 15, -15, 0] }}

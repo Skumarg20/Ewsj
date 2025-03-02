@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLoading } from "./context/loadingprovider";
 import { motion } from "framer-motion";
 
@@ -9,25 +9,29 @@ const LoadingSpinner = () => {
   const [progress, setProgress] = useState(0);
   const [loadingText, setLoadingText] = useState("Initializing...");
 
-  const loadingMessages = [
-    "Loading resources...",
-    "Optimizing performance...",
-    "Fetching data...",
-    "Almost there...",
-    "Finalizing setup...",
-  ];
+  // Memoize the loadingMessages array to avoid recreating it on every render
+  const loadingMessages = useMemo(
+    () => [
+      "Loading resources...",
+      "Optimizing performance...",
+      "Fetching data...",
+      "Almost there...",
+      "Finalizing setup...",
+    ],
+    [] // Empty dependency array ensures it's only created once
+  );
 
   useEffect(() => {
     if (isLoading) {
       setProgress(0); // Reset progress on start
-      let interval = setInterval(() => {
+      const interval = setInterval(() => {
         setProgress((prev) => (prev < 100 ? prev + 1 : 100));
         setLoadingText(loadingMessages[Math.floor(Math.random() * loadingMessages.length)]);
-      }, 300); // Updates every 10ms
+      }, 800); // Updates every 800ms
 
       return () => clearInterval(interval);
     }
-  }, [isLoading]);
+  }, [isLoading, loadingMessages]); // Now loadingMessages is stable
 
   if (!isLoading) return null;
 

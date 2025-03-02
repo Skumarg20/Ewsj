@@ -2,7 +2,14 @@
 import * as React from "react";
 import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
-import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
+import toast, { Toaster } from "react-hot-toast";
+
+// Define interface for decoded token
+interface DecodedToken {
+  username?: string;
+  name?: string;
+  email?: string;
+}
 
 interface UserDetails {
   username: string;
@@ -11,26 +18,22 @@ interface UserDetails {
 
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [userDetails, setUserDetails] = React.useState<UserDetails | null>(
-    null
-  );
+  const [userDetails, setUserDetails] = React.useState<UserDetails | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
     const token = localStorage.getItem("token");
-    
 
     if (token) {
       try {
-        const decodedToken: any = jwtDecode(token);
-        
+        const decodedToken: DecodedToken = jwtDecode(token);
 
         setUserDetails({
           username: decodedToken.username || decodedToken.name || "User",
           email: decodedToken.email || "No email",
         });
-      } catch (error) {
-      
+      } catch {
+        // Removed unused error variable
         setUserDetails({
           username: "Guest",
           email: "No email",
@@ -51,14 +54,14 @@ const ProfileDropdown = () => {
     setIsLoading(true);
 
     toast.success("Logout successful!", {
-      duration: 2000, // 2 seconds
-      position: "top-center", // Centered horizontally at the top
+      duration: 2000,
+      position: "top-center",
       style: {
         position: "fixed",
         top: "50%",
         left: "50%",
-        transform: "translate(-50%, -50%)", // Fully center the toast
-        zIndex: 9999, // Ensure it’s on top
+        transform: "translate(-50%, -50%)",
+        zIndex: 9999,
       },
     });
 
@@ -70,10 +73,8 @@ const ProfileDropdown = () => {
 
   return (
     <div className="relative">
-    
       <Toaster />
 
-     
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}

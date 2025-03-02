@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axios, { AxiosError } from "axios"; // Import AxiosError
 import { getAuthHeader } from "../../lib/api";
 import { StudyPlanInterface, StudySession } from "@/interface/studysession";
 
@@ -8,9 +8,16 @@ interface StudyPlanState {
   studyPlan: StudyPlanInterface | null;
   currentStudyPlan: StudyPlanInterface | null;
   setFormData: (data: StudyPlanInterface | null) => void;
-  saveStudyPlan: (setLoading: (loading: boolean) => void,generatedTimeTable:StudyPlanInterface) => Promise<StudyPlanInterface | void>;
+  saveStudyPlan: (
+    setLoading: (loading: boolean) => void,
+    generatedTimeTable: StudyPlanInterface
+  ) => Promise<StudyPlanInterface | void>;
   getTimeTable: (setLoading: (loading: boolean) => void) => Promise<void>;
-  updateSession: (sessionId: string, updatedData: Partial<StudySession>, setLoading: (loading: boolean) => void) => Promise<void>;
+  updateSession: (
+    sessionId: string,
+    updatedData: Partial<StudySession>,
+    setLoading: (loading: boolean) => void
+  ) => Promise<void>;
 }
 
 const useStudyPlanStore = create<StudyPlanState>((set, get) => ({
@@ -20,8 +27,7 @@ const useStudyPlanStore = create<StudyPlanState>((set, get) => ({
 
   setFormData: (data) => set({ formData: data }),
 
-  saveStudyPlan: async (setLoading,generatedTimeTable) => {
-    
+  saveStudyPlan: async (setLoading, generatedTimeTable) => {
     if (!generatedTimeTable) {
       console.error("No study plan available to save!");
       return;
@@ -42,7 +48,8 @@ const useStudyPlanStore = create<StudyPlanState>((set, get) => ({
         return response.data;
       }
     } catch (error) {
-      console.error("Error saving study plan:", error?.response?.data || error);
+      const axiosError = error as AxiosError; // Type the error as AxiosError
+      console.error("Error saving study plan:", axiosError.response?.data || axiosError.message);
     } finally {
       setLoading(false);
     }
@@ -62,7 +69,8 @@ const useStudyPlanStore = create<StudyPlanState>((set, get) => ({
         set({ currentStudyPlan: response.data });
       }
     } catch (error) {
-      console.error("error getting data", error);
+      const axiosError = error as AxiosError; // Type the error as AxiosError
+      console.error("error getting data", axiosError.response?.data || axiosError.message);
     } finally {
       setLoading(false);
     }
@@ -108,7 +116,8 @@ const useStudyPlanStore = create<StudyPlanState>((set, get) => ({
         set({ currentStudyPlan: { ...currentStudyPlan, schedule: updatedSchedule } });
       }
     } catch (error) {
-      console.error("Error updating session:", error?.response?.data || error);
+      const axiosError = error as AxiosError; // Type the error as AxiosError
+      console.error("Error updating session:", axiosError.response?.data || axiosError.message);
     } finally {
       setLoading(false);
     }

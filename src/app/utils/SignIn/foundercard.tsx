@@ -2,11 +2,15 @@
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Image from "next/image"; // Added Next.js Image import
+
 const MotivationalCard = () => {
   const [isVisible, setIsVisible] = useState(false);
+  
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -21,7 +25,7 @@ const MotivationalCard = () => {
               Daily Wisdom
             </span>
             <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-              "The Future Belongs To Those Who Believe In The Beauty Of Their Dreams"
+            &quot;The Future Belongs To Those Who Believe In The Beauty Of Their Dreams&quot;
             </h1>
             <p className="text-gray-600 leading-relaxed">
               Success is not about the destination, but the transformation that occurs during the journey. Every step forward is a victory in itself.
@@ -29,10 +33,12 @@ const MotivationalCard = () => {
           </div>
           <div className="relative">
             <div className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-gray-100 shadow-sm">
-              <img
+              <Image
                 src="/founder.jpg"
                 alt="Founder"
-                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                width={96} // Specify width (24 * 4 for pixel density)
+                height={96} // Specify height (24 * 4 for pixel density)
+                className="object-cover transform hover:scale-105 transition-transform duration-300"
               />
             </div>
             <div className="text-center mt-4 space-y-1">
@@ -48,4 +54,5 @@ const MotivationalCard = () => {
     </motion.div>
   );
 };
+
 export default MotivationalCard;

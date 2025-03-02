@@ -3,7 +3,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { 
   FaBookOpen, 
-  FaRegClock, 
   FaChartLine,
   FaStickyNote,
   FaCalendarAlt
@@ -15,35 +14,16 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 
+// Removed unused props from type definition
 type Props = {
-  timestamp?: string;
-  topic?: string;
-  activity?: string;
-  subject?: string;
-  image?: string;
-  notes?: string;
   notesCardClass?: string;
   notesClass?: string;
-  timestampClass?: string;
   topicClass?: string;
-  activityClass?: string;
-  subjectClass?: string;
-  imageClass?: string;
   cardClass?: string;
 };
 
 function SessionCard({
-  timestamp,
-  topic,
-  activity,
-  subject,
-  image,
-  notes,
-  timestampClass = "text-sky-100 text-sm font-medium",
   topicClass = "text-[2rem] font-bold text-[#7FE0ED]",
-  activityClass = "text-xl font-semibold text-white",
-  subjectClass = "text-rose-300 text-lg",
-  imageClass = "w-32 h-32 object-contain",
   cardClass = "border-none",
   notesCardClass = "bg-[#6fcedf] p-4 rounded-2xl mt-4",
   notesClass = "text-sky-100 text-base",
@@ -55,7 +35,6 @@ function SessionCard({
       whileHover={{ scale: 1.02 }}
       className="relative overflow-hidden group"
     >
-      {/* Floating Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
           className="absolute top-4 left-4 text-white/10"
@@ -123,7 +102,6 @@ function SessionCard({
             </motion.div>
           </div>
 
-          {/* Animated Progress Dots */}
           <div className="flex gap-2 px-8 pb-4">
             {[...Array(5)].map((_, i) => (
               <motion.div

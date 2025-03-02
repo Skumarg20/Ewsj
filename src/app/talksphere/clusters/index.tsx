@@ -2,9 +2,9 @@
 
 import React from 'react'
 import ChatComponent from '../components/chatcomponent'
-type Props = {}
+// type Props = {}
 
-export default function Clusters({}: Props) {
+export default function Clusters() {
   return (
     <div>
         <ChatComponent/>

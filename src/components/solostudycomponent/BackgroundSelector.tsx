@@ -1,5 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
+import Image from 'next/image'; // Added Next.js Image import
 
 interface BackgroundSelectorProps {
   currentBackground: string;
@@ -58,9 +59,11 @@ const BackgroundSelector: React.FC<BackgroundSelectorProps> = ({ currentBackgrou
               className={`relative cursor-pointer rounded-lg overflow-hidden h-40 transition-all ${currentBackground === bg.url ? 'ring-4 ring-blue-500' : 'hover:opacity-90'}`}
               onClick={() => onSelect(bg.url)}
             >
-              <img 
+              <Image 
                 src={bg.url} 
                 alt={bg.name} 
+                width={320}  // Added width (2x h-40 for better quality)
+                height={160} // Matches h-40 (10rem = 160px at 16px/rem)
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2">

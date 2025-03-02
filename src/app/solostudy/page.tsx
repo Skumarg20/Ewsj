@@ -16,12 +16,10 @@ interface Settings {
 }
 
 const SoloStudy: React.FC = () => {
- 
   const [mode, setMode] = useState<Mode>('pomodoro');
   const [timeLeft, setTimeLeft] = useState(25 * 60); 
   const [isActive, setIsActive] = useState(false);
   const [completedPomodoros, setCompletedPomodoros] = useState(0);
-
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showMusicSelector, setShowMusicSelector] = useState(false);
@@ -44,7 +42,6 @@ const SoloStudy: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const appRef = useRef<HTMLDivElement | null>(null);
 
-  // Initialize timer based on mode
   useEffect(() => {
     switch (mode) {
       case 'pomodoro':
@@ -69,52 +66,46 @@ const SoloStudy: React.FC = () => {
     } else if (isActive && timeLeft === 0) {
       if (mode === 'pomodoro') {
         setCompletedPomodoros((prev) => prev + 1);
-
-        // After 4 pomodoros, take a long break
         if ((completedPomodoros + 1) % 4 === 0) {
           setMode('longBreak');
-          if (settings.autoStartBreaks) setIsActive(true);
-          else setIsActive(false);
+          setIsActive(settings.autoStartBreaks);
         } else {
           setMode('shortBreak');
-          if (settings.autoStartBreaks) setIsActive(true);
-          else setIsActive(false);
+          setIsActive(settings.autoStartBreaks);
         }
       } else {
-        // Break completed, back to pomodoro
         setMode('pomodoro');
-        if (settings.autoStartPomodoros) setIsActive(true);
-        else setIsActive(false);
+        setIsActive(settings.autoStartPomodoros);
       }
     }
 
     return () => clearInterval(interval);
   }, [isActive, timeLeft, mode, completedPomodoros, settings]);
 
-  // Music player logic
+  // Fixed music player useEffect
   useEffect(() => {
-    if (audioRef.current) {
+    const audio = audioRef.current;
+    if (audio) {
       if (music && isActive) {
-        audioRef.current.src = music;
-        audioRef.current.loop = true;
-        audioRef.current.volume = 0.5;
-        audioRef.current.play().catch((e) => {
+        audio.src = music;
+        audio.loop = true;
+        audio.volume = 0.5;
+        audio.play().catch((e) => {
           console.log('Trying to play audio:', music);
           console.error('Audio play failed:', e);
         });
       } else {
-        audioRef.current.pause();
+        audio.pause();
       }
     }
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
+      if (audio) {
+        audio.pause();
       }
     };
   }, [music, isActive]);
 
-  // Fullscreen logic
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       appRef.current?.requestFullscreen().catch((err) => {
@@ -127,19 +118,16 @@ const SoloStudy: React.FC = () => {
     }
   };
 
-  // Format time as MM:SS
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Toggle timer
   const toggleTimer = () => {
     setIsActive(!isActive);
   };
 
-  // Reset timer
   const resetTimer = () => {
     setIsActive(false);
     switch (mode) {
@@ -154,7 +142,6 @@ const SoloStudy: React.FC = () => {
         break;
     }
   };
-
 
   const updateSettings = (newSettings: Settings) => {
     setSettings(newSettings);
@@ -276,7 +263,6 @@ const SoloStudy: React.FC = () => {
         </div>
       </div>
 
-      {/* Background Selector Modal */}
       {showBackgroundSelector && (
         <BackgroundSelector
           currentBackground={background}
@@ -285,7 +271,6 @@ const SoloStudy: React.FC = () => {
         />
       )}
 
-      {/* Music Selector Modal */}
       {showMusicSelector && (
         <MusicSelector
           currentMusic={music}
@@ -294,7 +279,6 @@ const SoloStudy: React.FC = () => {
         />
       )}
 
-      {/* Settings Modal */}
       {showSettings && (
         <SettingsPanel
           settings={settings}
@@ -303,7 +287,6 @@ const SoloStudy: React.FC = () => {
         />
       )}
 
-      {/* Hidden audio element for music */}
       <audio ref={audioRef} />
     </div>
   );

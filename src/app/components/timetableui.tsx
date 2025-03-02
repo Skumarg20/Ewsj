@@ -5,7 +5,7 @@ import TimeTables from "./utils/table";
 import TypographyBlockquote from "./utils/quote";
 
 
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type Props = {
   data: any;
 };

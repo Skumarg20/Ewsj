@@ -25,6 +25,25 @@ import { toast } from 'sonner';
 import Script from 'next/script';
 import axios from 'axios';
 
+// Define RazorpayOptions interface
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  handler: (response: RazorpayPaymentResponse) => void;
+  prefill: {
+    name: string;
+    email: string;
+    contact: string;
+  };
+  theme: {
+    color: string;
+  };
+}
+
 type FormData = {
   name: string;
   email: string;
@@ -33,6 +52,7 @@ type FormData = {
   date: string;
   message: string;
 };
+
 type RazorpayPaymentResponse = {
   razorpay_payment_id: string;
   razorpay_order_id: string;
@@ -53,11 +73,18 @@ type RazorpayPaymentError = {
   };
 };
 
+// Declare Razorpay type for TypeScript
+declare global {
+  interface Window {
+    Razorpay: new (options: RazorpayOptions) => {
+      open: () => void;
+      on: (event: string, callback: (response: RazorpayPaymentError) => void) => void;
+    };
+  }
+}
 
 const BookACall = () => {
-  
   const [loading, setLoading] = useState(false);
-  // const [formData, setFormData] = useState<FormData | null>(null);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -72,7 +99,7 @@ const BookACall = () => {
   const createOrderId = async (data: FormData) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/payments/create-order`, {
-        amount: parseFloat('0.99') * 100, 
+        amount: parseFloat('0.99') * 100,
         name: data.name,
         email: data.email,
         phoneNumber: data.phone,
@@ -81,7 +108,7 @@ const BookACall = () => {
         message: data.message,
       });
       console.log('Order created:', response.data);
-      console.log(response.data.order.id,"this is order id");
+      console.log(response.data.order.id, "this is order id");
       return response.data.order.id;
     } catch (error) {
       console.error('Error creating order:', error);
@@ -94,10 +121,10 @@ const BookACall = () => {
     try {
       const orderId: string = await createOrderId(data);
       console.log(orderId, "this is order id");
-  
+
       const options: RazorpayOptions = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY as string,
-        amount: Math.round(parseFloat('0.99') * 100), 
+        amount: Math.round(parseFloat('0.99') * 100),
         currency: 'INR',
         name: 'Mentorship Booking',
         description: 'One-on-One Call Booking',
@@ -114,7 +141,7 @@ const BookACall = () => {
               }
             );
             console.log(verificationData.isOk, "this is payment done", data);
-  
+
             if (verificationData.isOk) {
               toast.success("Payment succeeded! Call scheduled successfully!");
               reset();
@@ -135,8 +162,8 @@ const BookACall = () => {
           color: '#4F46E5', // Indigo-600
         },
       };
-  
-      const paymentObject = new Razorpay(options);
+
+      const paymentObject = new window.Razorpay(options);
       paymentObject.on('payment.failed', (response: RazorpayPaymentError) => {
         toast.error(response.error.description);
       });
@@ -148,7 +175,7 @@ const BookACall = () => {
       setLoading(false);
     }
   };
-  
+
   const benefits = [
     { icon: <Target className="w-8 h-8 text-indigo-500" />, title: "Personalized Strategy", description: "Get a study plan tailored just for you" },
     { icon: <BookOpen className="w-8 h-8 text-indigo-500" />, title: "Doubt Solving", description: "Clear all your conceptual doubts in real-time" },

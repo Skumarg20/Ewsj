@@ -10,10 +10,10 @@ import {
   FaTasks,
   FaChartLine,
 } from "react-icons/fa"; // Ensure react-icons/fa is installed
-
+import { ReactElement } from 'react';
 // Define types for section data
 interface Feature {
-  icon: JSX.Element;
+  icon: ReactElement;
   title: string;
   description: string;
 }

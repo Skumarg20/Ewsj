@@ -1,10 +1,10 @@
-'use client'
-import React, { useState, useEffect, useRef } from 'react';
-import { DndContext, useDraggable } from '@dnd-kit/core';
-import { 
-  Clock, 
-  BookOpen, 
-  CheckCircle, 
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import { DndContext, useDraggable } from "@dnd-kit/core";
+import {
+  Clock,
+  BookOpen,
+  CheckCircle,
   GraduationCap,
   ScrollText,
   Quote,
@@ -12,59 +12,69 @@ import {
   BarChart3,
   Hourglass,
   Timer,
-  Brain
-} from 'lucide-react';
-import { StudyPlanInterface, StudySession } from '@/interface/studysession';
+  Brain,
+} from "lucide-react";
+import { StudyPlanInterface, StudySession } from "@/interface/studysession";
 
-function TimeBlock({ session, onStartSession }: { session: StudySession; onStartSession: (duration: number) => void }) {
+function TimeBlock({
+  session,
+  onStartSession,
+}: {
+  session: StudySession;
+  onStartSession: (duration: number) => void;
+}) {
   const getSubjectColor = (subject: string) => {
     const colors = {
-      'Physics': 'from-blue-500 to-cyan-500',
-      'Chemistry': 'from-purple-500 to-pink-500',
-      'Maths': 'from-green-500 to-emerald-500',
-      'Break': 'from-gray-400 to-gray-500',
-      'Revision': 'from-amber-500 to-orange-500',
+      Physics: "from-blue-500 to-cyan-500",
+      Chemistry: "from-purple-500 to-pink-500",
+      Maths: "from-green-500 to-emerald-500",
+      Break: "from-gray-400 to-gray-500",
+      Revision: "from-amber-500 to-orange-500",
     };
-    return colors[subject as keyof typeof colors] || 'from-indigo-500 to-violet-500';
+    return colors[subject as keyof typeof colors] || "from-indigo-500 to-violet-500";
   };
 
   const getSubjectBg = (subject: string) => {
     const colors = {
-      'Physics': 'bg-blue-50 border-blue-200 text-blue-700',
-      'Chemistry': 'bg-purple-50 border-purple-200 text-purple-700',
-      'Maths': 'bg-green-50 border-green-200 text-green-700',
-      'Break': 'bg-gray-50 border-gray-200 text-gray-700',
-      'Revision': 'bg-amber-50 border-amber-200 text-amber-700',
+      Physics: "bg-blue-50 border-blue-200 text-blue-700",
+      Chemistry: "bg-purple-50 border-purple-200 text-purple-700",
+      Maths: "bg-green-50 border-green-200 text-green-700",
+      Break: "bg-gray-50 border-gray-200 text-gray-700",
+      Revision: "bg-amber-50 border-amber-200 text-amber-700",
     };
-    return colors[subject as keyof typeof colors] || 'bg-indigo-50 border-indigo-200 text-indigo-700';
+    return colors[subject as keyof typeof colors] || "bg-indigo-50 border-indigo-200 text-indigo-700";
   };
 
   const calculateDuration = (timeRange: string): number => {
-   
-    const [start, end] = timeRange.split('-');
-    
+    const [start, end] = timeRange.split("-");
+
     const getHours = (time: string): number => {
-        const [hours, minutes] = time.split(':').map(Number);
-        return hours + (minutes / 60);
+      const [hours, minutes] = time.split(":").map(Number);
+      return hours + minutes / 60;
     };
-    
+
     const startHours = getHours(start);
     const endHours = getHours(end);
-  
-    return endHours - startHours; 
-};
+
+    return endHours - startHours;
+  };
 
   return (
     <div className="relative pl-8 pb-8 group">
       <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-200 to-purple-200"></div>
-      <div className={`absolute left-[-8px] top-0 w-4 h-4 rounded-full bg-gradient-to-r ${getSubjectColor(session.subject)} shadow-lg
-        transform transition-transform duration-300 group-hover:scale-125`}></div>
+      <div
+        className={`absolute left-[-8px] top-0 w-4 h-4 rounded-full bg-gradient-to-r ${getSubjectColor(
+          session.subject
+        )} shadow-lg transform transition-transform duration-300 group-hover:scale-125`}
+      ></div>
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl">
         <div className={`h-1.5 bg-gradient-to-r ${getSubjectColor(session.subject)}`} />
         <div className="p-4">
           <div className="flex justify-between items-start mb-3">
-            <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getSubjectBg(session.subject)}`}>
-              {session.subject}
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium border ${getSubjectBg(session.subject)}`}
+            >
+              {session.subject.replace(/'/g, "'")}
             </span>
             <div className="flex items-center gap-2 text-gray-600">
               <Clock className="w-4 h-4" />
@@ -75,17 +85,17 @@ function TimeBlock({ session, onStartSession }: { session: StudySession; onStart
             {session.topic && (
               <div className="flex items-start gap-2">
                 <BookOpen className="w-4 h-4 text-indigo-600 mt-1 flex-shrink-0" />
-                <p className="text-sm font-medium text-gray-800">{session.topic}</p>
+                <p className="text-sm font-medium text-gray-800">{session.topic.replace(/'/g, "'")}</p>
               </div>
             )}
             <div className="flex items-start gap-2">
               <GraduationCap className="w-4 h-4 text-indigo-600 mt-1 flex-shrink-0" />
-              <p className="text-sm text-gray-600">{session.activity}</p>
+              <p className="text-sm text-gray-600">{session.activity.replace(/'/g, "'")}</p>
             </div>
             {session.notes && (
               <div className="flex items-start gap-2">
                 <ScrollText className="w-4 h-4 text-indigo-600 mt-1 flex-shrink-0" />
-                <p className="text-sm text-gray-600">{session.notes}</p>
+                <p className="text-sm text-gray-600">{session.notes.replace(/'/g, "'")}</p>
               </div>
             )}
           </div>
@@ -117,14 +127,12 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
   const [timeLeft, setTimeLeft] = useState<number>(0); // Time left in seconds
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
-  // Start the timer with the given duration (in hours)
   const startTimer = (duration: number): void => {
     setTimeLeft(duration * 3600); // Convert hours to seconds
     setIsRunning(true);
     setTimerVisible(true);
   };
 
-  // Countdown logic
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
       const interval = setInterval(() => {
@@ -136,18 +144,19 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
     }
   }, [isRunning, timeLeft]);
 
-  // Format time left into HH:MM:SS
   const formatTime = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(
+      2,
+      "0"
+    )}`;
   };
 
-  // Sort the schedule based on the start time of the time range
   const sortedSchedule = data.schedule.sort((a: StudySession, b: StudySession) => {
     const getStartTime = (timeRange: string): number => {
-      const [start] = timeRange.split('-').map(Number);
+      const [start] = timeRange.split("-").map(Number);
       return start;
     };
     return getStartTime(a.time) - getStartTime(b.time);
@@ -174,32 +183,30 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
     },
   ];
 
-  // Draggable Timer Component (Integrated)
   const DraggableTimer = () => {
-    const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 4 }); // Initial y: 4px from top
+    const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 4 });
     const dragRef = useRef<HTMLDivElement | null>(null);
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-      id: 'timer',
+      id: "timer",
     });
 
-    // Set initial position to center horizontally when component mounts
     useEffect(() => {
       const node = dragRef.current;
       if (node) {
         const rect = node.getBoundingClientRect();
         setPosition({
-          x: window.innerWidth / 2 - rect.width / 2, // Center horizontally
-          y: 4, // 4px from top
+          x: window.innerWidth / 2 - rect.width / 2,
+          y: 4,
         });
       }
     }, []);
 
     const style: React.CSSProperties = {
-      position: 'fixed',
+      position: "fixed",
       left: `${position.x}px`,
       top: `${position.y}px`,
-      transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : 'translate(0px, 0px)',
+      transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : "translate(0px, 0px)",
       zIndex: 50,
     };
 
@@ -223,30 +230,22 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
   return (
     <DndContext>
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 py-8 px-4">
-        {/* Draggable Timer */}
         {timerVisible && <DraggableTimer />}
 
         <div className="max-w-5xl mx-auto">
-          {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-4">
-              {data.title}
+              {data.title.replace(/'/g, "'")}
             </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-              {data.description}
-            </p>
+            <p className="text-gray-600 max-w-2xl mx-auto mb-6">{data.description.replace(/'/g, "'")}</p>
 
-            {/* Quote */}
             <blockquote className="relative p-6 mb-8">
               <div className="absolute top-0 left-0 transform -translate-x-4 -translate-y-4">
                 <Quote className="w-8 h-8 text-indigo-300" />
               </div>
-              <p className="text-lg text-gray-700 italic">
-                {data.quote}
-              </p>
+              <p className="text-lg text-gray-700 italic">{data.quote.replace(/'/g, "'")}</p>
             </blockquote>
 
-            {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
               {stats.map((stat, index) => (
                 <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm">
@@ -260,11 +259,10 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
             </div>
           </div>
 
-          {/* Timeline */}
           <div className="bg-white/40 backdrop-blur-md rounded-2xl p-8 shadow-lg">
             <div className="flex items-center gap-3 mb-8">
               <Brain className="w-6 h-6 text-indigo-600" />
-              <h2 className="text-2xl font-bold text-gray-800">Today's Schedule</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Today&apos;s Schedule</h2>
             </div>
 
             <div className="space-y-0">

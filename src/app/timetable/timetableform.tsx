@@ -5,19 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trash2, BookOpen, Calendar, Clock, Tag, GraduationCap } from "lucide-react";
+import { Trash2, BookOpen, Clock, GraduationCap } from "lucide-react";
 import { IoDocumentText } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
-import SessionCard from "@/components/Custom/sessionCard";
-
-const TimeFrame = {
-  DAILY: "daily",
-  WEEKLY: "weekly",
-  MONTHLY: "monthly",
-} as const;
 
 // Zod Schema based on the DTO
 const subjectPrioritySchema = z.object({
@@ -36,7 +28,12 @@ const timetableSchema = z.object({
 
 type TimetableFormValues = z.infer<typeof timetableSchema>;
 
-export default function TimetableForm({ handleformdata }: any) {
+// Specify props type instead of using 'any'
+interface TimetableFormProps {
+  handleformdata: (data: TimetableFormValues, openState: boolean) => void;
+}
+
+export default function TimetableForm({ handleformdata }: TimetableFormProps) {
   const [subjectInput, setSubjectInput] = useState("");
 
   const {
@@ -93,7 +90,6 @@ export default function TimetableForm({ handleformdata }: any) {
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 flex justify-center items-center">
       <div className="max-w-3xl w-full bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-2xl p-8 relative overflow-hidden">
-        {/* Enhanced Header Card */}
         <motion.div
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,7 +109,7 @@ export default function TimetableForm({ handleformdata }: any) {
                 Craft Your Epic Study Timetable
               </h2>
               <p className="text-blue-200 text-lg italic drop-shadow-sm">
-                "Master your goals with a schedule that shines!"
+                &quot;Master your goals with a schedule that shines!&quot;
               </p>
             </div>
           </div>
@@ -127,9 +123,7 @@ export default function TimetableForm({ handleformdata }: any) {
           </div>
         </motion.div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 relative">
-          {/* Daily Routine */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -159,7 +153,6 @@ export default function TimetableForm({ handleformdata }: any) {
             )}
           </motion.div>
 
-          {/* Target Exam */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -188,7 +181,6 @@ export default function TimetableForm({ handleformdata }: any) {
             )}
           </motion.div>
 
-          {/* Study Hours */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -220,7 +212,6 @@ export default function TimetableForm({ handleformdata }: any) {
             )}
           </motion.div>
 
-          {/* Subjects */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -276,7 +267,6 @@ export default function TimetableForm({ handleformdata }: any) {
             </div>
           </motion.div>
 
-          {/* Include Breaks Switch */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -294,7 +284,6 @@ export default function TimetableForm({ handleformdata }: any) {
             </Label>
           </motion.div>
 
-          {/* Submit Button */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

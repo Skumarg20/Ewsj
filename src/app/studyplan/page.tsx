@@ -17,9 +17,16 @@ import { motion } from "framer-motion";
 import WeeklyForm from "@/components/studyplan/weekly";
 import TargetedForm from "@/components/studyplan/targetedplan";
 import CustomForm from "@/components/studyplan/customstudyplan";
-import { useWeeklyStudyPlanStore, useTargetStudyPlanStore } from "@/state/store/studyplanstore";
+import {
+  useWeeklyStudyPlanStore,
+  useTargetStudyPlanStore,
+} from "@/state/store/studyplanstore";
 import axios from "axios";
-import { WeeklyStudyPlan, targetedStudyPlan, TargetPlanData } from "@/interface/studyPlan";
+import {
+  WeeklyStudyPlan,
+  targetedStudyPlan,
+  TargetPlanData,
+} from "@/interface/studyPlan";
 import { getAuthHeader } from "@/lib/api";
 import WeeklyStudyDashboard from "./weeklystudyplan";
 import TargetedStudyDashboard from "@/components/studyplan/targetStudyPlanDashBoard";
@@ -35,12 +42,22 @@ interface FormData {
 const StudyPlan = () => {
   const [activePlan, setActivePlan] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState<string | null>(null); // "weekly" or "targeted" to track which plan to show
-  const [generatedPlan, setGeneratedPlan] = useState<WeeklyStudyPlan | null>(null);
-  const [generatedTargetPlan, setGeneratedTargetPlan] = useState<targetedStudyPlan | null>(null);
+  const [generatedPlan, setGeneratedPlan] = useState<WeeklyStudyPlan | null>(
+    null
+  );
+  const [generatedTargetPlan, setGeneratedTargetPlan] =
+    useState<targetedStudyPlan | null>(null);
   // const [isGenerating, setIsGenerating] = useState(false);
   const [isFromGenerated, setIsFromGenerated] = useState(false); // Controls "Save" button visibility
-  const { targetPlan, targetloading, targeterror, getTargetPlan, postTargetPlan } = useTargetStudyPlanStore();
-  const { weeklyPlan, loading, error, getWeeklyPlan, postWeeklyPlan } = useWeeklyStudyPlanStore();
+  const {
+    targetPlan,
+    targetloading,
+    targeterror,
+    getTargetPlan,
+    postTargetPlan,
+  } = useTargetStudyPlanStore();
+  const { weeklyPlan, loading, error, getWeeklyPlan, postWeeklyPlan } =
+    useWeeklyStudyPlanStore();
 
   const planButtons = [
     {
@@ -181,7 +198,10 @@ const StudyPlan = () => {
       setIsFromGenerated(false);
       setShowPopup("targeted");
     } else {
-      alert("Failed to fetch latest target plan: " + (targeterror || "No plan available"));
+      alert(
+        "Failed to fetch latest target plan: " +
+          (targeterror || "No plan available")
+      );
     }
   };
 
@@ -208,7 +228,9 @@ const StudyPlan = () => {
       setIsFromGenerated(false);
       setShowPopup("weekly");
     } else {
-      alert("Failed to fetch latest weekly plan: " + (error || "No plan available"));
+      alert(
+        "Failed to fetch latest weekly plan: " + (error || "No plan available")
+      );
     }
   };
 
@@ -232,8 +254,8 @@ const StudyPlan = () => {
             </h2>
           </div>
           <p className="text-gray-600 text-lg italic">
-            "The future belongs to those who prepare for it today." – Malcolm X
-          </p>
+  &quot;The future belongs to those who prepare for it today.&quot; - Malcolm X
+</p>
           <div className="mt-4 flex justify-center gap-2 text-2xl">
             {["🚀", "📚", "🎓", "💡"].map((emoji, i) => (
               <motion.span
@@ -302,7 +324,9 @@ const StudyPlan = () => {
           {activePlan === "weekly" && (
             <WeeklyForm onSubmit={handleGenerateWeeklyPlan} />
           )}
-          {activePlan === "targeted" && <TargetedForm onSubmit={handleGenerateTargetPlan} />}
+          {activePlan === "targeted" && (
+            <TargetedForm onSubmit={handleGenerateTargetPlan} />
+          )}
           {activePlan === "custom" && <CustomForm />}
           <div className="flex gap-4 mt-4">
             <motion.button
@@ -368,7 +392,6 @@ const StudyPlan = () => {
               className="w-full h-full flex flex-col bg-white shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-             
               <div className="flex-1 overflow-auto p-6">
                 <WeeklyStudyDashboard data={generatedPlan} />
               </div>

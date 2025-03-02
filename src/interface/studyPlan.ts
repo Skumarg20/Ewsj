@@ -24,7 +24,7 @@ export interface targetedStudyPlan{
     chapters:string[];
     schoolSchedule?:string;
     subjects?:string[];
-    dueDate?:string;
+    due_date?:string;
     
 }
 

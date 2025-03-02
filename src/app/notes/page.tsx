@@ -18,9 +18,7 @@ import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
 import { JSONContent } from "@tiptap/core";
 import {CreateFolder,Note,FolderData} from '@/interface/notesinterface'
-import NoteEditor from "./[noteId]/page";
-
-
+import NoteEditor from "./NoteEditor";
 
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
@@ -248,7 +246,7 @@ function Notes() {
         headers: getAuthHeader(),
       });
       const folderData = response.data.reduce(
-        (acc: Record<string, FolderData>, folder: any) => {
+        (acc: Record<string, FolderData>, folder: FolderData) => {
           acc[folder.name] = {
             id: folder.id,
             name: folder.name,
