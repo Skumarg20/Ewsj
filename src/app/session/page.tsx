@@ -1,14 +1,10 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
-import { 
-  Clock, 
+import {
   BookOpen, 
   CheckCircle, 
   Calendar, 
-  ArrowRight,
-  GraduationCap,
   Timer,
-  ScrollText
 } from 'lucide-react';
 
 
@@ -43,13 +39,13 @@ const parseTimeRange = (timeRange: string) => {
 
 export function StudySessionCard({ session, updateSession }: { session: StudySession & { status: 'current' | 'upcoming' | 'past' }, updateSession: (id: string, data: Partial<StudySession>, setLoading: (loading: boolean) => void) => Promise<void> }) {
   const [currentSession, setCurrentSession] = useState(session);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
-  const statusColors = {
-    current: 'from-green-500 to-emerald-600',
-    upcoming: 'from-blue-500 to-indigo-600',
-    past: 'from-purple-500 to-pink-600',
-  };
+  // const statusColors = {
+  //   current: 'from-green-500 to-emerald-600',
+  //   upcoming: 'from-blue-500 to-indigo-600',
+  //   past: 'from-purple-500 to-pink-600',
+  // };
 
   const statusBg = {
     current: 'bg-green-50 text-green-700 border-green-200',
@@ -101,7 +97,7 @@ function StudySessions() {
   const {setLoading}=useLoading();
   useEffect(() => {
     getTimeTable(setLoading); 
-  }, []);
+  });
   const { currentStudyPlan, updateSession } = useStudyPlanStore();
   const { currentSession, upcomingSessions, pastSessions } = useMemo(() => {
     const now = new Date();
@@ -151,7 +147,7 @@ console.log(currentStudyPlan,"this is study plan");
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-4">
-            Today's Study Journey
+            Today&apos;s Study Journey
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             {stats.completedSessions} of {stats.totalSessions} sessions completed • {stats.remainingSessions} remaining

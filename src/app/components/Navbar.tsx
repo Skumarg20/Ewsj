@@ -9,7 +9,6 @@ import {
   LogIn,
   Menu,
   X,
-  Rocket,
   ChevronRight,
 } from "lucide-react";
 

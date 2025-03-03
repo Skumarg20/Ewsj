@@ -1,6 +1,7 @@
 'use client'
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 const MotivationalCard = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -21,7 +22,7 @@ const MotivationalCard = () => {
               Daily Wisdom
             </span>
             <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-              "The Future Belongs To Those Who Believe In The Beauty Of Their Dreams"
+            &quot;The Future Belongs To Those Who Believe In The Beauty Of Their Dreams&quot;
             </h1>
             <p className="text-gray-600 leading-relaxed">
               Success is not about the destination, but the transformation that occurs during the journey. Every step forward is a victory in itself.
@@ -29,10 +30,12 @@ const MotivationalCard = () => {
           </div>
           <div className="relative">
             <div className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-gray-100 shadow-sm">
-              <img
+              <Image
                 src="/founder.jpg"
                 alt="Founder"
                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                width={100}
+                height={100}
               />
             </div>
             <div className="text-center mt-4 space-y-1">

@@ -2,9 +2,8 @@
 import React from 'react'
 import Login from '../utils/SignIn';
 
-type Props = {}
 
-function LoginAndSignUp({}: Props) {
+function LoginAndSignUp() {
   return (
    <div className='h-screen flex items-center '>
    <Login/>

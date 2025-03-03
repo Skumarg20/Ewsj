@@ -222,12 +222,12 @@ function StudySessionCard({ session }: { session: typeof sessionsData[0] & { sta
 function StudySessions() {
   const { currentSession, upcomingSessions, pastSessions } = useMemo(() => {
     const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinutes = now.getMinutes();
+    // const currentHour = now.getHours();
+    // const currentMinutes = now.getMinutes();
 
     return sessionsData.reduce((acc, session) => {
       const sessionTime = parseTime(session.time);
-      const [startTime, endTime] = session.time.split(' - ');
+      const [, endTime] = session.time.split(' - ');
       const endTimeDate = parseTime(endTime);
 
       if (sessionTime <= now && endTimeDate >= now) {

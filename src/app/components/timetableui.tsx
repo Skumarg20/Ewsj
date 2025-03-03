@@ -1,18 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
 import ActionAreaCard from "@/app/components/utils/card";
 import TimeTables from "./utils/table";
 import TypographyBlockquote from "./utils/quote";
-import { Button } from "@/components/ui/button";
-import studyplan from "./utils/studyplan.png";
-import { useLoading } from "../loader/context/loadingprovider";
-import useStudyPlanStore from "@/state/store/timetablestore";
-import useFetchData from "@/hooks/fetchDataHook";
-import { StudyPlanInterface } from "@/interface/studysession";
 
 
 type Props = {
-  data: any;
+  data: {
+    title?: string,
+    description?: string,
+    schedule?: { [key: string]: string }[];
+    quote?: string
+  }
 };
 
 const header = ["completed","time", "topic","subject", "activity", "notes",];
@@ -31,7 +30,7 @@ export default function TimeTable({ data }: Props) {
       <TimeTables
         caption="Time is your greatest asset—spend it wisely on your dreams!"
         headers={header}
-        data={data?.schedule}
+        data={data?.schedule} 
       />
       <TypographyBlockquote quote={data?.quote || "Default Quote"} />
     </div>

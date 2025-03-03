@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import React from 'react'
 
-type Props = {}
+
 
  const CongratulationsPopup = ({ onClose }: { onClose: () => void }) => {
     return (

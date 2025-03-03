@@ -2,8 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { 
-  FaBookOpen, 
-  FaRegClock, 
+  FaBookOpen,  
   FaChartLine,
   FaStickyNote,
   FaCalendarAlt
@@ -33,17 +32,7 @@ type Props = {
 };
 
 function SessionCard({
-  timestamp,
-  topic,
-  activity,
-  subject,
-  image,
-  notes,
-  timestampClass = "text-sky-100 text-sm font-medium",
   topicClass = "text-[2rem] font-bold text-[#7FE0ED]",
-  activityClass = "text-xl font-semibold text-white",
-  subjectClass = "text-rose-300 text-lg",
-  imageClass = "w-32 h-32 object-contain",
   cardClass = "border-none",
   notesCardClass = "bg-[#6fcedf] p-4 rounded-2xl mt-4",
   notesClass = "text-sky-100 text-base",

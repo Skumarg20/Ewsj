@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
   FaRocket,
-  FaCalendar,
   FaBullseye,
   FaPen,
   FaRegCalendarCheck,
@@ -12,7 +11,6 @@ import {
   FaStar,
   FaMagic,
   FaSpinner,
-  FaTimes,
   FaBookOpen,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -39,7 +37,7 @@ const StudyPlan = () => {
   const [showPopup, setShowPopup] = useState<string | null>(null); // "weekly" or "targeted" to track which plan to show
   const [generatedPlan, setGeneratedPlan] = useState<WeeklyStudyPlan | null>(null);
   const [generatedTargetPlan, setGeneratedTargetPlan] = useState<targetedStudyPlan | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [, setIsGenerating] = useState(false);
   const [isFromGenerated, setIsFromGenerated] = useState(false); // Controls "Save" button visibility
   const { targetPlan, targetloading, targeterror, getTargetPlan, postTargetPlan } = useTargetStudyPlanStore();
   const { weeklyPlan, loading, error, getWeeklyPlan, postWeeklyPlan } = useWeeklyStudyPlanStore();
@@ -234,7 +232,7 @@ const StudyPlan = () => {
             </h2>
           </div>
           <p className="text-gray-600 text-lg italic">
-            "The future belongs to those who prepare for it today." – Malcolm X
+          `&quot;`The future belongs to those who prepare for it today.`&quot;` – Malcolm X
           </p>
           <div className="mt-4 flex justify-center gap-2 text-2xl">
             {["🚀", "📚", "🎓", "💡"].map((emoji, i) => (

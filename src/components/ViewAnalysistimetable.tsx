@@ -3,7 +3,6 @@ import {
   Clock, 
   BookOpen, 
   CheckCircle, 
-  Calendar,
   GraduationCap,
   Brain,
   Timer,
@@ -188,7 +187,7 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
         <div className="bg-white/40 backdrop-blur-md rounded-2xl p-8 shadow-lg">
           <div className="flex items-center gap-3 mb-8">
             <Brain className="w-6 h-6 text-indigo-600" />
-            <h2 className="text-2xl font-bold text-gray-800">Today's Schedule</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Today&apos;s Schedule</h2>
           </div>
           
           <div className="space-y-0">

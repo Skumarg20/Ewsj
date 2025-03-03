@@ -2,8 +2,7 @@
 import { Button } from '@/components/ui/button'
 import Card from '@mui/material/Card'
 import React from 'react'
-import { FaBookOpen, FaBrain, FaCalendarCheck, FaGraduationCap, FaRegClock, FaRocket } from 'react-icons/fa'
-import { MdAccessTime } from 'react-icons/md'
+import { FaBookOpen, FaBrain, FaCalendarCheck, FaRegClock, FaRocket } from 'react-icons/fa'
 import { motion } from "framer-motion";
 import { FiArrowRight } from 'react-icons/fi'
 type Props = {
@@ -12,7 +11,7 @@ type Props = {
 };
 
 
-export default function cardTimeTable({setOpen,open}: Props) {
+export default function cardTimeTable({setOpen}: Props) {
   return (
     <>
     <Card className="p-8 text-center relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-600 shadow-2xl">

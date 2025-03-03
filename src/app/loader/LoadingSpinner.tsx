@@ -20,14 +20,14 @@ const LoadingSpinner = () => {
   useEffect(() => {
     if (isLoading) {
       setProgress(0); // Reset progress on start
-      let interval = setInterval(() => {
+      const interval = setInterval(() => {
         setProgress((prev) => (prev < 100 ? prev + 1 : 100));
         setLoadingText(loadingMessages[Math.floor(Math.random() * loadingMessages.length)]);
       }, 300); // Updates every 10ms
 
       return () => clearInterval(interval);
     }
-  }, [isLoading]);
+  }, [loadingMessages, isLoading]);
 
   if (!isLoading) return null;
 

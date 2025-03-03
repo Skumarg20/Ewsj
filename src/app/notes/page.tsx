@@ -5,34 +5,24 @@ import {
   Folder,
   FolderOpen,
   Plus,
-  Book,
-  Notebook,
-  FlaskConical,
-  Calculator,
-  FileText,
   Calendar,
   Clock,
-  ChevronRight,
-  Search,
   ArrowLeft,
   FolderPlus,
-  Settings,
   Edit2,
-  Trash2,
   X,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { RichTextEditorDemo } from "@/components/tiptap/rich-text-editor";
 import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
 import { JSONContent } from "@tiptap/core";
 import {CreateFolder,Note,FolderData} from '@/interface/notesinterface'
 import NoteEditor from "./[noteId]/page";
-const spring = {
-  type: "spring",
-  stiffness: 300,
-  damping: 30,
-};
+// const spring = {
+//   type: "spring",
+//   stiffness: 300,
+//   damping: 30,
+// };
 
 
 
@@ -248,8 +238,6 @@ function Notes() {
   const [noteContent, setNoteContent] = useState<JSONContent|null>(null);
   const [title, setTitle] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
   
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   console.log(selectedNote,"this is notes content selected note need to submit");
@@ -264,7 +252,7 @@ function Notes() {
         headers: getAuthHeader(),
       });
       const folderData = response.data.reduce(
-        (acc: Record<string, FolderData>, folder: any) => {
+        (acc: Record<string, FolderData>, folder: FolderData) => {
           acc[folder.name] = {
             id: folder.id,
             name: folder.name,

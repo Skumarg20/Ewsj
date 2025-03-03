@@ -5,13 +5,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { login, signup } from '../../../lib/api'
-import { useRouter } from "next/navigation";
 import MotivationalCard from './foundercard';
 
 import useRedirectToDashboard from "@/hooks/dashboardRedirectHook";
 import { motion } from "framer-motion";
 import { FiLock, FiMail, FiPhone, FiBook, FiArrowRight, FiEye, FiEyeOff, FiBookOpen, FiMapPin, FiUser } from "react-icons/fi";
 import toast, { Toaster } from 'react-hot-toast';
+import Image from "next/image";
 
 type FormValues = {
   username?: string;
@@ -53,7 +53,6 @@ const signupSchema = yup.object().shape({
 });
 
 const Login: React.FC = () => {
-  const router = useRouter();
   const redirectToDashboard = useRedirectToDashboard();
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -109,6 +108,7 @@ const Login: React.FC = () => {
         await login(data.email, data.password);
         await redirectToDashboard();
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(isLogin ? "Login failed" : "Signup failed", error);
       setErrorMessage(
@@ -134,10 +134,12 @@ const Login: React.FC = () => {
             className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-white shadow-lg"
             whileHover={{ scale: 1.05 }}
           >
-            <img
+            <Image
               src="/student.png"
               alt="Founder"
               className="w-full h-full object-cover"
+              width={100}
+              height={100}
             />
           </motion.div>
 

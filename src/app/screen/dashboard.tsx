@@ -1,23 +1,23 @@
 "use client";
 import * as React from "react";
 import { AppProvider, Router } from "@toolpad/core/AppProvider";
-import Profile from "../utils/Profile";
 import RightDashboard from "../components/RightDashboard";
-import TimeTable from "@/app/timetable/index";
+import TimeTable from "@/app/timetable/page";
 import StudyPlan from "../studyplan/page";
 import Clusters from "../talksphere/clusters";
 import Notes from "@/app/notes/page";
-import TimerModal from "@/app/components/TimeModel/index";
+// import TimerModal from "@/app/components/TimeModel/index";
 import { AiOutlineSchedule } from "react-icons/ai";
 import { FaNotesMedical } from "react-icons/fa6";
 import { MdOutlineMoreTime, MdGroups2 } from "react-icons/md";
 import { GrNodes } from "react-icons/gr";
 import { RxDashboard } from "react-icons/rx";
-import { IoIosMenu, IoIosClose } from "react-icons/io";
+// import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { motion } from "framer-motion";
-import ProfileDropdown from "@/components/profiledropdown";
+// import ProfileDropdown from "@/components/profiledropdown";
+import Image from "next/image";
 
-const NAVIGATION = [
+export const NAVIGATION = [
   { segment: "dashboard", title: "Dashboard", icon: <RxDashboard /> },
   { segment: "studyplan", title: "Study Plan", icon: <AiOutlineSchedule /> },
   { segment: "timetable", title: "Time Table", icon: <MdOutlineMoreTime /> },
@@ -83,11 +83,12 @@ function PageContent({ pathname }: { pathname: string }) {
 }
 
 // Navbar Item Component
-function NavbarItem({
+export function NavbarItem({
   item,
   pathname,
-  navigate,
+  // navigate,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   item: any;
   pathname: string;
   navigate: (path: string) => void;
@@ -104,7 +105,7 @@ function NavbarItem({
         whileTap={{ scale: 0.95 }}
         onClick={() => {
           if (item.children) setIsOpen(!isOpen);
-          else navigate(`/${item.segment}`);
+          // else navigate(`/${item.segment}`);
         }}
         className={`flex items-center p-3 rounded-xl cursor-pointer transition-colors ${
           isActive
@@ -121,11 +122,14 @@ function NavbarItem({
           animate={{ height: "auto", opacity: 1 }}
           className="ml-6 mt-2 space-y-2"
         >
-          {item.children.map((child: any) => (
+          {item.children.map((
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            child: any
+          ) => (
             <motion.div
               key={child.segment}
               whileHover={{ scale: 1.05 }}
-              onClick={() => navigate(`/group/${child.segment}`)}
+              // onClick={() => navigate(`/group/${child.segment}`)}
               className={`flex items-center p-2 rounded-lg cursor-pointer ${
                 pathname === `/group/${child.segment}`
                   ? "bg-purple-500 text-white"
@@ -143,31 +147,30 @@ function NavbarItem({
 }
 
 // Main Dashboard Component
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Dashboard(props: any) {
   const { window } = props;
   const router = useDemoRouter("/dashboard");
-  const [isNavbarOpen, setIsNavbarOpen] = React.useState(false);
-  const [isMounted, setIsMounted] = React.useState(false);
+  
   const demoWindow = window ? window() : undefined;
 
-  React.useEffect(() => {
-    setIsMounted(true);
-    setIsNavbarOpen(true); // Show navbar after mount
-  }, []);
+  
 
-  const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
+  // const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
 
-  if (!isMounted) {
-    return <div className="h-screen bg-white" />;
-  }
+  // if (!isMounted) {
+  //   return <div className="h-screen bg-white" />;
+  // }
 
   return (
     <AppProvider
-      navigation={NAVIGATION}
+      // navigation={NAVIGATION}
       branding={{
         logo: (
-          <img
+          <Image
             src="https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png"
+            width={32} // Add width (required)
+            height={32} // Add height (required)
             alt="Coginest"
             className="h-8 w-auto"
           />
@@ -180,7 +183,7 @@ export default function Dashboard(props: any) {
     >
       <div className="flex h-screen bg-white">
         {/* Left Navbar (Toggleable) */}
-        {isMounted && (
+        {/* {isMounted && (
           <motion.div
             initial={{ x: isNavbarOpen ? 0 : -250 }}
             animate={{ x: isNavbarOpen ? 0 : -250 }}
@@ -200,12 +203,12 @@ export default function Dashboard(props: any) {
               )}
             </div>
           </motion.div>
-        )}
+        )} */}
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {/* Top Bar */}
-          <div className="bg-white shadow-md p-2 flex justify-evenly items-center sticky top-0 z-30">
+          {/* <div className="bg-white shadow-md p-2 flex justify-evenly items-center sticky top-0 z-30">
             <div className="flex justify-between items-center w-full">
               <div className="flex items-center space-x-4">
                 <motion.button
@@ -218,8 +221,10 @@ export default function Dashboard(props: any) {
                   {isNavbarOpen ? <IoIosClose /> : <IoIosMenu />}
                 </motion.button>
                 <div className="flex items-center">
-                  <img
+                  <Image
                     src="https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png"
+                    width={32} // Add width (required)
+                    height={32} // Add height (required)
                     alt="Coginest"
                     className="h-8 w-auto mr-2"
                   />
@@ -236,7 +241,7 @@ export default function Dashboard(props: any) {
             <div className="flex items-center space-x-4">
               <TimerModal />
             </div>
-          </div>
+          </div> */}
 
           {/* Page Content */}
           <PageContent pathname={router.pathname} />

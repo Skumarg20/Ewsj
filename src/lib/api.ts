@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export const login = async (email: string, password: string) => {
-  const response = await axios.post('http://localhost:5000/auth/signin', { email, password });
+  const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/signin`, { email, password });
   localStorage.setItem('token', response.data.access_token);
   return response.data;
 };

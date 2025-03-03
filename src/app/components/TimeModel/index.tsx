@@ -4,7 +4,7 @@ import { Dialog, DialogContent, IconButton } from "@mui/material";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import Stopwatch from "../../screen/stopwatch/index";
 import { motion } from 'framer-motion';
-import { ClockIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import { ClockIcon as ClockSolid } from '@heroicons/react/24/solid';
 const TimerModal = () => {
   const [open, setOpen] = useState(false);

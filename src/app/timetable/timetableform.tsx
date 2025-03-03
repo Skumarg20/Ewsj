@@ -5,19 +5,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trash2, BookOpen, Calendar, Clock, Tag, GraduationCap } from "lucide-react";
+import { Trash2, BookOpen, Clock, GraduationCap } from "lucide-react";
 import { IoDocumentText } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
-import SessionCard from "@/components/Custom/sessionCard";
 
-const TimeFrame = {
-  DAILY: "daily",
-  WEEKLY: "weekly",
-  MONTHLY: "monthly",
-} as const;
+// const TimeFrame = {
+//   DAILY: "daily",
+//   WEEKLY: "weekly",
+//   MONTHLY: "monthly",
+// } as const;
 
 // Zod Schema based on the DTO
 const subjectPrioritySchema = z.object({
@@ -36,6 +34,7 @@ const timetableSchema = z.object({
 
 type TimetableFormValues = z.infer<typeof timetableSchema>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function TimetableForm({ handleformdata }: any) {
   const [subjectInput, setSubjectInput] = useState("");
 
@@ -113,7 +112,7 @@ export default function TimetableForm({ handleformdata }: any) {
                 Craft Your Epic Study Timetable
               </h2>
               <p className="text-blue-200 text-lg italic drop-shadow-sm">
-                "Master your goals with a schedule that shines!"
+              &quot;Master your goals with a schedule that shines!&quot;
               </p>
             </div>
           </div>

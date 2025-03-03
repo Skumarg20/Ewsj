@@ -253,7 +253,7 @@ export default function StudyPlanForm() {
           </div>
 
           {Object.entries(watch("targetQuestionsPerSubject")).map(
-            ([subject, count], index) => (
+            ([subject], index) => (
               <div key={index} className="flex gap-4 items-center">
                 <Input
                   placeholder="Subject name"

@@ -34,7 +34,7 @@ const WeeklyStudyDashboard = ({ data}:Props) => {
           <FaCalendarAlt className="w-8 h-8" />
           <div>
             <h1 className="text-3xl font-bold">Weekly Study Plan</h1>
-            <p className="mt-2 opacity-90">"Success is the sum of small efforts, repeated day in and day out."</p>
+            <p className="mt-2 opacity-90">&quot;Success is the sum of small efforts, repeated day in and day out.&quot;</p>
           </div>
         </div>
       </motion.header>
@@ -154,7 +154,7 @@ const WeeklyStudyDashboard = ({ data}:Props) => {
       <footer className="mt-12 py-6 text-center text-gray-600">
         <div className="flex items-center justify-center gap-2">
           <FaRunning className="w-5 h-5 text-purple-600" />
-          <p>Stay consistent! You've got this! 💪</p>
+          <p>Stay consistent! You&apos;ve got this! 💪</p>
         </div>
       </footer>
     </div>

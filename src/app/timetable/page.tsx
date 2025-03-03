@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import TimeTablePlanForm from "./timetableform";
-import { Button, Card, Dialog, DialogContent } from "@mui/material";
+import { Button, Dialog, DialogContent } from "@mui/material";
 import { MdClose } from "react-icons/md";
 import { useLoading } from "../loader/context/loadingprovider";
 import useStudyPlanStore from "@/state/store/timetablestore";
@@ -11,7 +11,7 @@ import CardTimeTable from "./cardTimeTable";
 import { StudyPlanInterface } from "@/interface/studysession";
 import SessionUI from "../components/sessionui";
 import { motion } from "framer-motion";
-import { FaChartLine, FaCalendarAlt, FaChevronRight, FaPlus } from "react-icons/fa";
+import { FaChartLine, FaCalendarAlt, FaChevronRight } from "react-icons/fa";
 import ViewAnalysisTimetable from "@/components/ViewAnalysistimetable";
 import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
@@ -23,8 +23,8 @@ function TimeTablePlan() {
   const [openGenerated, setOpenGenerated] = useState(false);
   const [passData, setPassData] = useState<StudyPlanInterface | null>(null);
   const [generatedData, setGeneratedData] = useState<StudyPlanInterface | null>(null);
-  const [savedDate, setSavedDate] = useState<string | null>(null);
-  const { formData, studyPlan, setFormData, saveStudyPlan, getTimeTable, currentStudyPlan } = useStudyPlanStore();
+  const [, setSavedDate] = useState<string | null>(null);
+  const { studyPlan, setFormData, saveStudyPlan, getTimeTable, currentStudyPlan } = useStudyPlanStore();
   const { setLoading } = useLoading();
   const [showSaveButton, setShowSaveButton] = useState<boolean>(false);
 
@@ -51,13 +51,13 @@ function TimeTablePlan() {
       setLoading(false);
     };
     fetchInitialData();
-  }, [getTimeTable, setLoading]);
+  }, [currentStudyPlan, getTimeTable, setLoading, studyPlan]);
 
   // Update passData when currentStudyPlan or studyPlan changes
   useEffect(() => {
     setPassData(currentStudyPlan || studyPlan);
     setShowSaveButton(!!studyPlan && !hasCurrentDate(currentStudyPlan));
-  }, [currentStudyPlan, studyPlan]);
+  }, [currentStudyPlan, hasCurrentDate, studyPlan]);
 
   const handleGenerateTimetable = async (formData: StudyPlanInterface) => {
     try {
@@ -114,9 +114,9 @@ function TimeTablePlan() {
     }
   };
 
-  const handleOpenForm = () => {
-    setOpenForm(true); 
-  };
+  // const handleOpenForm = () => {
+  //   setOpenForm(true); 
+  // };
 
   const memoizedTimeTable = useMemo(() => {
     return passData ? <TimeTable data={passData} /> : <h1>No Timetable Available</h1>;

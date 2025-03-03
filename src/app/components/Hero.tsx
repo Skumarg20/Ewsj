@@ -12,7 +12,7 @@ import {
 import { useEffect, useState } from "react";
 
 const Hero = () => {
-  const [isClient, setIsClient] = useState(false);
+  const [, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);

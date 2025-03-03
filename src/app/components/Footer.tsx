@@ -14,7 +14,6 @@ import {
   FaRegClock
 } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { FiArrowUpRight } from "react-icons/fi";
 
 const Footer: FC = () => {
   const socialLinks = [

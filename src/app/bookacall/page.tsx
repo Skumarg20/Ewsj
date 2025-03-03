@@ -35,7 +35,7 @@ type FormData = {
 };
 
 const BookACall = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   // const [formData, setFormData] = useState<FormData | null>(null);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
@@ -81,7 +81,13 @@ const BookACall = () => {
         name: 'Mentorship Booking',
         description: 'One-on-One Call Booking',
         order_id: orderId,
-        handler: async function (response: any) {
+        handler: async function (
+          response: {
+            razorpay_payment_id: string,
+            razorpay_order_id: string,
+            razorpay_signature: string
+          }
+        ) {
           try {
             const { data: verificationData } = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/payments/verify-payment`, {
               orderCreationId: orderId,
@@ -113,7 +119,9 @@ const BookACall = () => {
         },
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const paymentObject = new (window as any).Razorpay(options);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       paymentObject.on('payment.failed', function (response: any) {
         toast.error(response.error.description);
       });

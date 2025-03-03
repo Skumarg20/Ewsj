@@ -1,13 +1,10 @@
 'use client';
-import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaEdit, FaRegClock, FaTable } from "react-icons/fa";
 import {
   Table,
   TableBody,
   TableCaption,
-  TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
@@ -15,7 +12,7 @@ import {
 interface TableProps {
   caption?: string;
   headers: string[];
-  data: { [key: string]: string }[];
+  data?: { [key: string]: string }[];
   
 }
 
@@ -25,7 +22,7 @@ export default function TimeTables({
   data,
   
 }: TableProps) {
-  function handleCheckboxChange(rowIndex: number, header: string): void {
+  function handleCheckboxChange(): void {
     throw new Error("Function not implemented.");
   }
 
@@ -140,7 +137,7 @@ export default function TimeTables({
   
         {/* Animated Table Body */}
         <TableBody>
-          {data.length > 0 ? (
+          {data && data.length > 0 ? (
             data.map((row, rowIndex) => (
               <motion.tr
                 key={rowIndex}
@@ -164,7 +161,7 @@ export default function TimeTables({
                           <input
                             type="checkbox"
                             checked={!!row[header]}
-                            onChange={() => handleCheckboxChange(rowIndex, header)}
+                            onChange={() => handleCheckboxChange()}
                             className="absolute w-full h-full opacity-0 cursor-pointer"
                           />
                           <div className="w-full h-full rounded-md bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
