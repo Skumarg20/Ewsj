@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { X, Image as ImageIcon, BookOpen, Leaf, Coffee, Moon, Armchair, Library } from "lucide-react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface BackgroundSelectorProps {
   currentBackground: string;
@@ -30,6 +30,7 @@ const BackgroundSelector: React.FC<BackgroundSelectorProps> = ({ currentBackgrou
         onClose();
       } catch (e) {
         console.error("Invalid URL:", customUrl);
+        console.log(e);
         alert("Please enter a valid image URL.");
       }
     }

@@ -5,11 +5,11 @@ import TimeTable from "@/app/timetable/index";
 import StudyPlan from "../studyplan/page";
 import Clusters from "../talksphere/clusters";
 import Notes from "@/app/notes/page";
-import TimerModal from "@/app/components/TimeModel/index";
+
 import { AiOutlineSchedule } from "react-icons/ai";
 import { FaNotesMedical, FaUserGraduate } from "react-icons/fa6";
-import { MdOutlineMoreTime, MdGroups2 } from "react-icons/md";
-import { GrNodes } from "react-icons/gr";
+import { MdOutlineMoreTime } from "react-icons/md";
+
 import { RxDashboard } from "react-icons/rx";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { motion } from "framer-motion";

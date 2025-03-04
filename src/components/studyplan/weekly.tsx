@@ -110,7 +110,7 @@ const WeeklyForm = ({ onSubmit, isGenerating }: WeeklyFormProps) => {
                 <p className="text-gray-600 mt-2 flex items-center justify-center gap-2">
                   <FaRegSmileBeam className="text-yellow-400 animate-bounce" />
                   <span className="bg-gradient-to-r from-blue-100 to-purple-100 px-3 py-1 rounded-full">
-                    "Consistency is the key to mastery!"
+                  &quot;Consistency is the key to mastery!&quot;
                   </span>
                 </p>
               </div>
@@ -233,7 +233,7 @@ const WeeklyForm = ({ onSubmit, isGenerating }: WeeklyFormProps) => {
               <div className="mt-8 text-center text-sm text-gray-600 flex flex-col items-center gap-2">
                 <div className="flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full">
                   <FaRegSmileBeam className="text-yellow-500" />
-                  <span>"Small steps lead to big achievements! 💪"</span>
+                  <span>&quot;Small steps lead to big achievements! 💪&quot;</span>
                 </div>
                 <motion.div
                   animate={{ rotate: [0, 15, -15, 0] }}

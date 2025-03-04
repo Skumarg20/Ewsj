@@ -16,10 +16,14 @@ import { FaChartLine, FaCalendarAlt, FaChevronRight } from "react-icons/fa";
 import ViewAnalysisTimetable from "@/components/ViewAnalysistimetable";
 import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
+
+
 const subjectPrioritySchema = z.object({
   subject: z.string().min(1, "Subject is required"),
   weightage: z.number().min(1).max(100, "Weightage must be between 1 and 100"),
 });
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const timetableSchema = z.object({
   dailyRoutine: z.string().min(1, "Daily routine description is required"),
   studyHours: z.number().min(1).max(16, "Study hours must be between 1 and 16"),
@@ -29,7 +33,9 @@ const timetableSchema = z.object({
   includeBreaks: z.boolean(),
 });
 
+// Infer type from schema
 type TimetableFormValues = z.infer<typeof timetableSchema>;
+
 function TimeTablePlan() {
   const [openForm, setOpenForm] = useState(false);
   const [openTimeTable, setOpenTimeTable] = useState(false);
@@ -57,9 +63,9 @@ function TimeTablePlan() {
       setPassData((prevData) => prevData ?? studyPlan);
       setLoading(false);
     };
-    
+
     fetchInitialData();
-  }, []); 
+  }, [getTimeTable, setLoading, studyPlan]); // Added dependencies
 
   useEffect(() => {
     const hasCurrentDate = (data: StudyPlanInterface | null) => {
@@ -75,12 +81,16 @@ function TimeTablePlan() {
   const handleGenerateTimetable = async (formData: TimetableFormValues) => {
     try {
       setLoading(true);
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/timetables/generatetimetable`, formData, {
-        headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeader(),
-        },
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/timetables/generatetimetable`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            ...getAuthHeader(),
+          },
+        }
+      );
 
       if (response.data) {
         const generatedPlan = response.data.data;

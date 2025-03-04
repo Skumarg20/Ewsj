@@ -9,7 +9,7 @@ import Footer from "@/components/subscriptioncomponent/Footer";
 import { SuccessStory } from "@/interface/type";
 import { plans } from "@/components/subscriptioncomponent/plans";
 import { featureIcons } from "@/components/subscriptioncomponent/featureIcons";
-import { IoMdSchool, IoMdStar } from "react-icons/io";
+import { IoMdSchool } from "react-icons/io";
 import { FaLightbulb, FaStar } from "react-icons/fa";
 import withAuth from "@/lib/withAuth";
 

@@ -14,7 +14,7 @@ interface TodoStore {
   deleteTodo: (id: string, setLoading: (loading: boolean) => void) => Promise<void>;
 }
 
-export const useTodoStore = create<TodoStore>((set, get) => ({
+export const useTodoStore = create<TodoStore>((set) => ({
   todos: [],
   loading: false,
   error: null,

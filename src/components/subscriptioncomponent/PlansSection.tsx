@@ -6,10 +6,40 @@ import axios, { AxiosResponse } from "axios";
 import { getAuthHeader } from "@/lib/api";
 import { jwtDecode } from "jwt-decode";
 import PlanCard from "./PlanCard";
+import Script from "next/script";
 import { Plan, FeatureIcons, RazorpayResponse, OrderResponse, VerifyResponse, JwtPayload } from "../../interface/type";
 
+// Define Razorpay type (since Razorpay doesn't provide official TS types)
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  order_id: string;
+  name: string;
+  description: string;
+  handler: (response: RazorpayResponse) => void;
+  prefill: {
+    name: string;
+    email: string;
+    contact: string;
+  };
+  theme: {
+    color: string;
+  };
+}
+
+interface Razorpay {
+  open: () => void;
+}
+
+declare global {
+  interface Window {
+    Razorpay: new (options: RazorpayOptions) => Razorpay;
+  }
+}
+
 interface PlansSectionProps {
-  plan: Plan; 
+  plan: Plan;
   featureIcons: FeatureIcons;
   setUserPlan: (plan: string) => void;
 }
@@ -41,7 +71,7 @@ export default function PlansSection({ plan, featureIcons, setUserPlan }: PlansS
         {
           amount: parseInt(plan.price, 10),
           date: new Date().toISOString(),
-          plan: planId
+          plan: planId,
         },
         {
           headers: {
@@ -51,14 +81,13 @@ export default function PlansSection({ plan, featureIcons, setUserPlan }: PlansS
         }
       );
 
-      console.log(createOrderResponse,createOrderResponse.data, "Response from create-order API");
+      console.log(createOrderResponse, createOrderResponse.data, "Response from create-order API");
 
       const order = createOrderResponse.data.order;
-      console.log(order,"this is order")
 
-      // ✅ Ensure `window` exists before using `Razorpay`
-      if (typeof window !== "undefined" && (window as any).Razorpay) {
-        const razorpay = new (window as any).Razorpay({
+      
+      if (typeof window !== "undefined" && window.Razorpay) {
+        const razorpay = new window.Razorpay({
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY as string,
           amount: order.amount,
           currency: "INR",
@@ -69,7 +98,8 @@ export default function PlansSection({ plan, featureIcons, setUserPlan }: PlansS
             try {
               const verifyResponse: AxiosResponse<VerifyResponse> = await axios.post(
                 `${process.env.NEXT_PUBLIC_BASE_URL}/payments/verify-payment`,
-                {  orderCreationId: order.id,
+                {
+                  orderCreationId: order.id,
                   razorpayOrderId: response.razorpay_order_id,
                   razorpayPaymentId: response.razorpay_payment_id,
                   razorpaySignature: response.razorpay_signature,
@@ -81,7 +111,7 @@ export default function PlansSection({ plan, featureIcons, setUserPlan }: PlansS
                   },
                 }
               );
-          console.log(verifyResponse.data,"this is my ");
+              console.log(verifyResponse.data, "this is my ");
               const result = verifyResponse.data;
               if (result.success) {
                 setUserPlan(planId);
@@ -117,17 +147,25 @@ export default function PlansSection({ plan, featureIcons, setUserPlan }: PlansS
   };
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-      <PlanCard
-        plan={plan}
-        featureIcons={featureIcons}
-        isHovered={hoveredPlan === plan.id}
-        onHoverStart={() => setHoveredPlan(plan.id)}
-        onHoverEnd={() => setHoveredPlan(null)}
-        onClick={() => handlePayment(plan.id)}
-        loading={loading}
+    <>
+      {/* Use afterInteractive instead of beforeInteractive */}
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="afterInteractive" // Changed to avoid Next.js warning
+        onLoad={() => console.log("Razorpay SDK loaded")}
       />
-    </motion.div>
+
+      <motion.div variants={containerVariants} initial="hidden" animate="visible">
+        <PlanCard
+          plan={plan}
+          featureIcons={featureIcons}
+          isHovered={hoveredPlan === plan.id}
+          onHoverStart={() => setHoveredPlan(plan.id)}
+          onHoverEnd={() => setHoveredPlan(null)}
+          onClick={() => handlePayment(plan.id)}
+          loading={loading}
+        />
+      </motion.div>
+    </>
   );
 }

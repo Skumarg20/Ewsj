@@ -181,33 +181,6 @@ const Services: React.FC = () => {
   );
 };
 
-// Custom Tailwind Animations (Add these to your CSS file)
-const customStyles = `
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  @keyframes float-delay {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  @keyframes pulse-slow {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-  @keyframes spin-slow {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 1; }
-  }
-  .animate-float { animation: float 3s ease-in-out infinite; }
-  .animate-float-delay { animation: float-delay 3s ease-in-out infinite 1s; }
-  .animate-pulse-slow { animation: pulse-slow 2s ease-in-out infinite; }
-  .animate-spin-slow { animation: spin-slow 4s linear infinite; }
-  .animate-twinkle { animation: twinkle 2s ease-in-out infinite; }
-`;
+
 
 export default Services;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react"; // Add useCallback import
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Play,
@@ -60,17 +60,8 @@ const SoloStudy: React.FC = () => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isActive && timeLeft > 0) {
-      interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-    } else if (isActive && timeLeft === 0) {
-      handleTimerEnd();
-    }
-    return () => clearInterval(interval);
-  }, [isActive, timeLeft, mode, settings, completedPomodoros]);
-
-  const handleTimerEnd = () => {
+  // Wrap handleTimerEnd in useCallback
+  const handleTimerEnd = useCallback(() => {
     setIsActive(false);
     if (mode === "pomodoro") {
       setCompletedPomodoros((prev) => prev + 1);
@@ -88,7 +79,17 @@ const SoloStudy: React.FC = () => {
       setTimeLeft(settings.pomodoro * 60);
       if (settings.autoStartPomodoros) setIsActive(true);
     }
-  };
+  }, [mode, completedPomodoros, settings]); // Dependencies for handleTimerEnd
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isActive && timeLeft > 0) {
+      interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+    } else if (isActive && timeLeft === 0) {
+      handleTimerEnd();
+    }
+    return () => clearInterval(interval);
+  }, [isActive, timeLeft, handleTimerEnd]); // Simplified dependency array
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -109,7 +110,11 @@ const SoloStudy: React.FC = () => {
   const resetTimer = () => {
     setIsActive(false);
     setTimeLeft(
-      mode === "pomodoro" ? settings.pomodoro * 60 : mode === "shortBreak" ? settings.shortBreak * 60 : settings.longBreak * 60
+      mode === "pomodoro"
+        ? settings.pomodoro * 60
+        : mode === "shortBreak"
+        ? settings.shortBreak * 60
+        : settings.longBreak * 60
     );
   };
 
@@ -130,7 +135,11 @@ const SoloStudy: React.FC = () => {
   const updateSettings = (newSettings: Settings) => {
     setSettings(newSettings);
     setTimeLeft(
-      mode === "pomodoro" ? newSettings.pomodoro * 60 : mode === "shortBreak" ? newSettings.shortBreak * 60 : newSettings.longBreak * 60
+      mode === "pomodoro"
+        ? newSettings.pomodoro * 60
+        : mode === "shortBreak"
+        ? newSettings.shortBreak * 60
+        : newSettings.longBreak * 60
     );
     setShowSettings(false);
   };
@@ -141,9 +150,11 @@ const SoloStudy: React.FC = () => {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const handleMusicSelect = (selectedMusic: string) => {
-    setMusic(selectedMusic);
-    setShowMusicSelector(false);
+  const handleMusicSelect = (selectedMusic: string | null) => {
+    if (selectedMusic) {
+      setMusic(selectedMusic);
+      setShowMusicSelector(false);
+    }
   };
 
   if (!isClient) return null;

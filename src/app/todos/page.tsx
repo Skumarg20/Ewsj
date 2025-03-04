@@ -10,22 +10,11 @@ import { useState, useEffect } from "react";
 import { CheckCircleIcon, ClipboardIcon } from "lucide-react";
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
 import { Todo, TodoPriority, TodoStatus } from "@/interface/todo";
-import { useTodoStore } from "@/state/store/todosstore"; // Adjust path as needed
+import { useTodoStore } from "@/state/store/todosstore";
 import withAuth from "@/lib/withAuth";
+import { statusOptions, priorityOptions } from "@/interface/todo";
 
-export const statusOptions: TodoStatus[] = [
-  TodoStatus.PENDING,
-  TodoStatus.IN_PROGRESS,
-  TodoStatus.COMPLETED,
-  TodoStatus.POSTPONED,
-  TodoStatus.REJECTED,
-];
 
-export const priorityOptions: TodoPriority[] = [
-  TodoPriority.LOW,
-  TodoPriority.MEDIUM,
-  TodoPriority.HIGH,
-];
 
 // TodoItem Component
 const TodoItem = ({
@@ -171,17 +160,17 @@ const TodoItem = ({
   const limit = 10;
 
   useEffect(() => {
-    fetchTodos(page, limit, (isLoading) => {}); // Dummy setLoading function if not used elsewhere
+    fetchTodos(page, limit, () => {});
   }, [fetchTodos, page]);
 
   const totalPages = Math.ceil(total / limit);
 
   const handleUpdate = (id: string, update: Partial<Todo>) => {
-    updateTodo(id, update, (isLoading) => {}); // Dummy setLoading
+    updateTodo(id, update, () => {});
   };
 
   const handleDelete = (id: string) => {
-    deleteTodo(id, (isLoading) => {}); // Dummy setLoading
+    deleteTodo(id, () => {});
   };
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { X, Music, BookOpen, Coffee, Leaf, Headphones, Bell } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { X, Music, BookOpen, Coffee, Leaf, Headphones } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface MusicSelectorProps {
   currentMusic: string | null;
@@ -20,7 +20,7 @@ const musicOptions = [
 const MusicSelector: React.FC<MusicSelectorProps> = ({ currentMusic, onSelect, onClose }) => {
   const [customUrl, setCustomUrl] = useState("");
 
-  const handleSelectAndClose = (musicUrl: string | null) => {
+  const handleSelectAndClose = (musicUrl: string|null) => {
     onSelect(musicUrl); // Trigger music playback in SoloStudy
     onClose(); // Close the selector
   };

@@ -3,7 +3,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
 import toast, { Toaster } from "react-hot-toast";
-import { FiBook, FiClock, FiLogOut, FiStar, FiUser, FiAward } from "react-icons/fi";
+import { FiBook, FiClock, FiLogOut, FiUser, FiAward } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
 
 // Define interface for decoded token based on JwtPayload

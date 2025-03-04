@@ -6,8 +6,6 @@ import {
   FaBookOpen, 
   FaBrain, 
   FaCalendarCheck, 
-  FaRegClock, 
-  FaRocket, 
   FaPencilAlt, 
   FaLaptopCode, 
   FaGraduationCap, 

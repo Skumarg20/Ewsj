@@ -126,7 +126,7 @@ const TargetedForm = ({ onSubmit, isGenerating }: TargetFormProps) => {
                 <p className="text-gray-600 mt-2 flex items-center justify-center gap-2">
                   <FaRegSmileBeam className="text-yellow-400 animate-bounce" />
                   <span className="bg-gradient-to-r from-green-100 to-emerald-100 px-3 py-1 rounded-full">
-                    "Hit your goals with precision!"
+                  &quot;Hit your goals with precision!&quot;
                   </span>
                 </p>
               </div>

@@ -165,28 +165,5 @@ function Navbar() {
   );
 }
 
-// Custom Tailwind Styles (Add to your CSS file)
-const customStyles = `
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-  @keyframes spin-once {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  @keyframes glow-pulse {
-    0%, 100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
-    50% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.6); }
-  }
-  .animate-twinkle { animation: twinkle 2s ease-in-out infinite; }
-  .animate-spin-once { animation: spin-once 0.5s ease-in-out; }
-  .hover\\:glow { 
-    &:hover { box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); }
-  }
-  .hover\\:glow-strong { 
-    &:hover { box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); }
-  }
-`;
 
 export default Navbar;

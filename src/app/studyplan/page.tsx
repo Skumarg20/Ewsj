@@ -4,19 +4,17 @@ import { useState } from "react";
 import {
   FaRocket,
   FaBullseye,
-  FaPen,
   FaRegCalendarCheck,
   FaTasks,
   FaBullhorn,
   FaStar,
-  FaMagic,
   FaSpinner,
   FaBookOpen,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import WeeklyForm from "@/components/studyplan/weekly";
 import TargetedForm from "@/components/studyplan/targetedplan";
-import CustomForm from "@/components/studyplan/customstudyplan";
+
 import {
   useWeeklyStudyPlanStore,
   useTargetStudyPlanStore,

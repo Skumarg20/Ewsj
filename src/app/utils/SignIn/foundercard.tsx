@@ -1,28 +1,21 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaQuoteLeft, FaStar, FaFireAlt } from "react-icons/fa";
 
+// Animation variants
+const cardFadeIn = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
+
+const bounceIn = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { type: "spring", stiffness: 200 } },
+};
+
 const MotivationalCard = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
-  // Animation variants
-  const cardFadeIn = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
-  };
-
-  const bounceIn = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: { scale: 1, opacity: 1, transition: { type: "spring", stiffness: 200 } },
-  };
-
   return (
     <motion.div
       initial="hidden"
@@ -55,7 +48,7 @@ const MotivationalCard = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight flex items-center justify-center gap-2">
               <FaQuoteLeft className="w-6 h-6 text-indigo-400" />
               <span className="bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent">
-                "The Future Belongs To Dreamers"
+              &quot;The Future Belongs To Dreamers&quot;
               </span>
             </h1>
             <p className="text-gray-700 text-lg leading-relaxed max-w-xs mx-auto">

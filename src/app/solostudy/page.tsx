@@ -1,3 +1,4 @@
+'use client'
 import withAuth from "@/lib/withAuth";
 import dynamic from "next/dynamic";
 const SoloStudy = dynamic(() => import("./solostudy"), { ssr: false });

@@ -11,6 +11,7 @@ import {
   FaStar,
   FaBolt,
 } from "react-icons/fa";
+import Image from "next/image";
 
 const AboutUs = () => {
   // Animation variants
@@ -69,7 +70,7 @@ const AboutUs = () => {
           whileHover={{ scale: 1.1, rotate: 5 }}
           variants={zoomIn}
         >
-          <img
+          <Image
             src="/founderimage.png"
             alt="Founder"
             className="rounded-full w-56 h-56 mx-auto object-cover border-4 border-yellow-400 shadow-xl transition-transform -rotate-12"

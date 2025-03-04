@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { X, Clock, Coffee, Sun } from "lucide-react";
 
 interface SettingsPanelProps {

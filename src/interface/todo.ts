@@ -46,3 +46,16 @@ export enum TodoPriority {
     due_date: string;
   }
   
+  export const statusOptions: TodoStatus[] = [
+    TodoStatus.PENDING,
+    TodoStatus.IN_PROGRESS,
+    TodoStatus.COMPLETED,
+    TodoStatus.POSTPONED,
+    TodoStatus.REJECTED,
+  ];
+  
+  export const priorityOptions: TodoPriority[] = [
+    TodoPriority.LOW,
+    TodoPriority.MEDIUM,
+    TodoPriority.HIGH,
+  ];

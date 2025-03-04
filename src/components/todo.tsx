@@ -30,7 +30,7 @@ export const priorityOptions: TodoPriority[] = [
 ];
 
 export default function TodoApp() {
-  const { todos, error, fetchTodos, addTodo, deleteTodo, updateTodo, loading } = useTodoStore();
+  const { todos, fetchTodos, addTodo, deleteTodo, updateTodo, loading } = useTodoStore();
   const { setLoading } = useLoading();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const {
@@ -41,14 +41,14 @@ export default function TodoApp() {
   } = useForm<TodoFormInputs>();
 
   useEffect(() => {
-    // Since this is a preview page, fetch initial todos (e.g., first 10)
-    fetchTodos(1, 10, setLoading); // Adjusted to use pagination parameters
+  
+    fetchTodos(1, 10, setLoading); 
   }, [fetchTodos, setLoading]);
 
   const onSubmit: SubmitHandler<TodoFormInputs> = async (data) => {
-    console.log(data, "this is form data");
+   
     await addTodo(data, setLoading);
-    console.log("submitting the data");
+   
     reset();
     setIsFormOpen(false);
     fetchTodos(1, 10, setLoading); // Refresh todos after adding

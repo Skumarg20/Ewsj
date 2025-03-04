@@ -43,7 +43,7 @@ export default function RootLayout({
           src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"
           strategy="beforeInteractive"
         />
-      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+     
       </body>
     </html>
   );

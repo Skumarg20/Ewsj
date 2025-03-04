@@ -4,7 +4,7 @@ import { FiUser, FiMail, FiBook, FiMessageSquare, FiClock, FiBookOpen, FiTarget,
 import { motion, useAnimation } from "framer-motion";
 import emailjs from "@emailjs/browser"; // Import EmailJS
 import { useRouter } from "next/navigation"; // Import useRouter for Next.js navigation
-import BookCallButton from "./BookaCall";
+
 
 interface FormData {
   name: string;
@@ -149,7 +149,7 @@ const ContactUs: React.FC = () => {
             { icon: FiBook, text: "Smart Study", color: "text-purple-400" },
             { icon: FiClock, text: "Time Mastery", color: "text-indigo-400" },
             { icon: FiTarget, text: "Goal Crusher", color: "text-pink-400" },
-          ].map(({ icon: Icon, text, color }, index) => (
+          ].map(({ icon: Icon, text, color }) => (
             <motion.div
               key={text}
               className="p-3 bg-gray-800/80 backdrop-blur-md rounded-lg border border-gray-700/50"
