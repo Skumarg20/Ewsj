@@ -33,8 +33,6 @@ export default function TodoApp() {
   const { todos, error, fetchTodos, addTodo, deleteTodo, updateTodo, loading } = useTodoStore();
   const { setLoading } = useLoading();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  // const [statusMenuOpen, setStatusMenuOpen] = useState<string | null>(null);
-  // const [priorityMenuOpen, setPriorityMenuOpen] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -43,17 +41,17 @@ export default function TodoApp() {
   } = useForm<TodoFormInputs>();
 
   useEffect(() => {
-    fetchTodos(setLoading);
-  }, [fetchTodos, setLoading]); // Added setLoading to dependencies
+    // Since this is a preview page, fetch initial todos (e.g., first 10)
+    fetchTodos(1, 10, setLoading); // Adjusted to use pagination parameters
+  }, [fetchTodos, setLoading]);
 
   const onSubmit: SubmitHandler<TodoFormInputs> = async (data) => {
-    console.log(data, "thisis form data");
+    console.log(data, "this is form data");
     await addTodo(data, setLoading);
-    console.log("submiting the data");
+    console.log("submitting the data");
     reset();
     setIsFormOpen(false);
-    fetchTodos(setLoading);
-    setIsFormOpen(false);
+    fetchTodos(1, 10, setLoading); // Refresh todos after adding
   };
 
   const handleUpdate = async (
@@ -65,18 +63,13 @@ export default function TodoApp() {
     if (updates.priority) updateData.priority = updates.priority;
 
     await updateTodo(todoId, updateData, setLoading);
-    // setStatusMenuOpen(null);
-    // setPriorityMenuOpen(null);
-    fetchTodos(setLoading);
+    fetchTodos(1, 10, setLoading); // Refresh todos after updating
   };
 
   const handleDelete = async (todoId: string) => {
     await deleteTodo(todoId, setLoading);
-    fetchTodos(setLoading);
+    fetchTodos(1, 10, setLoading); // Refresh todos after deleting
   };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   const toggleForm = () => setIsFormOpen(!isFormOpen);
 
@@ -111,7 +104,7 @@ export default function TodoApp() {
               >
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6 sticky top-0 bg-white/90 z-10 rounded-xl">
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent ">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                     Create study goal
                   </h2>
                   <button
@@ -192,12 +185,18 @@ export default function TodoApp() {
                         })}
                         className="w-full p-2 bg-transparent focus:outline-none appearance-none"
                       >
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
+                        <option value="">Select Priority</option>
+                        <option value={TodoPriority.LOW}>{TodoPriority.LOW}</option>
+                        <option value={TodoPriority.MEDIUM}>{TodoPriority.MEDIUM}</option>
+                        <option value={TodoPriority.HIGH}>{TodoPriority.HIGH}</option>
                       </select>
                       <ExclamationCircleIcon className="w-5 h-5 text-gray-500" />
                     </div>
+                    {errors.priority && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.priority.message}
+                      </p>
+                    )}
                   </div>
 
                   {/* Due Date */}
@@ -211,9 +210,14 @@ export default function TodoApp() {
                         {...register("due_date", {
                           required: "Due date is required",
                         })}
-                        className="mt-1 block w-full p-2 bg-[#2D336B] text-gray-100 shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-200 rounded-lg appearance-none"
+                        className="mt-1 block w-full p-2 bg-transparent text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-200 rounded-lg"
                       />
                     </div>
+                    {errors.due_date && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.due_date.message}
+                      </p>
+                    )}
                   </div>
 
                   {/* Submit Button */}
@@ -222,8 +226,9 @@ export default function TodoApp() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="w-full lg:col-span-2 p-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                    disabled={loading}
                   >
-                    Create study goal
+                    {loading ? "Creating..." : "Create study goal"}
                   </motion.button>
                 </form>
               </motion.div>
@@ -231,7 +236,6 @@ export default function TodoApp() {
           )}
         </AnimatePresence>
 
-        {/* Todo List */}
         <Todos todos={todos} handleUpdate={handleUpdate} handleDelete={handleDelete} />
       </div>
     </div>

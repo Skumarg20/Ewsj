@@ -19,6 +19,7 @@ import { getAuthHeader } from "@/lib/api";
 import { JSONContent } from "@tiptap/core";
 import {CreateFolder,Note,FolderData} from '@/interface/notesinterface'
 import NoteEditor from "./NoteEditor";
+import withAuth from "@/lib/withAuth";
 
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
@@ -598,4 +599,4 @@ if (view === "edit" && selectedNote) {
 }
 
 
-export default Notes;
+export default withAuth(Notes);

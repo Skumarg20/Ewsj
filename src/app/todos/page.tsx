@@ -1,11 +1,17 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDownIcon, TrashIcon, TagIcon, CalendarIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import {
+  ChevronDownIcon,
+  TrashIcon,
+  TagIcon,
+  CalendarIcon,
+} from "@heroicons/react/24/outline";
+import { useState, useEffect } from "react";
 import { CheckCircleIcon, ClipboardIcon } from "lucide-react";
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
-import { Todo, TodoPriority, TodoStatus, TodoPreviewProps} from "@/interface/todo";
-import { useRouter } from "next/navigation";
+import { Todo, TodoPriority, TodoStatus } from "@/interface/todo";
+import { useTodoStore } from "@/state/store/todosstore"; // Adjust path as needed
+import withAuth from "@/lib/withAuth";
 
 export const statusOptions: TodoStatus[] = [
   TodoStatus.PENDING,
@@ -22,25 +28,41 @@ export const priorityOptions: TodoPriority[] = [
 ];
 
 // TodoItem Component
-const TodoItem = ({ todo, handleUpdate, handleDelete }: { todo: Todo; handleUpdate: (id: string, update: Partial<Todo>) => void; handleDelete: (id: string) => void }) => {
+const TodoItem = ({
+  todo,
+  handleUpdate,
+  handleDelete,
+}: {
+  todo: Todo;
+  handleUpdate: (id: string, update: Partial<Todo>) => void;
+  handleDelete: (id: string) => void;
+}) => {
   const [priorityMenuOpen, setPriorityMenuOpen] = useState(false);
   const [statusMenuOpen, setStatusMenuOpen] = useState(false);
 
   const getPriorityColor = (priority: TodoPriority) => {
     switch (priority) {
-      case TodoPriority.HIGH: return "bg-red-500";
-      case TodoPriority.MEDIUM: return "bg-yellow-500";
-      default: return "bg-green-500";
+      case TodoPriority.HIGH:
+        return "bg-red-500";
+      case TodoPriority.MEDIUM:
+        return "bg-yellow-500";
+      default:
+        return "bg-green-500";
     }
   };
 
   const getStatusIcon = (status: TodoStatus) => {
     switch (status) {
-      case TodoStatus.COMPLETED: return <CheckCircleIcon className="w-5 h-5 text-green-500" />;
-      case TodoStatus.IN_PROGRESS: return <ArrowPathIcon className="w-5 h-5 text-blue-500" />;
-      case TodoStatus.POSTPONED: return <ClipboardIcon className="w-5 h-5 text-orange-500" />;
-      case TodoStatus.REJECTED: return <ClipboardIcon className="w-5 h-5 text-red-500" />;
-      default: return <ClipboardIcon className="w-5 h-5 text-gray-500" />;
+      case TodoStatus.COMPLETED:
+        return <CheckCircleIcon className="w-5 h-5 text-green-500" />;
+      case TodoStatus.IN_PROGRESS:
+        return <ArrowPathIcon className="w-5 h-5 text-blue-500" />;
+      case TodoStatus.POSTPONED:
+        return <ClipboardIcon className="w-5 h-5 text-orange-500" />;
+      case TodoStatus.REJECTED:
+        return <ClipboardIcon className="w-5 h-5 text-red-500" />;
+      default:
+        return <ClipboardIcon className="w-5 h-5 text-gray-500" />;
     }
   };
 
@@ -142,48 +164,75 @@ const TodoItem = ({ todo, handleUpdate, handleDelete }: { todo: Todo; handleUpda
   );
 };
 
-const Todos = ({ todos, handleUpdate, handleDelete }: TodoPreviewProps) => {
-  const router = useRouter();
-  const visibleCount = 5; // Show only 5 todos initially
+ function TodosPage() {
+  const { todos, error, fetchTodos, updateTodo, deleteTodo, loading, total } =
+    useTodoStore();
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  const sortedTodos = todos.sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime());
-  const visibleTodos = sortedTodos.slice(0, visibleCount);
+  useEffect(() => {
+    fetchTodos(page, limit, (isLoading) => {}); // Dummy setLoading function if not used elsewhere
+  }, [fetchTodos, page]);
 
-  const handleShowMore = () => {
-    router.push("/todos"); // Redirect to the main todos page
+  const totalPages = Math.ceil(total / limit);
+
+  const handleUpdate = (id: string, update: Partial<Todo>) => {
+    updateTodo(id, update, (isLoading) => {}); // Dummy setLoading
+  };
+
+  const handleDelete = (id: string) => {
+    deleteTodo(id, (isLoading) => {}); // Dummy setLoading
   };
 
   return (
-    <div className="relative z-0">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {visibleTodos.map((todo) => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            handleUpdate={handleUpdate}
-            handleDelete={handleDelete}
-          />
-        ))}
-      </div>
-      {todos.length > visibleCount && (
-        <motion.div
-          className="mt-6 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
+    <div className="p-6 min-h-screen bg-gray-100">
+      <motion.h1
+        className="text-4xl md:text-5xl font-extrabold text-center mb-6 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 bg-clip-text text-transparent"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        All Your Todos ✨
+      </motion.h1>
+      {loading && <p className="text-center text-gray-500">Loading...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
+      <div className="relative z-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {todos.map((todo) => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              handleUpdate={handleUpdate}
+              handleDelete={handleDelete}
+            />
+          ))}
+        </div>
+        <div className="mt-8 flex justify-center items-center gap-6">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleShowMore}
-            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            onClick={() => setPage(page - 1)}
+            disabled={page === 1 || loading}
+            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full font-semibold shadow-lg disabled:opacity-50 transition-all duration-300"
           >
-            Show More ({todos.length - visibleCount})
+            Previous
           </motion.button>
-        </motion.div>
-      )}
+          <span className="text-gray-700 text-lg">
+            Page {page} of {totalPages}
+          </span>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setPage(page + 1)}
+            disabled={page === totalPages || loading}
+            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full font-semibold shadow-lg disabled:opacity-50 transition-all duration-300"
+          >
+            Next
+          </motion.button>
+        </div>
+      </div>
     </div>
   );
-};
+}
 
-export default Todos;
+export default withAuth(TodosPage)

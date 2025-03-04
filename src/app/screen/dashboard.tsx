@@ -7,7 +7,7 @@ import Clusters from "../talksphere/clusters";
 import Notes from "@/app/notes/page";
 import TimerModal from "@/app/components/TimeModel/index";
 import { AiOutlineSchedule } from "react-icons/ai";
-import { FaNotesMedical } from "react-icons/fa6";
+import { FaNotesMedical, FaUserGraduate } from "react-icons/fa6";
 import { MdOutlineMoreTime, MdGroups2 } from "react-icons/md";
 import { GrNodes } from "react-icons/gr";
 import { RxDashboard } from "react-icons/rx";
@@ -15,33 +15,35 @@ import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { motion } from "framer-motion";
 import ProfileDropdown from "@/components/profiledropdown";
 import Image from "next/image";
+import SoloStudy from "../solostudy/page";
 
-// Define navigation items without relying on @toolpad/core types
 const NAVIGATION = [
   { path: "dashboard", title: "Dashboard", icon: <RxDashboard /> },
+  { path: "solostudy", title: "Focus", icon: <FaUserGraduate /> },
   { path: "studyplan", title: "Study Plan", icon: <AiOutlineSchedule /> },
   { path: "timetable", title: "Time Table", icon: <MdOutlineMoreTime /> },
   { path: "notes", title: "Notes", icon: <FaNotesMedical /> },
-  {
-    path: "group",
-    title: "Clusters",
-    icon: <MdGroups2 />,
-    children: [
-      {
-        path: "hbhsales",
-        title: "Sales",
-        icon: <GrNodes />,
-        groupId: "sal8777es",
-      },
-      {
-        path: "traf98fic",
-        title: "Traffic",
-        icon: <GrNodes />,
-        groupId: "traff38587ic",
-      },
-    ],
-  },
-  { path: "peers", title: "Peers", icon: <GrNodes /> },
+  // {
+  //   path: "group",
+  //   title: "Clusters",
+  //   icon: <MdGroups2 />,
+  //   children: [
+  //     {
+  //       path: "hbhsales",
+  //       title: "Sales",
+  //       icon: <GrNodes />,
+  //       groupId: "sal8777es",
+  //     },
+  //     {
+  //       path: "traf98fic",
+  //       title: "Traffic",
+  //       icon: <GrNodes />,
+  //       groupId: "traff38587ic",
+  //     },
+  //   ],
+  // },
+  // { path: "peers", title: "Peers", icon: <GrNodes /> },
+ 
 ];
 
 function PageContent({ pathname }: { pathname: string }) {
@@ -49,12 +51,14 @@ function PageContent({ pathname }: { pathname: string }) {
   const groupId = isGroupPage ? pathname.split("/")[2] : null;
 
   return (
-    <div className="flex-1 p-4 md:p-6 bg-white">
+    <div className="flex-1 p-2 md:p-2 bg-white">
       {pathname === "/dashboard" && <RightDashboard />}
+      {pathname === "/solostudy" && <SoloStudy />}
       {pathname === "/studyplan" && <StudyPlan />}
       {pathname === "/timetable" && <TimeTable />}
       {pathname === "/group" && <Clusters />}
       {pathname === "/notes" && <Notes />}
+      
       {isGroupPage && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -224,12 +228,10 @@ export default function Dashboard({  }: DashboardProps) {
               <ProfileDropdown />
             </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <TimerModal />
-          </div>
+         
         </div>
 
-        {/* Page Content */}
+       
         <PageContent pathname={pathname} />
       </div>
     </div>

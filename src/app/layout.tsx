@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
-import {LoadingProvider }from "@/app/loader/context/loadingprovider"
-
+import { LoadingProvider } from "@/app/loader/context/loadingprovider";
+import { UpgradeProvider} from "@/context/UpgradeContext";
 import LoadingSpinner from "./loader/LoadingSpinner";
+import UpgradePopup from "@/components/UpgradePopup";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,39 +23,28 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html className=" scroll-smooth" lang="en" suppressHydrationWarning>
-        <head>
-      
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 m-auto`}
+      >
+        <UpgradeProvider>
+          <LoadingProvider>
+            <div className="z-50">
+               <UpgradePopup/>
+            </div>
+           
+            <LoadingSpinner />
+            <div className="border">{children}</div>
+          </LoadingProvider>
+        </UpgradeProvider>
         <Script
           src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"
-          strategy="beforeInteractive" 
+          strategy="beforeInteractive"
         />
-      </head>
-
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased m-auto bg-white  text-gray-900`}
-      >
-        <LoadingProvider>
-       
-        <LoadingSpinner />
-        <div className="">
-          <div className="w-[100%] m-auto backdrop-blur-md sticky top-0 z-50 bg-slate-100">
-
-         
-          </div>
-          <div className=" border">
-          {children}
-          </div>
-        </div>
-       
-     
-        </LoadingProvider>
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       </body>
-      
     </html>
   );
 }

@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import Services from "./components/Ourservice";
 import Contact from "./components/Contact";
 import HomeLayout from "@/components/homepage";
+import AboutUs from "./components/aboutsus";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <div className="services">
         <Services />
       </div>
+      <AboutUs/>
       
       <Contact />
     </HomeLayout>

@@ -38,7 +38,13 @@ const RightDashboard = () => {
         >
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {showChat ? (
-              <ChatBuddie onClose={() => setShowChat(false)} />
+             <ChatBuddie 
+             onClose={() => setShowChat(false)} 
+             onRateLimitExceeded={(message: string) => {
+               console.error(message); 
+               alert(message); 
+             }} 
+           />
             ) : (
               <DashBoardChat onStartChat={() => setShowChat(true)} />
             )}

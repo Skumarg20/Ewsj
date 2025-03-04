@@ -14,101 +14,95 @@ import {
   FaTasks,
   FaClock,
   FaBrain,
+  FaStar,
+  FaFire,
+  FaGem,
 } from 'react-icons/fa';
 
 interface Service {
   id: number;
   title: string;
   description: string;
-  icon: React.ReactNode; // Icon for each service
+  icon: React.ReactNode;
+  badge?: string; // Optional badge for highlighting special services
 }
 
 const services: Service[] = [
   {
     id: 10,
     title: 'Time Management Tools',
-    description:
-      'Optimize your study schedule with time management tools, helping you stay organized and productive.',
-    icon: <FaClock className="w-8 h-8 text-blue-500" />,
+    description: 'Master your schedule with smart tools to boost productivity and keep you on track!',
+    icon: <FaClock className="w-10 h-10 text-blue-600" />,
+    badge: 'Top Pick',
   },
   {
     id: 11,
     title: 'Focus & Productivity Boosters',
-    description:
-      'Improve your focus and productivity with guided techniques and tools designed to minimize distractions.',
-    icon: <FaBrain className="w-8 h-8 text-green-500" />,
+    description: 'Stay laser-focused with techniques and timers to crush distractions.',
+    icon: <FaBrain className="w-10 h-10 text-green-600" />,
   },
   {
     id: 12,
     title: 'Task Management',
-    description:
-      'Stay on top of your tasks with a built-in task manager, ensuring you never miss a deadline.',
-    icon: <FaTasks className="w-8 h-8 text-purple-500" />,
+    description: 'Organize tasks like a pro and never miss a deadline again!',
+    icon: <FaTasks className="w-10 h-10 text-purple-600" />,
   },
   {
     id: 1,
     title: 'Personalized Learning Path',
-    description:
-      'Receive a customized learning path tailored to your goals and study pace. We create a roadmap to maximize your potential.',
-    icon: <FaBookOpen className="w-8 h-8 text-blue-500" />,
+    description: 'Your custom roadmap to success, tailored just for you!',
+    icon: <FaBookOpen className="w-10 h-10 text-blue-600" />,
+    badge: 'Student Favorite',
   },
   {
     id: 2,
-    title: 'Doubt Resolution',
-    description:
-      'Get your doubts resolved by experts with quick and easy explanations, helping you to understand even the toughest concepts.',
-    icon: <FaQuestionCircle className="w-8 h-8 text-green-500" />,
+    title: 'Instant Doubt Resolution',
+    description: 'Confused? Get expert help in a snap to conquer tough topics!',
+    icon: <FaQuestionCircle className="w-10 h-10 text-green-600" />,
   },
   {
     id: 3,
-    title: 'Smart Practice Tests & Quizzes',
-    description:
-      'Test your knowledge with smart quizzes and practice tests. Designed to challenge you, helping you strengthen your skills.',
-    icon: <FaChartLine className="w-8 h-8 text-purple-500" />,
+    title: 'Smart Quizzes & Tests',
+    description: 'Challenge yourself with fun, adaptive quizzes to level up your skills.',
+    icon: <FaChartLine className="w-10 h-10 text-purple-600" />,
   },
   {
     id: 4,
-    title: 'Performance Analytics & Progress Tracking',
-    description:
-      'Track your learning journey with detailed performance analytics, pinpointing strengths and areas for improvement.',
-    icon: <FaChartLine className="w-8 h-8 text-yellow-500" />,
+    title: 'Progress Tracking',
+    description: 'See your growth with cool analytics – know your strengths and smash your weaknesses!',
+    icon: <FaChartLine className="w-10 h-10 text-yellow-600" />,
   },
   {
     id: 5,
-    title: 'Video Summarization',
-    description:
-      'Save time with summarized videos focusing on key concepts, allowing you to learn faster and retain more.',
-    icon: <FaVideo className="w-8 h-8 text-pink-500" />,
+    title: 'Video Summaries',
+    description: 'Quick video recaps to learn fast and ace your revision.',
+    icon: <FaVideo className="w-10 h-10 text-pink-600" />,
   },
   {
     id: 6,
-    title: 'Exam Strategy Guidance',
-    description:
-      'Access strategies and tips from experts on how to ace your exams, including time management and exam-specific approaches.',
-    icon: <FaLightbulb className="w-8 h-8 text-indigo-500" />,
+    title: 'Exam Strategy Hacks',
+    description: 'Pro tips to dominate exams – from time hacks to smart prep.',
+    icon: <FaLightbulb className="w-10 h-10 text-indigo-600" />,
+    badge: 'Game Changer',
   },
   {
     id: 7,
-    title: 'Study Group Matching',
-    description:
-      'Connect with like-minded students, join study groups, and enhance your learning experience through collaborative discussions.',
-    icon: <FaUsers className="w-8 h-8 text-red-500" />,
+    title: 'Study Squads',
+    description: 'Team up with study buddies for epic group learning vibes!',
+    icon: <FaUsers className="w-10 h-10 text-red-600" />,
   },
   {
     id: 8,
-    title: 'Smart Notes & Flash Cards',
-    description:
-      'Create, organize, and review digital notes while using flash cards for quick memorization of key concepts. Perfect for efficient study sessions and quick recall during exams.',
-    icon: <FaStickyNote className="w-8 h-8 text-teal-500" />,
+    title: 'Smart Notes & Flashcards',
+    description: 'Make notes and flashcards that stick – perfect for quick cramming!',
+    icon: <FaStickyNote className="w-10 h-10 text-teal-600" />,
   },
   {
     id: 9,
-    title: 'Download Syllabus & Books ',
-    description:
-      'Download subject-wise syllabi and books for JEE and NEET to aid in your preparation. We offer syllabi for Physics, Chemistry, and Mathematics/Biology to help you stay on track with your studies.',
-    icon: <FaDownload className="w-8 h-8 text-orange-500" />,
+    title: 'Syllabus & Book Downloads',
+    description: 'Grab syllabi and books for JEE/NEET – everything you need in one click!',
+    icon: <FaDownload className="w-10 h-10 text-orange-600" />,
   },
- 
 ];
 
 const Services: React.FC = () => {
@@ -117,69 +111,103 @@ const Services: React.FC = () => {
   const displayedServices = showAll ? services : services.slice(0, 6);
 
   return (
-    <div className="bg-[#28282B] text-white py-16 px-6 w-full rounded-xl mt-5 relative overflow-hidden" id='services'>
-      {/* Background Graphics */}
+    <div
+      className="bg-gradient-to-br from-[#1E1E2F] to-[#28282B] text-white py-16 px-6 w-full rounded-xl mt-5 relative overflow-hidden shadow-2xl"
+      id="services"
+    >
+      {/* Animated Background Elements */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl animate-float-delay"></div>
+        <div className="absolute top-0 left-0 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <FaStar className="absolute top-10 right-20 text-yellow-400 w-6 h-6 animate-twinkle" />
+        <FaFire className="absolute bottom-20 left-10 text-orange-500 w-8 h-8 animate-bounce" />
       </div>
 
       {/* Header Section */}
       <div className="text-center mb-12 relative z-10">
-  {/* Icon and Graphic */}
-  <div className="relative flex justify-center items-center mb-6">
-    {/* Floating Icons */}
-    <FaRocket className="w-12 h-12 text-blue-500 absolute -top-8 -left-8 animate-float" />
-    <FaLightbulb className="w-10 h-10 text-yellow-500 absolute -top-12 right-8 animate-float-delay" />
-    <FaChartLine className="w-8 h-8 text-purple-500 absolute -bottom-8 -right-8 animate-float" />
-
-    {/* Main Icon */}
-    <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-6 rounded-full shadow-lg">
-      <FaBookOpen className="w-16 h-16 text-white" />
-    </div>
-  </div>
-
-  {/* Title */}
-  <h1 className="text-4xl font-bold mb-4">Our Services</h1>
-
-  {/* Description */}
-  <p className="text-lg max-w-4xl mx-auto">
-    We offer a range of personalized services designed to help you succeed academically. Whether you&apos;re looking for a
-    customized learning path, need help resolving doubts, or want to track your progress with performance analytics, we
-    have the tools and expertise to guide you.
-  </p>
-</div>
+        <div className="relative flex justify-center items-center mb-8">
+          <FaRocket className="w-12 h-12 text-blue-500 absolute -top-10 -left-12 animate-float" />
+          <FaGem className="w-10 h-10 text-indigo-500 absolute -top-14 right-10 animate-float-delay" />
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-full shadow-lg animate-pulse-slow">
+            <FaBookOpen className="w-16 h-16 text-white" />
+          </div>
+        </div>
+        <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+          Level Up Your Study Game
+        </h1>
+        <p className="text-lg max-w-3xl mx-auto text-gray-300">
+          Unlock a world of tools and tricks to ace your studies – from personalized paths to epic exam hacks, we’ve got your back!
+        </p>
+      </div>
 
       {/* Services Cards Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
         {displayedServices.map((service) => (
           <div
             key={service.id}
-            className="bg-white p-6 rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-slate-50 w-full max-w-[90%] mx-auto"
+            className="bg-white p-6 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 w-full max-w-[90%] mx-auto group"
           >
             <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 bg-blue-50 rounded-full">{service.icon}</div>
-              <h2 className="text-2xl font-semibold text-gray-800">{service.title}</h2>
+              <div className="p-4 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full group-hover:animate-spin-slow">
+                {service.icon}
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 group-hover:text-blue-600">{service.title}</h2>
+                {service.badge && (
+                  <span className="text-xs font-semibold text-white bg-blue-500 px-2 py-1 rounded-full">
+                    {service.badge}
+                  </span>
+                )}
+              </div>
             </div>
-            <p className="text-gray-600">{service.description}</p>
+            <p className="text-gray-700 group-hover:text-gray-900">{service.description}</p>
           </div>
         ))}
       </div>
 
       {/* Show More Button */}
       {!showAll && (
-        <div className="text-center mt-6 relative z-10">
+        <div className="text-center mt-10 relative z-10">
           <button
             onClick={() => setShowAll(true)}
-            className="flex items-center justify-center bg-black text-white py-2 px-6 rounded-full text-lg font-semibold transition-all duration-300 hover:bg-gray-700 focus:outline-none"
+            className="flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-8 rounded-full text-lg font-bold transition-all duration-300 hover:scale-110 hover:shadow-lg focus:outline-none"
           >
-            <span>Show More</span>
-            <ChevronDownIcon className="w-5 h-5 ml-2 text-white" />
+            <span>Unlock More Awesomeness</span>
+            <ChevronDownIcon className="w-6 h-6 ml-2 animate-bounce" />
           </button>
         </div>
       )}
     </div>
   );
 };
+
+// Custom Tailwind Animations (Add these to your CSS file)
+const customStyles = `
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes float-delay {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  @keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+  .animate-float { animation: float 3s ease-in-out infinite; }
+  .animate-float-delay { animation: float-delay 3s ease-in-out infinite 1s; }
+  .animate-pulse-slow { animation: pulse-slow 2s ease-in-out infinite; }
+  .animate-spin-slow { animation: spin-slow 4s linear infinite; }
+  .animate-twinkle { animation: twinkle 2s ease-in-out infinite; }
+`;
 
 export default Services;

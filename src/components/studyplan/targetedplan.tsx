@@ -25,9 +25,10 @@ interface TargetPlanData {
 
 interface TargetFormProps {
   onSubmit: (formData: TargetPlanData) => void;
+  isGenerating: boolean; 
 }
 
-const TargetedForm = ({ onSubmit }: TargetFormProps) => {
+const TargetedForm = ({ onSubmit, isGenerating }: TargetFormProps) => {
   const [formData, setFormData] = useState<TargetPlanData>({
     dailyPlan: [],
     subjects: [],
@@ -37,12 +38,11 @@ const TargetedForm = ({ onSubmit }: TargetFormProps) => {
     existingCommitments: false,
     milestones: [],
   });
-  const [loading, setLoading] = useState(false); // Removed unused 'plan' state
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (isGenerating) return;
 
     const submitData: TargetPlanData = {
       ...formData,
@@ -53,12 +53,12 @@ const TargetedForm = ({ onSubmit }: TargetFormProps) => {
     };
 
     onSubmit(submitData);
-    setLoading(false);
   };
 
-  const handleInputChange = (field: keyof TargetPlanData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [field]: [e.target.value] });
-  };
+  const handleInputChange =
+    (field: keyof TargetPlanData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFormData({ ...formData, [field]: [e.target.value] });
+    };
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, dailyHours: parseInt(e.target.value) || 0 });
@@ -126,7 +126,7 @@ const TargetedForm = ({ onSubmit }: TargetFormProps) => {
                 <p className="text-gray-600 mt-2 flex items-center justify-center gap-2">
                   <FaRegSmileBeam className="text-yellow-400 animate-bounce" />
                   <span className="bg-gradient-to-r from-green-100 to-emerald-100 px-3 py-1 rounded-full">
-                  &quot;Hit your goals with precision!&quot;
+                    "Hit your goals with precision!"
                   </span>
                 </p>
               </div>
@@ -225,11 +225,13 @@ const TargetedForm = ({ onSubmit }: TargetFormProps) => {
                   whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(16, 185, 129, 0.4)" }}
                   whileTap={{ scale: 0.95 }}
                   type="submit"
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:shadow-xl transition-all relative overflow-hidden"
+                  disabled={isGenerating}
+                  className={`w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:shadow-xl transition-all relative overflow-hidden ${
+                    isGenerating ? "opacity-75 cursor-not-allowed" : ""
+                  }`}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent" />
-                  {loading ? (
+                  {isGenerating ? (
                     <>
                       <FaSpinner className="animate-spin text-xl" />
                       <span>Generating Plan...</span>

@@ -54,22 +54,23 @@ function TimeTablePlan() {
     const fetchInitialData = async () => {
       setLoading(true);
       await getTimeTable(setLoading);
-      setPassData(currentStudyPlan || studyPlan);
+      setPassData((prevData) => prevData ?? studyPlan);
       setLoading(false);
     };
+    
     fetchInitialData();
-  }, [getTimeTable, setLoading, currentStudyPlan, studyPlan]);
+  }, []); 
 
   useEffect(() => {
-    // Define hasCurrentDate inside the useEffect
     const hasCurrentDate = (data: StudyPlanInterface | null) => {
       if (!data || !data.date) return false;
       return data.date === getCurrentDate();
     };
 
-    setPassData(currentStudyPlan || studyPlan);
+    const newData = currentStudyPlan || studyPlan;
+    setPassData((prev) => (JSON.stringify(prev) === JSON.stringify(newData) ? prev : newData));
     setShowSaveButton(!!studyPlan && !hasCurrentDate(currentStudyPlan));
-  }, [currentStudyPlan, studyPlan]); // Removed hasCurrentDate from dependencies
+  }, [studyPlan, currentStudyPlan]);
 
   const handleGenerateTimetable = async (formData: TimetableFormValues) => {
     try {

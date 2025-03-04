@@ -1,7 +1,7 @@
 :root {
   /* Color System */
-  --editor-text-default: hsl(0, 25%, 95%);
-  --editor-text-gray: hsl(240 3.8% 46.1%);
+  --editor-text-default: hsl(0, 7%, 18%);
+  --editor-text-gray: hsl(240, 8%, 22%)
   --editor-text-brown: hsl(25 95% 53%);
   --editor-text-orange: hsl(24 95% 53%);
   --editor-text-yellow: hsl(48 96% 53%);

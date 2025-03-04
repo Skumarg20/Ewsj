@@ -37,3 +37,7 @@ export interface TargetPlanData {
     existingCommitments: boolean;
     milestones: string[];
   }
+  export interface CustomStudyPlan{
+    title:string;
+    content:string;
+  }

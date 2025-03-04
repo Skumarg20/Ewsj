@@ -2,31 +2,60 @@
 import { useState } from "react";
 import { FaSave, FaEdit, FaRegSmileBeam, FaTimes, FaMagic, FaRocket, FaStar } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import axiosInstance from "@/lib/axiosInstance";
 import { RichTextEditorDemo } from "../tiptap/rich-text-editor";
-import { useToast } from "@/hooks/use-toast"; // Ensure this path is correct
+import { JSONContent } from "@tiptap/core";
 
 const CustomForm = () => {
-  const [plan, setPlan] = useState("");
+  const [customStudyPlan, setCustomStudyPlan] = useState<JSONContent | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast(); // Destructure toast from useToast hook
+  const { toast } = useToast();
+
+  const handleOnContentChange = (content: JSONContent) => {
+    setCustomStudyPlan(content);
+  };
 
   const handleSave = async () => {
+    if (!customStudyPlan || !customStudyPlan.content || customStudyPlan.content.length === 0) {
+      toast({
+        title: "Oops!",
+        description: "Please enter some content before saving.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
-      await axios.post("http://localhost:3000/api/custom-plan", { plan });
-      // toast({
-      //   title: "Success!",
-      //   description: "Plan saved successfully! 🎉",
-      //   variant: "success", // Corrected typo from 'varient' to 'variant'
-      // });
+      const payload = {
+        customStudyPlan: JSON.stringify(customStudyPlan),
+      };
+
+    const response= await axiosInstance.post(`/study-plan/custom-plan`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+    if(response){
+       toast({
+        title: "Success!",
+        description: "Plan saved successfully! 🎉",
+        variant: "default",
+      });
+
+      setCustomStudyPlan(null);
+    }
+     
+
     } catch (error) {
       console.error("Failed to save plan:", error);
       toast({
         title: "Error",
-        description: "Failed to save plan.",
-        variant: "destructive", // Corrected typo from 'varient' to 'variant'
+        description: "Failed to save plan. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -35,7 +64,6 @@ const CustomForm = () => {
 
   return (
     <>
-      {/* Trigger Button */}
       <motion.button
         whileHover={{ scale: 1.05, rotate: [0, -5, 5, 0] }}
         whileTap={{ scale: 0.95 }}
@@ -49,7 +77,6 @@ const CustomForm = () => {
         </div>
       </motion.button>
 
-      {/* Popup Form */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -66,7 +93,6 @@ const CustomForm = () => {
               className="bg-white p-8 rounded-2xl shadow-2xl max-w-2xl w-full border-2 border-purple-100 custom-scrollbar overflow-y-auto relative max-h-[90vh]"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
               <motion.button
                 whileHover={{ rotate: 90 }}
                 onClick={() => setIsOpen(false)}
@@ -75,7 +101,6 @@ const CustomForm = () => {
                 <FaTimes className="text-2xl" />
               </motion.button>
 
-              {/* Header */}
               <div className="text-center mb-8 relative">
                 <div className="absolute -top-8 left-1/2 -translate-x-1/2">
                   <motion.div
@@ -95,27 +120,26 @@ const CustomForm = () => {
                 <p className="text-gray-600 mt-2 flex items-center justify-center gap-2">
                   <FaRegSmileBeam className="text-yellow-400 animate-bounce" />
                   <span className="bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 rounded-full">
-                  &quot;Craft your path to success!&quot;
+                    "Craft your path to success!"
                   </span>
                 </p>
               </div>
 
-              {/* Main Content */}
               <div className="space-y-6">
                 <motion.div whileHover={{ scale: 1.01 }}>
                   <div className="relative group">
                     <FaEdit className="absolute top-4 left-3 text-purple-500 group-hover:text-purple-600 transition-colors" />
-                    {/* <RichTextEditorDemo
-                      value={plan}
-                      onChange={(content: string) => setPlan(content)}
-                    /> */}
+                    <RichTextEditorDemo
+                      className="w-full max-h-full"
+                      initialContent={customStudyPlan ? JSON.stringify(customStudyPlan) : undefined}
+                      onContentChange={handleOnContentChange}
+                    />
                     <div className="absolute right-3 top-3 text-purple-300">
                       💡
                     </div>
                   </div>
                 </motion.div>
 
-                {/* Submit Button */}
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(168, 85, 247, 0.4)" }}
                   whileTap={{ scale: 0.95 }}
@@ -137,54 +161,6 @@ const CustomForm = () => {
                     </>
                   )}
                 </motion.button>
-              </div>
-
-              {/* Saved Plan Preview */}
-              {plan && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-8 p-6 bg-purple-50 rounded-xl border-2 border-purple-200 shadow-lg"
-                >
-                  <div className="flex items-center gap-2 mb-4 text-purple-700">
-                    <FaStar className="text-2xl animate-spin" />
-                    <h4 className="text-xl font-bold">Masterpiece Preview</h4>
-                  </div>
-                  <div className="space-y-3">
-                    {plan.split("\n").map((line, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ x: -20 }}
-                        animate={{ x: 0 }}
-                        className="flex items-start gap-2 p-3 bg-white rounded-lg shadow-sm border border-purple-100"
-                      >
-                        <div className="text-purple-500 pt-1">
-                          {index % 4 === 0 ? "📝" : index % 4 === 1 ? "🎯" : index % 4 === 2 ? "📌" : "✅"}
-                        </div>
-                        <span className="font-medium text-gray-700">{line}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <div className="mt-4 flex items-center gap-2 text-purple-600">
-                    <FaMagic className="animate-pulse" />
-                    <span className="font-medium">Creativity Score: 100% 🌈</span>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Motivational Footer */}
-              <div className="mt-8 text-center text-sm text-gray-600 flex flex-col items-center gap-2">
-                <div className="flex items-center gap-2 bg-purple-100 px-4 py-2 rounded-full">
-                  <FaRegSmileBeam className="text-yellow-500" />
-                  <span>&quot;Your imagination is the limit! 💫&quot;</span>
-                </div>
-                <motion.div
-                  animate={{ rotate: [0, 15, -15, 0] }}
-                  transition={{ repeat: Infinity, duration: 4 }}
-                  className="text-2xl"
-                >
-                  🏆
-                </motion.div>
               </div>
             </motion.div>
           </motion.div>

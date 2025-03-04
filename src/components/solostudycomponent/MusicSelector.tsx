@@ -1,5 +1,7 @@
-import React from 'react';
-import { X, Play, Pause } from 'lucide-react';
+"use client";
+import React, { useState } from "react";
+import { X, Music, BookOpen, Coffee, Leaf, Headphones, Bell } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface MusicSelectorProps {
   currentMusic: string | null;
@@ -8,153 +10,109 @@ interface MusicSelectorProps {
 }
 
 const musicOptions = [
-  {
-    id: 'rain',
-    url: 'https://assets.mixkit.co/sfx/preview/mixkit-light-rain-loop-2393.mp3',
-    name: 'Rain Sounds'
-  },
-  {
-    id: 'forest',
-    url: 'https://assets.mixkit.co/sfx/preview/mixkit-forest-stream-ambience-loop-2316.mp3',
-    name: 'Forest Ambience'
-  },
-  {
-    id: 'cafe',
-    url: 'https://assets.mixkit.co/sfx/preview/mixkit-coffee-shop-ambience-612.mp3',
-    name: 'Cafe Ambience'
-  },
-  {
-    id: 'lofi',
-    url: 'https://assets.mixkit.co/sfx/preview/mixkit-lo-fi-01-621.mp3',
-    name: 'Lo-Fi Beats'
-  },
-  {
-    id: 'piano',
-    url: 'https://assets.mixkit.co/sfx/preview/mixkit-piano-ballad-483.mp3',
-    name: 'Calm Piano'
-  },
-  {
-    id: 'meditation',
-    url: 'https://assets.mixkit.co/sfx/preview/mixkit-meditation-bell-595.mp3',
-    name: 'Meditation'
-  },
+  { id: "rain", url: "https://ewsj12.s3.ap-south-1.amazonaws.com/rain.mp3", name: "Rain Sounds", icon: <BookOpen size={20} /> },
+  { id: "forest", url: "https://ewsj12.s3.ap-south-1.amazonaws.com/lofi-study+clam.mp3", name: "Study Calm", icon: <Leaf size={20} /> },
+  { id: "cafe", url: "https://ewsj12.s3.ap-south-1.amazonaws.com/close-study-relax-chillhop-calm-study-lofi-123089.mp3", name: "Cafe Ambience", icon: <Coffee size={20} /> },
+  { id: "lofi", url: "https://ewsj12.s3.ap-south-1.amazonaws.com/lofi-study-beat-4-245775.mp3", name: "Lo-Fi Beats", icon: <Headphones size={20} /> },
+  
 ];
 
 const MusicSelector: React.FC<MusicSelectorProps> = ({ currentMusic, onSelect, onClose }) => {
-  const [previewMusic, setPreviewMusic] = React.useState<string | null>(null);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const [customUrl, setCustomUrl] = useState("");
 
-  // Handle preview playback with proper ref handling
-  React.useEffect(() => {
-    const audio = audioRef.current; // Capture the current audio element
-    if (audio) {
-      if (previewMusic) {
-        audio.src = previewMusic;
-        audio.volume = 0.5;
-        audio.play().catch(e => {
-          console.log("Trying to play audio:", previewMusic);
-          console.error("Audio preview failed:", e);
-        });
-      } else {
-        audio.pause();
-      }
-    }
-    
-    return () => {
-      if (audio) { // Use the captured audio variable in cleanup
-        audio.pause();
-      }
-    };
-  }, [previewMusic]);
-
-  const togglePreview = (url: string) => {
-    if (previewMusic === url) {
-      setPreviewMusic(null);
-    } else {
-      setPreviewMusic(url);
-    }
+  const handleSelectAndClose = (musicUrl: string | null) => {
+    onSelect(musicUrl); // Trigger music playback in SoloStudy
+    onClose(); // Close the selector
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
-        <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl font-bold">Select Background Music</h2>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-200">
-            <X size={24} />
-          </button>
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <motion.div
+        className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl w-full max-w-md max-h-[80vh] overflow-y-auto shadow-2xl border border-white/20"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-white/30 flex justify-between items-center bg-gradient-to-r from-purple-500 to-blue-500 rounded-t-2xl">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <Music className="w-6 h-6 animate-pulse" /> Study Vibes
+          </h2>
+          <motion.button
+            whileHover={{ rotate: 90 }}
+            onClick={onClose}
+            className="p-1 rounded-full bg-white/20 hover:bg-white/40 transition-all"
+          >
+            <X size={24} className="text-white" />
+          </motion.button>
         </div>
-        
+
+        {/* Music Options */}
         <div className="p-4">
           <div className="space-y-3">
-            <div 
-              className={`p-3 rounded-lg cursor-pointer flex justify-between items-center ${currentMusic === null ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
-              onClick={() => {
-                setPreviewMusic(null);
-                onSelect(null);
-              }}
+            {/* No Music Option */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className={`p-3 rounded-lg cursor-pointer flex justify-between items-center ${currentMusic === null ? "bg-blue-100" : "bg-white/80 hover:bg-gray-100"} shadow-md`}
+              onClick={() => handleSelectAndClose(null)}
             >
-              <span className="font-medium">No Music</span>
-              {currentMusic === null && <span className="text-blue-600 text-sm">Selected</span>}
-            </div>
-            
+              <span className="font-medium text-gray-700 flex items-center gap-2">
+                <Headphones className="w-5 h-5 text-gray-500" /> No Music
+              </span>
+              {currentMusic === null && <span className="text-blue-600 text-sm font-semibold">Selected</span>}
+            </motion.div>
+
+            {/* Music List */}
             {musicOptions.map((music) => (
-              <div 
+              <motion.div
                 key={music.id}
-                className={`p-3 rounded-lg cursor-pointer flex justify-between items-center ${currentMusic === music.url ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+                whileHover={{ scale: 1.02 }}
+                className={`p-3 rounded-lg cursor-pointer flex justify-between items-center ${currentMusic === music.url ? "bg-blue-100" : "bg-white/80 hover:bg-gray-100"} shadow-md`}
+                onClick={() => handleSelectAndClose(music.url)}
               >
-                <div className="flex items-center">
-                  <button 
-                    className="mr-3 w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
-                    onClick={() => togglePreview(music.url)}
-                  >
-                    {previewMusic === music.url ? <Pause size={16} /> : <Play size={16} />}
-                  </button>
-                  <span className="font-medium">{music.name}</span>
-                </div>
-                
-                <button 
-                  className={`px-3 py-1 rounded-md ${currentMusic === music.url ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
-                  onClick={() => onSelect(music.url)}
-                >
-                  {currentMusic === music.url ? 'Selected' : 'Select'}
-                </button>
-              </div>
+                <span className="font-medium text-gray-700 flex items-center gap-2">
+                  {music.icon}
+                  {music.name}
+                </span>
+                {currentMusic === music.url && <span className="text-blue-600 text-sm font-semibold">Selected</span>}
+              </motion.div>
             ))}
           </div>
-          
+
+          {/* Custom URL Input */}
           <div className="mt-6">
-            <p className="text-sm text-gray-600 mb-2">Or enter a custom audio URL:</p>
+            <p className="text-sm text-gray-600 mb-2 flex items-center gap-2">
+              <Music className="w-4 h-4" /> Or vibe with your own tune:
+            </p>
             <div className="flex gap-2">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="https://example.com/audio.mp3"
-                className="flex-1 border rounded-md px-3 py-2"
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 bg-white/80 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
+                value={customUrl}
+                onChange={(e) => setCustomUrl(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    onSelect((e.target as HTMLInputElement).value);
-                    onClose();
+                  if (e.key === "Enter" && customUrl) {
+                    handleSelectAndClose(customUrl);
                   }
                 }}
               />
-              <button 
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                onClick={(e) => {
-                  const input = (e.target as HTMLElement).previousElementSibling as HTMLInputElement;
-                  if (input.value) {
-                    onSelect(input.value);
-                    onClose();
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-r from-blue-500 to-teal-500 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all"
+                onClick={() => {
+                  if (customUrl) {
+                    handleSelectAndClose(customUrl);
                   }
                 }}
               >
                 Apply
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
-        
-        <audio ref={audioRef} />
-      </div>
+      </motion.div>
     </div>
   );
 };
