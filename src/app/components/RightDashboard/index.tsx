@@ -41,7 +41,7 @@ const RightDashboard = () => {
              <ChatBuddie 
              onClose={() => setShowChat(false)} 
              onRateLimitExceeded={(message: string) => {
-               console.error(message); 
+              
                alert(message); 
              }} 
            />

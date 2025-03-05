@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export const login = async (email: string, password: string) => {
-  console.log("login",process.env.NEXT_PUBLIC_BASE_URL,email,password);
+  
   const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/signin`, { email, password });
   localStorage.setItem('token', response.data.access_token);
   return response.data;
@@ -19,7 +19,7 @@ export const signup = async (
   fullname:string
 ) => {
   try {
-    console.log("signup",process.env.NEXT_PUBLIC_BASE_URL);
+   
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/signup`, {
       username,
       email,
@@ -33,7 +33,7 @@ export const signup = async (
 
     return response.data;
   } catch (error) {
-    console.error("Signup failed:", error);
+    
     throw error;
   }
 };

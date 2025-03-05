@@ -16,10 +16,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Cogenist",
-  description: "Cogenist is a platform for students to learn and grow",
+export const metadata: Metadata = {  
+  title: "Cogenist - AI-Powered Learning & Productivity Platform",  
+  description: "Cogenist is an AI-driven platform designed to enhance student productivity, focus, and exam preparation with smart tools and personalized learning insights.",  
 };
+
 
 export default function RootLayout({
   children,

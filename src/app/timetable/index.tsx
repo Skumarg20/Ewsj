@@ -65,7 +65,7 @@ function TimeTablePlan() {
     };
 
     fetchInitialData();
-  }, [getTimeTable, setLoading, studyPlan]); // Added dependencies
+  }, [getTimeTable, setLoading, studyPlan]); 
 
   useEffect(() => {
     const hasCurrentDate = (data: StudyPlanInterface | null) => {

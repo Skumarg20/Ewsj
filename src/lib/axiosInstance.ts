@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
   timeout: 5000, 
 });
 
-console.log("Axios baseURL:", process.env.NEXT_PUBLIC_BASE_URL);
+
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use(
     if (authHeader) {
       Object.assign(config.headers, authHeader);
     }
-    console.log("Request URL:", `${config.baseURL}${config.url}`, "Headers:", config.headers);
+
     return config;
   },
   (error) => {

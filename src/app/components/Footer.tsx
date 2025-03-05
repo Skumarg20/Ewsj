@@ -1,22 +1,27 @@
 import { FC } from "react";
-import { FaTwitter, FaInstagram, FaGithub, FaRocket } from "react-icons/fa";
+import { FaTwitter, FaInstagram, FaYoutube, FaRocket, FaEnvelope, FaPhone } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const Footer: FC = () => {
   const socialLinks = [
-    { icon: <FaTwitter className="text-cyan-400" />, name: "Twitter", href: "#" },
-    { icon: <FaInstagram className="text-pink-400" />, name: "Instagram", href: "#" },
-    { icon: <FaGithub className="text-gray-300" />, name: "GitHub", href: "#" },
+    { icon: <FaTwitter className="text-cyan-400" />, name: "Twitter", href: "https://x.com/cogenist" },
+    { icon: <FaInstagram className="text-pink-400" />, name: "Instagram", href: "https://www.instagram.com/cogenist/" },
+    { icon: <FaYoutube className="text-gray-300" />, name: "Youtube", href: "https://www.youtube.com/@CogeNist" },
   ];
 
   const quickLinks = [
     { text: "Home", href: "#" },
-    { text: "Contact", href: "#" },
+    { text: "Contact", href: "#contact" }, // Updated to link to contact section
   ];
+
+  const contactInfo = {
+    email: "cogenist@gmail.com",
+    phone: "+91 9696402486",
+  };
 
   return (
     <footer className="relative bg-gradient-to-t from-gray-900 to-indigo-900 text-white py-12 overflow-hidden">
-      {/* Subtle Animated Background Effect */}
+     
       <div className="absolute inset-0 z-0 opacity-20">
         <motion.div
           className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500 via-transparent to-transparent"
@@ -96,11 +101,40 @@ const Footer: FC = () => {
           </motion.div>
         </div>
 
+        {/* Contact Us Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-8 flex flex-col items-center gap-4"
+          id="contact"
+        >
+          <h3 className="text-lg font-semibold text-indigo-400">Contact Us</h3>
+          <div className="flex flex-col md:flex-row gap-4 text-sm text-gray-300">
+            <motion.a
+              href={`mailto:${contactInfo.email}`}
+              whileHover={{ scale: 1.05, color: "#22d3ee" }}
+              className="flex items-center gap-2 hover:text-cyan-400 transition-colors"
+            >
+              <FaEnvelope className="text-indigo-400" />
+              {contactInfo.email}
+            </motion.a>
+            <motion.a
+              href={`tel:${contactInfo.phone}`}
+              whileHover={{ scale: 1.05, color: "#22d3ee" }}
+              className="flex items-center gap-2 hover:text-cyan-400 transition-colors"
+            >
+              <FaPhone className="text-indigo-400" />
+              {contactInfo.phone}
+            </motion.a>
+          </div>
+        </motion.div>
+
         {/* Bottom Section */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-8 text-center text-sm text-gray-400"
         >
           <p>

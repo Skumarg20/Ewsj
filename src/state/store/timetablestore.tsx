@@ -41,7 +41,7 @@ const useStudyPlanStore = create<StudyPlanState>((set, get) => ({
       const response = await axiosInstance.post("/timetables", generatedTimeTable);
 
       if (response.data) {
-        console.log("Study plan saved successfully:", response.data);
+      
         set({ studyPlan: response.data });
         return response.data;
       }
@@ -64,7 +64,7 @@ const useStudyPlanStore = create<StudyPlanState>((set, get) => ({
         },
       });
       if (response.data) {
-        console.log("you are getting data successfully", response.data);
+      
         set({ currentStudyPlan: response.data });
       }
     } catch (error) {
@@ -102,7 +102,7 @@ const useStudyPlanStore = create<StudyPlanState>((set, get) => ({
       const response = await axiosInstance.patch(`/timetables/session/${sessionId}`, updatedSession);
 
       if (response.data) {
-        console.log("Session updated successfully:", response.data);
+       
         set({ currentStudyPlan: { ...currentStudyPlan, schedule: updatedSchedule } });
       }
     } catch (error) {

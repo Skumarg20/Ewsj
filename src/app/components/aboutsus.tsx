@@ -73,6 +73,8 @@ const AboutUs = () => {
           <Image
             src="/founderimage.png"
             alt="Founder"
+            width={96}
+            height={96}
             className="rounded-full w-56 h-56 mx-auto object-cover border-4 border-yellow-400 shadow-xl transition-transform -rotate-12"
           />
         </motion.div>

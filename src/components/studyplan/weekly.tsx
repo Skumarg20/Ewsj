@@ -110,7 +110,7 @@ const WeeklyForm = ({ onSubmit, isGenerating }: WeeklyFormProps) => {
                 <p className="text-gray-600 mt-2 flex items-center justify-center gap-2">
                   <FaRegSmileBeam className="text-yellow-400 animate-bounce" />
                   <span className="bg-gradient-to-r from-blue-100 to-purple-100 px-3 py-1 rounded-full">
-                  &quot;Consistency is the key to mastery!&quot;
+                    &quot;Consistency is the key to mastery!&quot;
                   </span>
                 </p>
               </div>
@@ -166,15 +166,16 @@ const WeeklyForm = ({ onSubmit, isGenerating }: WeeklyFormProps) => {
                         <input
                           type="number"
                           min="1"
-                          max="12"
+                          max="16"
+                          step="1"
                           placeholder="⏳ Daily Study Hours"
                           value={formData.dailyHours}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
                               dailyHours: Math.min(
-                                12,
-                                Math.max(1, parseInt(e.target.value)) || 3
+                                16,
+                                Math.max(1, parseFloat(e.target.value) || 0)
                               ),
                             })
                           }
@@ -189,13 +190,18 @@ const WeeklyForm = ({ onSubmit, isGenerating }: WeeklyFormProps) => {
                         <select
                           value={formData.studentType}
                           onChange={(e) =>
-                            setFormData({ ...formData, studentType: e.target.value })
+                            setFormData({
+                              ...formData,
+                              studentType: e.target.value,
+                            })
                           }
                           className="w-full pl-10 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all appearance-none bg-white text-gray-800 font-medium shadow-sm hover:shadow-blue-100"
                         >
                           <option value="school">🎒 School Student</option>
                           <option value="dropper">📚 Full-time Learner</option>
-                          <option value="working">💼 Working Professional</option>
+                          <option value="working">
+                            💼 Working Professional
+                          </option>
                         </select>
                       </div>
                     </motion.div>
@@ -223,7 +229,9 @@ const WeeklyForm = ({ onSubmit, isGenerating }: WeeklyFormProps) => {
                   ) : (
                     <>
                       <FaRocket className="text-xl animate-bounce" />
-                      <span className="text-shadow">Launch Weekly Strategy</span>
+                      <span className="text-shadow">
+                        Launch Weekly Strategy
+                      </span>
                       <div className="absolute right-4 text-xl">🚀</div>
                     </>
                   )}
@@ -233,7 +241,9 @@ const WeeklyForm = ({ onSubmit, isGenerating }: WeeklyFormProps) => {
               <div className="mt-8 text-center text-sm text-gray-600 flex flex-col items-center gap-2">
                 <div className="flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full">
                   <FaRegSmileBeam className="text-yellow-500" />
-                  <span>&quot;Small steps lead to big achievements! 💪&quot;</span>
+                  <span>
+                    &quot;Small steps lead to big achievements! 💪&quot;
+                  </span>
                 </div>
                 <motion.div
                   animate={{ rotate: [0, 15, -15, 0] }}
