@@ -3,36 +3,36 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Trigger on push to main branch
+      - main
   pull_request:
     branches:
-      - main  # Trigger on pull requests to main
+      - main
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: main
 
-      # Debugging step to list files
-      - name: List files in directory
-        run: ls -la
+      - name: Debug file presence
+        run: |
+          pwd
+          ls -la
+          find . -name "docker-compose.yml"
 
-      # Set up Docker Buildx (for multi-platform builds, optional)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Login to Docker Hub (optional, if pushing to a registry)
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Build and push Docker images
       - name: Build and push Docker images
         run: |
-          docker compose build
-          docker compose push  # Pushes images if defined with an image tag
+          docker compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml push
