@@ -52,10 +52,10 @@ jobs:
     if: github.event_name == 'push'  # Only deploy on push, not PR
     steps:
       - name: Pull image from Docker Hub
-        run: docker pull frontendcogenist:latest
+        run: docker pull sanantino/frontendcogenist:latest
 
       - name: Delete old container
         run: docker rm -f nextjs-app-container || true  # Added || true to avoid failure if container doesn’t exist
 
       - name: Run Docker container
-        run: docker run -d -p 3000:3000 --name nextjs-app-container frontendcogenist:latest
+        run: docker run -d -p 3000:3000 --name nextjs-app-container sanantino/frontendcogenist:latest
