@@ -33,6 +33,7 @@ jobs:
           docker stop nextjs-app-container || true
           docker rm nextjs-app-container || true  
 
+
       - name: Run Docker Container
         run: |
           docker run -d -p 3000:3000 \
