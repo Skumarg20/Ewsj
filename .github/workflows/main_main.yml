@@ -58,10 +58,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Pull image from Docker Hub
-        run: docker pull sanantino/frontendcogenist:latest
+        run: docker pull frontendcogenist:latest
 
       - name: Delete old container
         run: docker rm -f nextjs-app-container || true
 
       - name: Run Docker container
-        run: docker run -d -p 3000:3000 --name nextjs-app-container sanantino/frontendcogenist:latest
+        run: docker run -d -p 3000:3000 --name nextjs-app-container frontendcogenist:latest
