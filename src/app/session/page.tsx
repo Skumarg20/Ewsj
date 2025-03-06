@@ -1,29 +1,24 @@
+// src/app/session/page.tsx
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
-import {  
-  BookOpen, 
-  CheckCircle, 
-  Calendar, 
-  Timer,
-} from 'lucide-react';
-
-
+import React, { useEffect, useMemo } from 'react';
+import {  CheckCircle, Calendar, Timer } from 'lucide-react';
 import { StudySession } from '@/interface/studysession';
 import withAuth from '@/lib/withAuth';
 import useStudyPlanStore from '@/state/store/timetablestore';
-import {useLoading} from '@/app/loader/context/loadingprovider'
+import { useLoading } from '@/app/loader/context/loadingprovider';
+import { StudySessionCard } from '@/components/StudySessionCard'; // Adjust import path
+
 const parseTimeString = (timeStr: string) => {
   const [time, period] = timeStr.trim().split(' ');
   const [hours, minutes] = time.split(':');
   let hour = parseInt(hours);
-  
-  // Convert to 24-hour format
+
   if (period === 'PM' && hour !== 12) {
     hour += 12;
   } else if (period === 'AM' && hour === 12) {
     hour = 0;
   }
-  
+
   const date = new Date();
   date.setHours(hour, parseInt(minutes), 0, 0);
   return date;
@@ -33,70 +28,22 @@ const parseTimeRange = (timeRange: string) => {
   const [startStr, endStr] = timeRange.split(' - ');
   return {
     start: parseTimeString(startStr),
-    end: parseTimeString(endStr)
+    end: parseTimeString(endStr),
   };
 };
 
-export function StudySessionCard({ session, updateSession }: { session: StudySession & { status: 'current' | 'upcoming' | 'past' }, updateSession: (id: string, data: Partial<StudySession>, setLoading: (loading: boolean) => void) => Promise<void> }) {
-  const [currentSession, setCurrentSession] = useState(session);
-  const [loading, setLoading] = useState(false);
-
-  const statusBg = {
-    current: 'bg-green-50 text-green-700 border-green-200',
-    upcoming: 'bg-blue-50 text-blue-700 border-blue-200',
-    past: 'bg-purple-50 text-purple-700 border-purple-200',
-  };
-
-  const handleMarkComplete = async () => {
-    const newStatus = !currentSession.completed;
-    setCurrentSession({ ...currentSession, completed: newStatus });
-
-    try {
-      await updateSession(currentSession.id, { completed: newStatus }, setLoading);
-    } catch (error) {
-      console.error("Failed to update session:", error);
-      setCurrentSession({ ...currentSession, completed: !newStatus }); // Revert on failure
-    }
-  };
-
-  return (
-    <div className={`p-6 rounded-xl shadow-sm border ${statusBg[session.status]}`}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className={`p-3 rounded-lg ${statusBg[session.status]}`}>
-            <BookOpen className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-800">{session.subject}</h3>
-            <p className="text-sm text-gray-600">{session.topic}</p>
-          </div>
-        </div>
-        <button
-          onClick={handleMarkComplete}
-          className={`px-4 py-2 rounded-lg text-sm font-medium ${currentSession.completed ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}
-        >
-          {currentSession.completed ? 'Completed' : 'Mark Complete'}
-        </button>
-      </div>
-      <div className="mt-4 text-sm text-gray-600">
-        <p>{session.activity}</p>
-        {session.notes && <p className="mt-2 text-gray-500">Notes: {session.notes}</p>}
-      </div>
-    </div>
-  );
-}
-
 function StudySessions() {
-  const {getTimeTable} =useStudyPlanStore();
-  const {setLoading}=useLoading();
+  const { getTimeTable, currentStudyPlan, updateSession } = useStudyPlanStore();
+  const { setLoading } = useLoading();
+
   useEffect(() => {
-    getTimeTable(setLoading); 
-  }, []);
-  const { currentStudyPlan, updateSession } = useStudyPlanStore();
+    getTimeTable(setLoading);
+  }, [getTimeTable, setLoading]);
+
   const { currentSession, upcomingSessions, pastSessions } = useMemo(() => {
     const now = new Date();
-console.log(currentStudyPlan?.schedule,"this is scjhdvjdsbkfjv");
-console.log(currentStudyPlan,"this is study plan");
+    console.log(currentStudyPlan?.schedule, 'this is scjhdvjdsbkfjv');
+    console.log(currentStudyPlan, 'this is study plan');
     return (currentStudyPlan?.schedule || []).reduce<{
       currentSession: (StudySession & { status: 'current' }) | null;
       upcomingSessions: Array<StudySession & { status: 'upcoming' }>;
@@ -128,7 +75,6 @@ console.log(currentStudyPlan,"this is study plan");
     [currentStudyPlan]
   );
 
-  // Sort sessions by time
   upcomingSessions.sort(
     (a, b) => parseTimeRange(a.time).start.getTime() - parseTimeRange(b.time).start.getTime()
   );
@@ -141,10 +87,11 @@ console.log(currentStudyPlan,"this is study plan");
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-4">
-            Today's Study Journey
+            Today&apos;s Study Journey {/* Escaped single quote */}
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            {stats.completedSessions} of {stats.totalSessions} sessions completed • {stats.remainingSessions} remaining
+            {stats.completedSessions} of {stats.totalSessions} sessions completed •{' '}
+            {stats.remainingSessions} remaining
           </p>
         </div>
 
@@ -210,8 +157,6 @@ console.log(currentStudyPlan,"this is study plan");
             </div>
           )}
         </div>
-
-        
       </div>
     </div>
   );

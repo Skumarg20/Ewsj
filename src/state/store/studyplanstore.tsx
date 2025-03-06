@@ -1,11 +1,13 @@
+// src/stores/useStudyPlanStore.ts
 import { create } from "zustand";
+import axiosInstance from "@/lib/axiosInstance"; // Import your custom axios instance
 import axios, { AxiosResponse } from "axios";
-import { getAuthHeader } from "../../lib/api";
 import {
   WeeklyStudyPlan,
   StudyPlanUsingGetApi,
   targetedStudyPlan,
 } from "@/interface/studyPlan";
+
 interface WeeklyStudyPlanState {
   StudyPlanUsingGetApi: StudyPlanUsingGetApi | null;
   weeklyPlan: WeeklyStudyPlan | null;
@@ -14,6 +16,7 @@ interface WeeklyStudyPlanState {
   getWeeklyPlan: () => Promise<void>;
   postWeeklyPlan: (plan: WeeklyStudyPlan) => Promise<void>;
 }
+
 interface TargetStudyPlanState {
   studyPlanUsingGetApi: StudyPlanUsingGetApi | null;
   targetPlan: targetedStudyPlan | null;
@@ -32,14 +35,7 @@ export const useWeeklyStudyPlanStore = create<WeeklyStudyPlanState>((set) => ({
   getWeeklyPlan: async () => {
     set({ loading: true, error: null });
     try {
-      const response: AxiosResponse<StudyPlanUsingGetApi> = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/weekly-plan`,
-        {
-          headers: {
-            ...getAuthHeader(),
-          },
-        }
-      );
+      const response: AxiosResponse<StudyPlanUsingGetApi> = await axiosInstance.get("/study-plan/weekly-plan");
       const weeklyData = response.data?.weeklyData || null;
       set({ weeklyPlan: weeklyData, loading: false });
     } catch (error) {
@@ -57,18 +53,7 @@ export const useWeeklyStudyPlanStore = create<WeeklyStudyPlanState>((set) => ({
   postWeeklyPlan: async (plan: WeeklyStudyPlan) => {
     set({ loading: true, error: null });
     try {
-      const response: AxiosResponse<WeeklyStudyPlan> = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/weekly-plan`,
-        plan,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            ...getAuthHeader(),
-          },
-        }
-      );
-      console.log(response.data, "this is data is comming after saving");
-
+      const response: AxiosResponse<WeeklyStudyPlan> = await axiosInstance.post("/study-plan/weekly-plan", plan);
       set({ weeklyPlan: response.data, loading: false });
     } catch (error) {
       set({
@@ -89,15 +74,7 @@ export const useTargetStudyPlanStore = create<TargetStudyPlanState>((set) => ({
   getTargetPlan: async () => {
     set({ targetloading: true, targeterror: null });
     try {
-      const response: AxiosResponse<{ targetData: targetedStudyPlan }> =
-        await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/target-plan`,
-          {
-            headers: {
-              ...getAuthHeader(),
-            },
-          }
-        );
+      const response: AxiosResponse<{ targetData: targetedStudyPlan }> = await axiosInstance.get("/study-plan/target-plan");
       const targetData = response.data?.targetData || null;
       console.log(response.data, "this is response data");
       console.log(targetData, "this is target data");
@@ -108,8 +85,8 @@ export const useTargetStudyPlanStore = create<TargetStudyPlanState>((set) => ({
         error instanceof Error
           ? error.message
           : axios.isAxiosError(error) && error.response?.data?.message
-            ? error.response.data.message
-            : "Failed to fetch target plan";
+          ? error.response.data.message
+          : "Failed to fetch target plan";
       set({
         targeterror: errorMessage,
         targetloading: false,
@@ -120,18 +97,8 @@ export const useTargetStudyPlanStore = create<TargetStudyPlanState>((set) => ({
   postTargetPlan: async (plan: targetedStudyPlan) => {
     set({ targetloading: true, targeterror: null });
     try {
-      const response: AxiosResponse<targetedStudyPlan> = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/target-plan`,
-        plan,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            ...getAuthHeader(),
-          },
-        }
-      );
-      console.log(response.data, "this is data is comming after saving");
-
+      const response: AxiosResponse<targetedStudyPlan> = await axiosInstance.post("/study-plan/target-plan", plan);
+      console.log(response.data, "this is data is coming after saving");
       set({ targetPlan: response.data, targetloading: false });
     } catch (error) {
       set({
@@ -142,3 +109,4 @@ export const useTargetStudyPlanStore = create<TargetStudyPlanState>((set) => ({
     }
   },
 }));
+

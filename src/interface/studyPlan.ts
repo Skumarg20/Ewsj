@@ -24,7 +24,7 @@ export interface targetedStudyPlan{
     chapters:string[];
     schoolSchedule?:string;
     subjects?:string[];
-    dueDate?:string;
+    due_date?:string;
     
 }
 
@@ -36,4 +36,8 @@ export interface TargetPlanData {
     dailyHours: number;
     existingCommitments: boolean;
     milestones: string[];
+  }
+  export interface CustomStudyPlan{
+    title:string;
+    content:string;
   }

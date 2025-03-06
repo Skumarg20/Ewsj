@@ -4,25 +4,31 @@ import { useState } from "react";
 import {
   FaRocket,
   FaBullseye,
-  FaPen,
   FaRegCalendarCheck,
   FaTasks,
   FaBullhorn,
   FaStar,
-  FaMagic,
   FaSpinner,
   FaBookOpen,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import WeeklyForm from "@/components/studyplan/weekly";
 import TargetedForm from "@/components/studyplan/targetedplan";
-import CustomForm from "@/components/studyplan/customstudyplan";
-import { useWeeklyStudyPlanStore, useTargetStudyPlanStore } from "@/state/store/studyplanstore";
+
+import {
+  useWeeklyStudyPlanStore,
+  useTargetStudyPlanStore,
+} from "@/state/store/studyplanstore";
 import axios from "axios";
-import { WeeklyStudyPlan, targetedStudyPlan, TargetPlanData } from "@/interface/studyPlan";
+import {
+  WeeklyStudyPlan,
+  targetedStudyPlan,
+  TargetPlanData,
+} from "@/interface/studyPlan";
 import { getAuthHeader } from "@/lib/api";
 import WeeklyStudyDashboard from "./weeklystudyplan";
 import TargetedStudyDashboard from "@/components/studyplan/targetStudyPlanDashBoard";
+import withAuth from "@/lib/withAuth";
 
 interface FormData {
   target: string[];
@@ -35,12 +41,22 @@ interface FormData {
 const StudyPlan = () => {
   const [activePlan, setActivePlan] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState<string | null>(null); // "weekly" or "targeted" to track which plan to show
-  const [generatedPlan, setGeneratedPlan] = useState<WeeklyStudyPlan | null>(null);
-  const [generatedTargetPlan, setGeneratedTargetPlan] = useState<targetedStudyPlan | null>(null);
-  // const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedPlan, setGeneratedPlan] = useState<WeeklyStudyPlan | null>(
+    null
+  );
+  const [generatedTargetPlan, setGeneratedTargetPlan] =
+    useState<targetedStudyPlan | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [isFromGenerated, setIsFromGenerated] = useState(false); // Controls "Save" button visibility
-  const { targetPlan, targetloading, targeterror, getTargetPlan, postTargetPlan } = useTargetStudyPlanStore();
-  const { weeklyPlan, loading, error, getWeeklyPlan, postWeeklyPlan } = useWeeklyStudyPlanStore();
+  const {
+    targetPlan,
+    targetloading,
+    targeterror,
+    getTargetPlan,
+    postTargetPlan,
+  } = useTargetStudyPlanStore();
+  const { weeklyPlan, loading, error, getWeeklyPlan, postWeeklyPlan } =
+    useWeeklyStudyPlanStore();
 
   const planButtons = [
     {
@@ -60,64 +76,43 @@ const StudyPlan = () => {
       secondaryIcon: <FaBullhorn />,
       color: "from-green-500 to-teal-500",
       emoji: "🎯",
-    },
-    {
-      id: "custom",
-      title: "Custom Plan",
-      subtitle: "Create your own schedule",
-      icon: <FaPen />,
-      secondaryIcon: <FaMagic />,
-      color: "from-purple-500 to-pink-500",
-      emoji: "✨",
-    },
+    }
   ];
 
   const handleGenerateWeeklyPlan = async (formData: FormData) => {
-    // setIsGenerating(true);
+    setIsGenerating(true);
     try {
+      console.log("Generating with formData:", formData);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/generate`,
         formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            ...getAuthHeader(),
-          },
-        }
+        { headers: { "Content-Type": "application/json", ...getAuthHeader() } }
       );
-      console.log(response, "this is response");
-
       const rawData = response.data?.data || response.data;
-      console.log(rawData, "this is raw data");
-
       let generatedData: WeeklyStudyPlan;
-
       if (typeof rawData === "string") {
         const cleanData = rawData.replace(/```json\n|\n```/g, "");
-        console.log(cleanData, "this is cleaned data");
         generatedData = JSON.parse(cleanData);
       } else if (rawData && typeof rawData === "object") {
         generatedData = rawData as WeeklyStudyPlan;
       } else {
         throw new Error("Invalid response data format");
       }
-
-      console.log(generatedData, "this is generated data");
       setGeneratedPlan(generatedData);
-      setGeneratedTargetPlan(null); // Clear target plan to avoid overlap
+      setGeneratedTargetPlan(null);
       setIsFromGenerated(true);
       setShowPopup("weekly");
     } catch (err) {
       console.error("Error generating weekly plan:", err);
       alert("Failed to generate weekly plan. Please try again.");
     } finally {
-      // setIsGenerating(false);
+      setIsGenerating(false);
     }
   };
 
   const handleGenerateTargetPlan = async (formData: TargetPlanData) => {
+    setIsGenerating(true);
     try {
-      // setIsGenerating(true);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/study-plan/generate-targetplan`,
         formData,
@@ -147,14 +142,14 @@ const StudyPlan = () => {
 
       console.log(generatedData, "this is generated data");
       setGeneratedTargetPlan(generatedData);
-      setGeneratedPlan(null); // Clear weekly plan to avoid overlap
+      setGeneratedPlan(null); 
       setIsFromGenerated(true);
       setShowPopup("targeted");
     } catch (err) {
       console.error("Error generating target plan:", err);
       alert("Failed to generate target plan. Please try again.");
     } finally {
-      // setIsGenerating(false);
+      setIsGenerating(false);
     }
   };
 
@@ -181,13 +176,15 @@ const StudyPlan = () => {
       setIsFromGenerated(false);
       setShowPopup("targeted");
     } else {
-      alert("Failed to fetch latest target plan: " + (targeterror || "No plan available"));
+      alert(
+        "Failed to fetch latest target plan: " +
+          (targeterror || "No plan available")
+      );
     }
   };
 
   const handleSavePlan = async () => {
     if (generatedPlan) {
-      console.log(generatedPlan, "this is the data following");
       await postWeeklyPlan(generatedPlan);
       if (!error) {
         setShowPopup(null);
@@ -201,14 +198,13 @@ const StudyPlan = () => {
 
   const handleViewLatestPlan = async () => {
     await getWeeklyPlan();
-    console.log(weeklyPlan, "this is weekly plan I am getting");
     if (!error && weeklyPlan) {
       setGeneratedPlan(weeklyPlan);
-      setGeneratedTargetPlan(null); // Clear target plan to avoid overlap
+      setGeneratedTargetPlan(null);
       setIsFromGenerated(false);
       setShowPopup("weekly");
     } else {
-      alert("Failed to fetch latest weekly plan: " + (error || "No plan available"));
+      alert(error ? "Failed to fetch latest weekly plan: " + error : "No weekly plan available yet. Generate one first!");
     }
   };
 
@@ -232,8 +228,8 @@ const StudyPlan = () => {
             </h2>
           </div>
           <p className="text-gray-600 text-lg italic">
-            "The future belongs to those who prepare for it today." – Malcolm X
-          </p>
+  &quot;The future belongs to those who prepare for it today.&quot; - Malcolm X
+</p>
           <div className="mt-4 flex justify-center gap-2 text-2xl">
             {["🚀", "📚", "🎓", "💡"].map((emoji, i) => (
               <motion.span
@@ -247,7 +243,7 @@ const StudyPlan = () => {
           </div>
         </motion.div>
 
-        {/* Plan Buttons */}
+      
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {planButtons.map((plan) => (
             <motion.div
@@ -290,6 +286,7 @@ const StudyPlan = () => {
             </motion.div>
           ))}
         </div>
+       
 
         {/* Render Selected Form */}
         <motion.div
@@ -300,10 +297,12 @@ const StudyPlan = () => {
           transition={{ duration: 0.3 }}
         >
           {activePlan === "weekly" && (
-            <WeeklyForm onSubmit={handleGenerateWeeklyPlan} />
+            <WeeklyForm onSubmit={handleGenerateWeeklyPlan} isGenerating={isGenerating} />
           )}
-          {activePlan === "targeted" && <TargetedForm onSubmit={handleGenerateTargetPlan} />}
-          {activePlan === "custom" && <CustomForm />}
+          {activePlan === "targeted" && (
+            <TargetedForm onSubmit={handleGenerateTargetPlan} isGenerating={isGenerating} />
+          )}
+         
           <div className="flex gap-4 mt-4">
             <motion.button
               onClick={handleViewLatestPlan}
@@ -368,7 +367,6 @@ const StudyPlan = () => {
               className="w-full h-full flex flex-col bg-white shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-             
               <div className="flex-1 overflow-auto p-6">
                 <WeeklyStudyDashboard data={generatedPlan} />
               </div>
@@ -439,4 +437,4 @@ const StudyPlan = () => {
   );
 };
 
-export default StudyPlan;
+export default withAuth(StudyPlan);

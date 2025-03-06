@@ -4,11 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NODE_HANDLES_SELECTED_STYLE_CLASSNAME, isValidUrl } from "@/lib/tiptap-utils";
 import { Node, NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer, mergeAttributes } from "@tiptap/react";
-import { Image, Link, Upload, Loader2, X } from "lucide-react";
+import { Image as LucideImage, Link, Upload, Loader2, X } from "lucide-react";
 import { FormEvent, useCallback, useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { getAuthHeader } from "@/lib/api";
+import Image from "next/image"; // Import Next.js Image component
 
 interface ImagePlaceholderOptions {
   HTMLAttributes: Record<string, unknown>;
@@ -55,8 +56,8 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
 });
 
 function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
-  const [isVisible, setIsVisible] = useState(true); // Control overall visibility
-  const [isExpanded, setIsExpanded] = useState(true); // Start expanded since it's a new instance
+  const [isVisible, setIsVisible] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [activeTab, setActiveTab] = useState<"upload" | "url">("upload");
   const [url, setUrl] = useState("");
   const [altText, setAltText] = useState("");
@@ -98,8 +99,8 @@ function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
 
         setUploadedUrl(response.data.Location);
         setPreviewUrl(URL.createObjectURL(file));
-      } catch (err) {
-        setError("Failed to upload image. Please try again.");
+      } catch (error) { // Replace 'err' with '_' since it's unused
+        setError(`Failed to upload image. Please try again.=${error}`);
       } finally {
         setUploading(false);
       }
@@ -110,7 +111,7 @@ function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
   const handleInsertImage = () => {
     if (uploadedUrl) {
       editor.chain().focus().setImage({ src: uploadedUrl, alt: altText }).run();
-      setIsVisible(false); // Hide entire component after insertion
+      setIsVisible(false);
     }
   };
 
@@ -164,7 +165,7 @@ function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
       return;
     }
     editor.chain().focus().setImage({ src: url, alt: altText }).run();
-    setIsVisible(false); // Hide entire component after insertion
+    setIsVisible(false);
   };
 
   if (!isMounted) {
@@ -176,7 +177,7 @@ function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
   }
 
   if (!isVisible) {
-    return null; // Don't render anything after insertion
+    return null;
   }
 
   return (
@@ -194,7 +195,7 @@ function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
             )}
           >
             <div className="relative p-4">
-              <Image className="h-8 w-8 text-indigo-600 transition-transform group-hover:scale-110" />
+              <LucideImage className="h-8 w-8 text-indigo-600 transition-transform group-hover:scale-110" />
               <div className="absolute inset-0 bg-indigo-100 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
             </div>
             <div className="text-center">
@@ -211,7 +212,7 @@ function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setIsVisible(false)} // Close everything when clicking X
+                  onClick={() => setIsVisible(false)}
                   className="hover:bg-gray-100 rounded-full"
                 >
                   <X className="h-5 w-5 text-gray-600" />
@@ -252,9 +253,11 @@ function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
                     {uploadedUrl ? (
                       <div className="space-y-4">
                         <div className="relative">
-                          <img
+                          <Image
                             src={previewUrl || uploadedUrl}
-                            alt="Uploaded preview"
+                            alt={altText || "Uploaded preview"}
+                            width={200} // Adjust width as needed
+                            height={200} // Adjust height as needed
                             className="mx-auto max-h-[200px] rounded-lg object-cover shadow-md"
                           />
                         </div>
@@ -284,9 +287,11 @@ function ImagePlaceholderComponent({ editor, selected }: NodeViewProps) {
                       <div className="space-y-4">
                         <div className="relative">
                           {previewUrl && (
-                            <img
+                            <Image
                               src={previewUrl}
-                              alt="Preview"
+                              alt={altText || "Preview"}
+                              width={200} // Adjust width as needed
+                              height={200} // Adjust height as needed
                               className="mx-auto max-h-[200px] rounded-lg object-cover shadow-md"
                             />
                           )}

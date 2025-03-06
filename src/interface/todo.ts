@@ -12,6 +12,22 @@ export enum TodoPriority {
     REJECTED = "rejected",
   }
   
+  export interface TodosProps {
+    todos: Todo[];
+    total: number;
+    handleUpdate: (id: string, update: Partial<Todo>) => void;
+    handleDelete: (id: string) => void;
+    page: number;
+    limit: number;
+    setPage: (page: number) => void;
+  }
+  export interface TodoPreviewProps {
+    todos: Todo[];
+    handleUpdate: (id: string, update: Partial<Todo>) => void;
+    handleDelete: (id: string) => void;
+  }
+  
+ 
   export interface Todo {
     id: string;
     title: string;
@@ -30,3 +46,16 @@ export enum TodoPriority {
     due_date: string;
   }
   
+  export const statusOptions: TodoStatus[] = [
+    TodoStatus.PENDING,
+    TodoStatus.IN_PROGRESS,
+    TodoStatus.COMPLETED,
+    TodoStatus.POSTPONED,
+    TodoStatus.REJECTED,
+  ];
+  
+  export const priorityOptions: TodoPriority[] = [
+    TodoPriority.LOW,
+    TodoPriority.MEDIUM,
+    TodoPriority.HIGH,
+  ];

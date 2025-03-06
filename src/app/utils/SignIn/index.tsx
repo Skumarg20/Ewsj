@@ -5,17 +5,16 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { login, signup } from '../../../lib/api'
-import { useRouter } from "next/navigation";
 import MotivationalCard from './foundercard';
-
 import useRedirectToDashboard from "@/hooks/dashboardRedirectHook";
 import { motion } from "framer-motion";
 import { FiLock, FiMail, FiPhone, FiBook, FiArrowRight, FiEye, FiEyeOff, FiBookOpen, FiMapPin, FiUser } from "react-icons/fi";
 import toast, { Toaster } from 'react-hot-toast';
+import Image from "next/image"; // Added Next.js Image import
 
 type FormValues = {
   username?: string;
-  fullname?: string; // Added fullname
+  fullname?: string;
   email: string;
   password: string;
   phone?: string;
@@ -33,7 +32,7 @@ const signupSchema = yup.object().shape({
   username: yup.string().required("Username is required"),
   fullname: yup.string()
     .required("Full name is required")
-    .min(2, "Full name must be at least 2 characters"), // Added fullname validation
+    .min(2, "Full name must be at least 2 characters"),
   email: yup.string().email().required("Email is required"),
   password: yup.string()
     .min(6, "Password must be at least 6 characters")
@@ -53,7 +52,6 @@ const signupSchema = yup.object().shape({
 });
 
 const Login: React.FC = () => {
-  const router = useRouter();
   const redirectToDashboard = useRedirectToDashboard();
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -100,7 +98,7 @@ const Login: React.FC = () => {
           data.exam!,
           data.address!,
           data.username!,
-          data.fullname! // Added fullname
+          data.fullname!
         );
         toast.success('Signup successful! Logging in...', {
           duration: 2000,
@@ -109,12 +107,12 @@ const Login: React.FC = () => {
         await login(data.email, data.password);
         await redirectToDashboard();
       }
-    } catch (error: any) {
+    } catch (error: unknown) { // Changed from 'any' to 'unknown'
       console.error(isLogin ? "Login failed" : "Signup failed", error);
-      setErrorMessage(
-        error.message || 
-        (isLogin ? "Invalid credentials" : "Signup failed. Please try again.")
-      );
+      const errorMsg = error instanceof Error 
+        ? error.message 
+        : (isLogin ? "Invalid credentials" : "Signup failed. Please try again.");
+      setErrorMessage(errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -134,10 +132,12 @@ const Login: React.FC = () => {
             className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-white shadow-lg"
             whileHover={{ scale: 1.05 }}
           >
-            <img
+            <Image
               src="/student.png"
               alt="Founder"
-              className="w-full h-full object-cover"
+              width={96} // Added width
+              height={96} // Added height
+              className="object-cover"
             />
           </motion.div>
 
@@ -171,7 +171,7 @@ const Login: React.FC = () => {
                 },
                 {
                   name: "fullname",
-                  icon: <FiUser className="text-blue-600" />, // Using FiUser for fullname too
+                  icon: <FiUser className="text-blue-600" />,
                   type: "text",
                   placeholder: "Enter your full name",
                   error: errors.fullname

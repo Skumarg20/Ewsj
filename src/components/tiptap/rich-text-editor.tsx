@@ -94,15 +94,16 @@ console.log(initialContent,"this is content comming into editor page")
   return (
     <div
       className={cn(
-        "relative max-h-[calc(100vh-6rem)] text-black w-full h-auto bg-white overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0 flex flex-col items-center custom-scrollbar",
+        "relative max-h-[calc(100vh-6rem)]  w-full h-auto bg-white overflow-hidden overflow-y-scroll border bg-card pb-[60px] sm:pb-0 flex flex-col items-center custom-scrollbar",
         className
       )}
     >
       <EditorToolbar editor={editor} />
+      <FloatingToolbar editor={editor} />
       <TipTapFloatingMenu editor={editor} />
       <EditorContent
         editor={editor}
-        className="h-full w-full bg-white text-black cursor-text sm:p-3 prose prose-sm sm:prose-lg"
+        className="h-full w-full bg-white  cursor-text sm:p-3 prose prose-sm sm:prose-lg"
       />
     </div>
   );

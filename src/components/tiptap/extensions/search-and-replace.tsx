@@ -112,7 +112,7 @@ function processSearches(
     results,
   };
 }
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const replace = (
   replaceTerm: string,
   results: Range[],
@@ -161,7 +161,7 @@ const rebaseNextResult = (
 
   return [offset, results];
 };
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const replaceAll = (
   replaceTerm: string,
   results: Range[],

@@ -12,8 +12,8 @@ import { motion } from "framer-motion";
 const RightDashboard = () => {
   const [showChat, setShowChat] = useState(false);
   const { currentStudyPlan } = useStudyPlanStore();
-  const user=localStorage.getItem('user');
-  const fullname=JSON.parse(user)?.fullname.split(" ")[0];
+  // const user=localStorage.getItem('user');
+  // const fullname=JSON.parse(user)?.fullname.split(" ")[0];
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 to-gray-200 text-gray-900 p-4 md:p-6 lg:p-8">
@@ -24,7 +24,7 @@ const RightDashboard = () => {
         transition={{ duration: 0.5 }}
         className="text-2xl md:text-3xl font-bold mb-6 md:mb-8"
       >
-        Welcome Back {fullname}🚀
+        Welcome Back 🚀
       </motion.div>
 
       {/* Main Grid - Single Column */}
@@ -38,7 +38,13 @@ const RightDashboard = () => {
         >
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {showChat ? (
-              <ChatBuddie onClose={() => setShowChat(false)} />
+             <ChatBuddie 
+             onClose={() => setShowChat(false)} 
+             onRateLimitExceeded={(message: string) => {
+              
+               alert(message); 
+             }} 
+           />
             ) : (
               <DashBoardChat onStartChat={() => setShowChat(true)} />
             )}
