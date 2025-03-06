@@ -1,9 +1,10 @@
-version: '3.8'
 services:
   app:
-    image: frontendcogenist:latest
+    image: sanantino/frontendcogenist:latest  # Update with your username
     ports:
       - "3000:3000"
-    env_file:
-      - .env.local
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - HOSTNAME=${HOSTNAME}
     restart: unless-stopped
