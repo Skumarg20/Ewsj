@@ -1,6 +1,6 @@
 services:
   app:
-    image: sanantino/frontendcogenist:latest  # Update with your username
+    image: sanantino/cogenist_frontend:latest  # Update with your username
     ports:
       - "3000:3000"
     environment:

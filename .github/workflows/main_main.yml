@@ -27,8 +27,8 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/nextjs-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/nextjs-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/cogenist_frontend:latest 
+          docker push ${{ secrets.DOCKER_USERNAME }}/cogenist_frontend:latest 
 
   deploy:
     needs: build-and-push
