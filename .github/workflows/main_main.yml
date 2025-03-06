@@ -1,44 +1,58 @@
-name: Deploy Next.js Application
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - deploy-with-docker-ec2
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
-    steps: 
-      - name: Checkout Source
-        uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Build Docker Image
-        run: docker build -t integrationninjas/nextjs-app .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Publish Image to Docker Hub
-        run: docker push integrationninjas/nextjs-app:latest
+      - name: Build and push Docker images
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nextjs-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/nextjs-app:latest
 
   deploy:
-    needs: build
-    runs-on: self-hosted
+    needs: build-and-push
+    runs-on: ubuntu-latest
     steps:
-      - name: Pull Image from Docker Hub
-        run: docker pull integrationninjas/nextjs-app:latest
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Stop and Remove Old Container (If Exists)
-        run: |
-          docker stop nextjs-app-container || true
-          docker rm nextjs-app-container || true  
+      - name: Copy docker-compose.yml to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "~/app"
 
-
-      - name: Run Docker Container
-        run: |
-          docker run -d -p 3000:3000 \
-          --name nextjs-app-container \
-          integrationninjas/nextjs-app
-
-      - name: Verify Running Container
-        run: docker ps -a
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/app
+            docker compose pull
+            docker compose down
+            docker compose up -d
