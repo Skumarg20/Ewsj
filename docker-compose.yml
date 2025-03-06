@@ -1,9 +1,9 @@
 version: '3.8'
 services:
   app:
-    image: frontendcogenist  # Replace with your image name if different
+    image: frontendcogenist 
     ports:
-      - "3000:3000"              # Maps host port 3000 to container port 3000
+      - "3000:3000"              
     environment:
       - NODE_ENV=production
       - PORT=3000
