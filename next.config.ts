@@ -29,6 +29,7 @@ module.exports = {
   ...nextConfig,
   eslint: {
     ...nextConfig.eslint,
-    // Next.js doesn't directly support inline rules here, so we rely on .eslintrc
+   
   },
+  output: 'standalone',
 };

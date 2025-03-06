@@ -151,10 +151,8 @@ const SoloStudy: React.FC = () => {
   };
 
   const handleMusicSelect = (selectedMusic: string | null) => {
-    if (selectedMusic) {
       setMusic(selectedMusic);
-      setShowMusicSelector(false);
-    }
+    setShowMusicSelector(false);
   };
 
   if (!isClient) return null;
