@@ -37,6 +37,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: Test SSH Connection
+        run: ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH Connection Successful'"
+
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@master
         with:
