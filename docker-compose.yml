@@ -3,9 +3,7 @@ services:
   app:
     image: frontendcogenist:latest
     ports:
-      - "3000:3000"              
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - HOSTNAME=0.0.0.0
+      - "3000:3000"
+    env_file:
+      - .env.local
     restart: unless-stopped
