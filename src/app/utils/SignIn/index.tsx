@@ -106,13 +106,13 @@ const Login: React.FC = () => {
         await redirectToDashboard();
       } else {
         await signup(
-          data.fullname!,
+          data.username!,
+          data.fullname!,    // Changed order
           data.email,
           data.password,
           data.phone!,
           data.class!,
           data.exam!,
-          data.username!,
         ); 
         toast.success("Signup successful! Logging in...", {
           duration: 2000,

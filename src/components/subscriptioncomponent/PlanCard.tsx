@@ -41,7 +41,7 @@ export default function PlanCard({
   isHovered,
   onHoverStart,
   onHoverEnd,
-  onClick,
+ onClick,
   loading,
 }: PlanCardProps): JSX.Element {
   return (
@@ -107,9 +107,11 @@ export default function PlanCard({
                 : "border-2 border-indigo-500 text-indigo-500 hover:bg-indigo-500 hover:text-white"
             } font-semibold py-3 rounded-lg group relative overflow-hidden transition-all duration-300`}
             onClick={onClick}
-            disabled={loading}
+            disabled={true}
+           
           >
-            <span className="relative z-10">{loading ? "Processing..." : plan.buttonText}</span>
+            {/* <span className="relative z-10">{loading ? "Processing..." : plan.buttonText}</span> */}
+            <span className="relative z-10">Coming Soon</span>
             <motion.span
               initial={{ x: "-100%", opacity: 0.4 }}
               whileHover={{ x: "100%", opacity: 0.6 }}

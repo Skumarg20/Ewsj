@@ -213,13 +213,13 @@ export default function Dashboard({  }: DashboardProps) {
               <div className="flex items-center">
                 <Image
                   src="https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png"
-                  alt="Coginest"
+                  alt="CogeNist"
                   width={32}
                   height={32}
                   className="h-8 w-auto"
                 />
                 <h1 className="text-lg font-bold text-indigo-600">
-                  Coginest
+                  CogeNist
                 </h1>
               </div>
             </div>

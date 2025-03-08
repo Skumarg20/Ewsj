@@ -62,6 +62,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/app
+            echo "${{ secrets.ENV_FILE }}" > .env
+            cat .env
+            file .env
             docker compose pull
             docker compose down
             docker compose up -d

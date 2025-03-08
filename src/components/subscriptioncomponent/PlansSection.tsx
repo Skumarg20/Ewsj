@@ -81,7 +81,7 @@ export default function PlansSection({ plan, featureIcons, setUserPlan }: PlansS
         }
       );
 
-      console.log(createOrderResponse, createOrderResponse.data, "Response from create-order API");
+    
 
       const order = createOrderResponse.data.order;
 

@@ -9,29 +9,28 @@ export const login = async (email: string, password: string) => {
 };
 
 export const signup = async (
+  username: string,    // Reordered to match typical API expectations
+  fullname: string,
   email: string,
   password: string,
   phone: string,
   userClass: string,
-  exam: string,
-  username: string ,
-  fullname:string
+  exam: string
 ) => {
   try {
-   
+    console.log(username, fullname, email, password, phone, userClass, exam, "this is data I am sending");
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/signup`, {
       username,
+      fullname,
       email,
       password,
       phonenumber: phone,
-      studentclass: userClass, 
+      studentclass: userClass,
       exam,
-      fullname,
     });
 
     return response.data;
   } catch (error) {
-    
     throw error;
   }
 };
