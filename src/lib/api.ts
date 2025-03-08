@@ -14,7 +14,6 @@ export const signup = async (
   phone: string,
   userClass: string,
   exam: string,
-  address: string,
   username: string ,
   fullname:string
 ) => {
@@ -27,7 +26,6 @@ export const signup = async (
       phonenumber: phone,
       studentclass: userClass, 
       exam,
-      address,
       fullname,
     });
 

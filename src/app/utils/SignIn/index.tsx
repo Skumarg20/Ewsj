@@ -4,14 +4,26 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { login, signup } from '../../../lib/api'
-import MotivationalCard from './foundercard';
+import { login, signup } from "@/lib/api";
+import MotivationalCard from "./foundercard";
 import useRedirectToDashboard from "@/hooks/dashboardRedirectHook";
 import { motion } from "framer-motion";
-import { FiLock, FiMail, FiPhone, FiBook, FiArrowRight, FiEye, FiEyeOff, FiBookOpen, FiMapPin, FiUser } from "react-icons/fi";
-import toast, { Toaster } from 'react-hot-toast';
-import Image from "next/image"; // Added Next.js Image import
+import {
+  FiLock,
+  FiMail,
+  FiPhone,
+  FiBook,
+  FiArrowRight,
+  FiEye,
+  FiEyeOff,
+  FiBookOpen,
+  FiUser,
+} from "react-icons/fi";
+import toast, { Toaster } from "react-hot-toast";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
+// Define form values type (removed address)
 type FormValues = {
   username?: string;
   fullname?: string;
@@ -20,14 +32,15 @@ type FormValues = {
   phone?: string;
   class?: string;
   exam?: string;
-  address?: string;
 };
 
+// Login schema
 const loginSchema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
   password: yup.string().required("Password is required"),
 });
 
+// Signup schema (removed address)
 const signupSchema = yup.object().shape({
   username: yup.string().required("Username is required"),
   fullname: yup.string()
@@ -46,13 +59,11 @@ const signupSchema = yup.object().shape({
   exam: yup.string()
     .required("Exam is required")
     .min(2, "Please enter a valid exam"),
-  address: yup.string()
-    .required("Address is required")
-    .min(5, "Please enter a valid address"),
 });
 
 const Login: React.FC = () => {
   const redirectToDashboard = useRedirectToDashboard();
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -67,15 +78,19 @@ const Login: React.FC = () => {
     resolver: yupResolver(isLogin ? loginSchema : signupSchema),
   });
 
-  const toggleForm = () => {
+  const toggleForm = (): void => {
     setIsLogin((prev) => !prev);
     setErrorMessage("");
     setIsLoading(false);
     reset();
   };
 
-  const togglePasswordVisibility = () => {
+  const togglePasswordVisibility = (): void => {
     setShowPassword((prev) => !prev);
+  };
+
+  const handleForgotPassword = (): void => {
+    router.push("/reset-password");
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -84,34 +99,36 @@ const Login: React.FC = () => {
     try {
       if (isLogin) {
         await login(data.email, data.password);
-        toast.success('Login successful! Redirecting...', {
+        toast.success("Login successful! Redirecting...", {
           duration: 2000,
-          position: 'top-center',
+          position: "top-center",
         });
         await redirectToDashboard();
       } else {
         await signup(
+          data.fullname!,
           data.email,
           data.password,
           data.phone!,
           data.class!,
           data.exam!,
-          data.address!,
           data.username!,
-          data.fullname!
-        );
-        toast.success('Signup successful! Logging in...', {
+        ); 
+        toast.success("Signup successful! Logging in...", {
           duration: 2000,
-          position: 'top-center',
+          position: "top-center",
         });
         await login(data.email, data.password);
         await redirectToDashboard();
       }
-    } catch (error: unknown) { // Changed from 'any' to 'unknown'
+    } catch (error: unknown) {
       console.error(isLogin ? "Login failed" : "Signup failed", error);
-      const errorMsg = error instanceof Error 
-        ? error.message 
-        : (isLogin ? "Invalid credentials" : "Signup failed. Please try again.");
+      const errorMsg =
+        error instanceof Error
+          ? error.message
+          : isLogin
+          ? "Invalid credentials"
+          : "Signup failed. Please try again.";
       setErrorMessage(errorMsg);
     } finally {
       setIsLoading(false);
@@ -122,26 +139,26 @@ const Login: React.FC = () => {
     <div className="max-h-full bg-white mt-5 bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col md:flex-row w-[80%] justify-center m-auto p-auto rounded-3xl shadow-xl">
       <Toaster />
       <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-[10%] p-5">
-        <motion.div 
+        <motion.div
           className="w-[100%] mr-7 flex-col items-center justify-center"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <motion.div 
+          <motion.div
             className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-white shadow-lg"
             whileHover={{ scale: 1.05 }}
           >
             <Image
               src="/student.png"
               alt="Founder"
-              width={96} // Added width
-              height={96} // Added height
+              width={96}
+              height={96}
               className="object-cover"
             />
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -161,66 +178,63 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {[
-              ...(isLogin ? [] : [
-                {
-                  name: "username",
-                  icon: <FiUser className="text-blue-600" />,
-                  type: "text",
-                  placeholder: "Enter your username",
-                  error: errors.username
-                },
-                {
-                  name: "fullname",
-                  icon: <FiUser className="text-blue-600" />,
-                  type: "text",
-                  placeholder: "Enter your full name",
-                  error: errors.fullname
-                },
-              ]),
+              ...(isLogin
+                ? []
+                : [
+                    {
+                      name: "username",
+                      icon: <FiUser className="text-blue-600" />,
+                      type: "text",
+                      placeholder: "Enter your username",
+                      error: errors.username,
+                    },
+                    {
+                      name: "fullname",
+                      icon: <FiUser className="text-blue-600" />,
+                      type: "text",
+                      placeholder: "Enter your full name",
+                      error: errors.fullname,
+                    },
+                  ]),
               {
                 name: "email",
                 icon: <FiMail className="text-blue-600" />,
                 type: "email",
                 placeholder: "Enter your email",
-                error: errors.email
+                error: errors.email,
               },
               {
                 name: "password",
                 icon: <FiLock className="text-blue-600" />,
                 type: showPassword ? "text" : "password",
                 placeholder: "Enter your password",
-                error: errors.password
+                error: errors.password,
               },
-              ...(!isLogin ? [
-                {
-                  name: "phone",
-                  icon: <FiPhone className="text-blue-600" />,
-                  type: "tel",
-                  placeholder: "Enter your phone number",
-                  error: errors.phone
-                },
-                {
-                  name: "class",
-                  icon: <FiBook className="text-blue-600" />,
-                  type: "text",
-                  placeholder: "Enter your class (e.g., 11th, 12th)",
-                  error: errors.class
-                },
-                {
-                  name: "exam",
-                  icon: <FiBookOpen className="text-blue-600" />,
-                  type: "text",
-                  placeholder: "Enter your exam (e.g., JEE, NEET, UPSC)",
-                  error: errors.exam
-                },
-                {
-                  name: "address",
-                  icon: <FiMapPin className="text-blue-600" />,
-                  type: "text",
-                  placeholder: "Enter your address",
-                  error: errors.address
-                },
-              ] : [])
+              ...(!isLogin
+                ? [
+                    {
+                      name: "phone",
+                      icon: <FiPhone className="text-blue-600" />,
+                      type: "tel",
+                      placeholder: "Enter your phone number",
+                      error: errors.phone,
+                    },
+                    {
+                      name: "class",
+                      icon: <FiBook className="text-blue-600" />,
+                      type: "text",
+                      placeholder: "Enter your class (e.g., 11th, 12th)",
+                      error: errors.class,
+                    },
+                    {
+                      name: "exam",
+                      icon: <FiBookOpen className="text-blue-600" />,
+                      type: "text",
+                      placeholder: "Enter your exam (e.g., JEE, NEET, UPSC)",
+                      error: errors.exam,
+                    },
+                  ]
+                : []),
             ].map((field, index) => (
               <motion.div
                 key={field.name}
@@ -230,7 +244,9 @@ const Login: React.FC = () => {
               >
                 <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
                   {field.icon}
-                  <label>{field.name.charAt(0).toUpperCase() + field.name.slice(1)}</label>
+                  <label>
+                    {field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+                  </label>
                 </div>
                 <div className="relative">
                   <input
@@ -252,7 +268,9 @@ const Login: React.FC = () => {
                   )}
                 </div>
                 {field.error && (
-                  <p className="text-red-500 text-sm mt-1">{field.error.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {field.error.message}
+                  </p>
                 )}
               </motion.div>
             ))}
@@ -262,18 +280,43 @@ const Login: React.FC = () => {
               whileHover={{ scale: isLoading ? 1 : 1.02 }}
               whileTap={{ scale: isLoading ? 1 : 0.98 }}
               className={`w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all flex items-center justify-center gap-2 ${
-                isLoading ? 'opacity-75 cursor-not-allowed' : 'hover:from-blue-600 hover:to-purple-600'
+                isLoading
+                  ? "opacity-75 cursor-not-allowed"
+                  : "hover:from-blue-600 hover:to-purple-600"
               }`}
               disabled={isLoading}
             >
-              {isLoading 
-                ? (isLogin ? "Logging in..." : "Signing up...") 
-                : (isLogin ? "Login" : "Sign Up")}
+              {isLoading
+                ? isLogin
+                  ? "Logging in..."
+                  : "Signing up..."
+                : isLogin
+                ? "Login"
+                : "Sign Up"}
               {!isLoading && <FiArrowRight className="inline-block" />}
             </motion.button>
+
+            {/* Forgot Password Button - Only visible in Login mode */}
+            {isLogin && (
+              <motion.p
+                className="mt-2 text-center text-sm text-gray-600"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                whileHover={{ scale: isLoading ? 1 : 1.02 }}
+              >
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="text-blue-500 hover:text-blue-600 font-medium focus:outline-none"
+                  disabled={isLoading}
+                >
+                  Forgot Password?
+                </button>
+              </motion.p>
+            )}
           </form>
 
-          <motion.p 
+          <motion.p
             className="mt-4 text-center text-sm text-gray-600"
             whileHover={{ scale: isLoading ? 1 : 1.02 }}
           >
@@ -288,7 +331,7 @@ const Login: React.FC = () => {
           </motion.p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="w-full md:w-[45%] shrink-0"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}

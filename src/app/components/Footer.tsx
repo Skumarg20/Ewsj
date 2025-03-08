@@ -47,7 +47,7 @@ const Footer: FC = () => {
                 <FaRocket className="w-8 h-8 text-indigo-400" />
               </motion.div>
               <span className="text-3xl font-extrabold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-                CogiNest
+                CogeNist
               </span>
             </div>
             <p className="mt-2 text-sm text-gray-300 text-center md:text-left">
@@ -138,7 +138,7 @@ const Footer: FC = () => {
           className="mt-8 text-center text-sm text-gray-400"
         >
           <p>
-            © {new Date().getFullYear()} CogiNest.{" "}
+            © {new Date().getFullYear()} CogeNist.{" "}
             <motion.span
               className="text-indigo-400 font-semibold"
               animate={{ opacity: [0.7, 1, 0.7] }}

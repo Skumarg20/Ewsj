@@ -12,7 +12,7 @@ const HomeLayout: React.FC<HomeLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow w-full mx-auto p-6">{children}</main>
+      <main className="flex-grow w-[100%]  md:p-6 md:mx-auto">{children}</main>
       <Footer />
     </div>
   );

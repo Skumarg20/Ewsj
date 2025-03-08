@@ -20,9 +20,9 @@ const Hero = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 rounded-xl mt-0">
+      <div className="min-h-screen w-[100%] bg-gray-50 rounded-xl mt-0">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 min-h-screen w-full flex items-center justify-center overflow-hidden rounded-b-2xl mb-5">
+        <div className="relative bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 min-h-screen w-full flex items-center justify-center overflow-hidden rounded-2xl mb-5">
           {/* Background gradient with a bolder animation */}
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/40 via-purple-600/40 to-pink-600/40 opacity-100 animate-gradient-move-fast"></div>
 

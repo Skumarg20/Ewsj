@@ -74,7 +74,7 @@ const ContactUs: React.FC = () => {
   };
 
   return (
-    <div className="w-[90%] h-full p-4 lg:p-7 mt-5 mb-5 flex flex-col lg:flex-row border shadow-2xl m-auto bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 relative overflow-hidden" id="contact">
+    <div className="w-[100%] md:[w-90%] h-full p-4 lg:p-7 mt-5 mb-5 flex flex-col lg:flex-row border shadow-2xl m-auto bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 relative overflow-hidden" id="contact">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent animate-pulse-slow" />
@@ -102,7 +102,7 @@ const ContactUs: React.FC = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mt-4 font-extrabold px-4 lg:pl-6 text-4xl lg:text-5xl bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent tracking-tight"
         >
-          Supercharge Your Success <br /> with CogiNest
+          Supercharge Your Success <br /> with CogeNist
         </motion.h1>
 
         <motion.p 

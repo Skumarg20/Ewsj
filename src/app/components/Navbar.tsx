@@ -46,7 +46,7 @@ function Navbar() {
             >
               <Image
                 src="https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png"
-                alt="CogiNest Logo"
+                alt="CogeNist Logo"
                 width={40}
                 height={40}
                 className="object-contain"
@@ -59,7 +59,7 @@ function Navbar() {
             <span
               className={`text-3xl font-extrabold tracking-tight text-white group-hover:text-yellow-200 transition-colors duration-300 bg-gradient-to-r from-yellow-200 to-gray-300 bg-clip-text hover:text-transparent`}
             >
-              CogiNest
+              CogeNist
             </span>
           </div>
 
