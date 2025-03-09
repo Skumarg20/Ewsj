@@ -9,6 +9,11 @@ const axiosInstance = axios.create({
 });
 
 console.log(process.env.NEXT_PUBLIC_BASE_URL,"this is backend");
+console.log(process.env.NEXT_PUBLIC_AUTH_SECRET,"this is auth");
+console.log(process.env.NEXT_PUBLIC_RAZORPAY_KEY,"this is auth");
+console.log(process.env.NEXT_PUBLIC_BASE_URL,"this is auth");
+console.log(process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,"this is auth");
+console.log(process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,"this is auth");
 
 
 axiosInstance.interceptors.request.use(
