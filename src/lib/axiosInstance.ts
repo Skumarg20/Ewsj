@@ -10,6 +10,7 @@ const axiosInstance = axios.create({
 
 console.log(process.env.NEXT_PUBLIC_BASE_URL,"this is backend");
 
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const authHeader = getAuthHeader();
