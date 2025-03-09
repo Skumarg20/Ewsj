@@ -3,7 +3,7 @@ import { triggerUpgradePopup } from "@/context/UpgradeContext";
 import { getAuthHeader } from "@/lib/api";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL: 'http://ec2-35-154-144-165.ap-south-1.compute.amazonaws.com',
   headers: { "Content-Type": "application/json" },
   timeout: 5000, 
 });
