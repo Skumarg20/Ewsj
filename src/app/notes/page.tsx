@@ -22,7 +22,7 @@ import NoteEditor from "./NoteEditor";
 import withAuth from "@/lib/withAuth";
 
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000";
+
 
 function CreateFolderModal({
   onClose,
@@ -235,7 +235,7 @@ function Notes() {
   const [loading, setLoading] = useState(false);
 
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  console.log(selectedNote,"this is notes content selected note need to submit");
+  
   useEffect(() => {
     fetchFolders();
   }, []);
@@ -243,7 +243,7 @@ function Notes() {
   const fetchFolders = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/notesfolder`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/notesfolder`, {
         headers: getAuthHeader(),
       });
       const folderData = response.data.reduce(
@@ -270,7 +270,7 @@ function Notes() {
   const handleCreateFolder = async (name: string, color: string, description?: string) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/notesfolder`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/notesfolder`,
         { name, color, description },
         { headers: { ...getAuthHeader(), "Content-Type": "application/json" } }
       );
@@ -295,7 +295,7 @@ function Notes() {
       if (newName && newName !== name) {
         const folderId = folders[name].id;
         await axios.put(
-          `${API_BASE_URL}/notesfolder/${folderId}`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/notesfolder/${folderId}`,
           { name: newName, color, description },
           { headers: { ...getAuthHeader(), "Content-Type": "application/json" } }
         );
@@ -313,7 +313,7 @@ function Notes() {
   };
 
   const handleViewNote = (note: Note) => {
-    console.log(note,"this is not in handleview note")
+    
     setSelectedNote(note);
     setView("edit");
   };
@@ -355,28 +355,25 @@ function Notes() {
     setView("list");
   }
   const handleSaveNote = async () => {
-    console.log("Selected Subject:", selectedSubject, "Note Content:", noteContent, "this is for save notes api");
+   
     if (!selectedSubject || !noteContent) {
-      console.log("Missing required fields - selectedSubject or noteContent is undefined");
+
       return;
     }
   
     try {
       const folderId = folders[selectedSubject].id;
-      console.log("Folder ID:", folderId, "Title:", title,JSON.stringify(noteContent)); 
-      console.log(noteContent,"this is note content");
       const payload = {
         title: title || "Untitled",
         content: noteContent || "", // Ensure content is always a string
       };
-      console.log(payload,"this is payload");
       const response = await axios.post(
-        `${API_BASE_URL}/notes/${folderId}/note`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/notes/${folderId}/note`,
         payload,
         { headers: { ...getAuthHeader(), "Content-Type": "application/json" } }
       );
   
-      console.log("API Response:", response.data); // Log response for debugging
+  
   
       setFolders((prev) => ({
         ...prev,
@@ -406,7 +403,8 @@ function Notes() {
     }
   };
   const handleOnContentChange = (content: JSONContent) => {
-    console.log("Content changed:", content);
+   
+
     setNoteContent(content);
     if (selectedNote && selectedSubject) {
       setFolders((prev) => ({
@@ -428,7 +426,7 @@ function Notes() {
     }
   };
 if (view === "edit" && selectedNote) {
-  console.log(selectedNote,"this is selected note");
+ 
   return (
     <NoteEditor
       noteData={selectedNote}
