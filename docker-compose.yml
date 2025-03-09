@@ -1,10 +1,13 @@
+version: '3.8'
+
 services:
   app:
-    image: sanantino/cogenist_frontend:latest  # Update with your username
+    image: sanantino/cogenist_frontend:latest
     ports:
       - "3000:3000"
+    env_file:
+      - .env.local  # Loads all variables from .env.local
     environment:
-      - NODE_ENV=${NODE_ENV}
-      - PORT=${PORT}
-      - HOSTNAME=${HOSTNAME}
+      - NODE_ENV=production
+      - PORT=3000
     restart: unless-stopped
