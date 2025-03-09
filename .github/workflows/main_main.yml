@@ -45,13 +45,22 @@ jobs:
       - name: Test SSH Connection
         run: ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH Connection Successful'"
 
-      - name: Copy docker-compose.yml to EC2
+      - name: Copy files to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "docker-compose.yml"
+          target: "~/app"
+
+      - name: Copy .env file to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: ".env"
           target: "~/app"
 
       - name: SSH into EC2 and deploy
@@ -62,9 +71,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/app
-            echo "${{ secrets.ENV_FILE }}" > .env
+            printf "%s" "${{ secrets.ENV_FILE }}" > .env
+            echo "Checking .env content:"
             cat .env
+            echo "Checking file type:"
             file .env
             docker compose pull
             docker compose down
-            docker compose up -d
+            docker compose up -d --build
