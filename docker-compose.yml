@@ -10,6 +10,11 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}  # ✅ Add this
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}  # ✅ Pass at build time
     volumes:
       - ./.env.local:/app/.env.local  # Mount .env.local inside the container
     entrypoint: |
