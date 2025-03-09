@@ -25,4 +25,5 @@ services:
              echo 'HOSTNAME=' $HOSTNAME;
              echo '---- Running App ----';
              node server.js"
+    command: ["sh", "-c", "npm run build && npm start"]
     restart: unless-stopped
