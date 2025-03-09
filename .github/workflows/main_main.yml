@@ -1,70 +1,39 @@
-name: CI/CD Pipeline
+name: Deploy Frontend
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push Docker images
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/cogenist_frontend:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/cogenist_frontend:latest 
-
   deploy:
-    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Setup SSH Key
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-
-      - name: Test SSH Connection
-        run: ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH Connection Successful'"
-
-      - name: Copy docker-compose.yml to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "docker-compose.yml"
-          target: "~/app"
-
-      - name: SSH into EC2 and deploy
+      - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}  # e.g., ec2-35-154-144-165.ap-south-1.compute.amazonaws.com
+          username: ${{ secrets.SSH_USERNAME }}  # e.g., ubuntu
+          key: ${{ secrets.SSH_KEY }}  # Private key for SSH
+          port: 22
           script: |
             cd ~/app
-            echo "${{ secrets.ENV_FILE }}" > .env.local
+            # Copy files from GitHub workspace to ~/app (assuming they're mounted)
+            cp -r /github/workspace/* .
+            echo "NEXT_PUBLIC_AUTH_SECRET=${{ secrets.NEXT_PUBLIC_AUTH_SECRET }}" > .env.local
+            echo "NEXT_PUBLIC_RAZORPAY_KEY=${{ secrets.NEXT_PUBLIC_RAZORPAY_KEY }}" >> .env.local
+            echo "NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}" >> .env.local
+            echo "NEXT_PUBLIC_EMAILJS_SERVICE_ID=${{ secrets.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}" >> .env.local
+            echo "NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${{ secrets.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}" >> .env.local
+            echo "NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}" >> .env.local
+            echo "NODE_ENV=production" >> .env.local
+            echo "PORT=3000" >> .env.local
+            echo "HOSTNAME=0.0.0.0" >> .env.local
             cat .env.local
             file .env.local
             docker compose pull
             docker compose down
-            docker compose up -d
+            docker compose up -d --build  # Add --build to force rebuild
