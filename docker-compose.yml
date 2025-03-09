@@ -1,23 +1,12 @@
-version: '3.8'
-
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - NEXT_PUBLIC_AUTH_SECRET=${NEXT_PUBLIC_AUTH_SECRET}
-        - NEXT_PUBLIC_RAZORPAY_KEY=${NEXT_PUBLIC_RAZORPAY_KEY}
-        - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
-        - NEXT_PUBLIC_EMAILJS_SERVICE_ID=${NEXT_PUBLIC_EMAILJS_SERVICE_ID}
-        - NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${NEXT_PUBLIC_EMAILJS_TEMPLATE_ID}
-        - NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${NEXT_PUBLIC_EMAILJS_PUBLIC_KEY}
+    image: sanantino/cogenist_frontend:latest  # Use the pre-built image
     ports:
-      - "3000:3000"  # Frontend runs on 3000 inside container
+      - "3000:3000"
     environment:
-      - NODE_ENV=${NODE_ENV:-production}  # Default to production if not set
-      - PORT=${PORT:-3000}                # Default to 3000 if not set
-      - HOSTNAME=${HOSTNAME:-0.0.0.0}     # Default to 0.0.0.0 if not set
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3000}
+      - HOSTNAME=${HOSTNAME:-0.0.0.0}
       - NEXT_PUBLIC_AUTH_SECRET=${NEXT_PUBLIC_AUTH_SECRET}
       - NEXT_PUBLIC_RAZORPAY_KEY=${NEXT_PUBLIC_RAZORPAY_KEY}
       - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
@@ -25,9 +14,7 @@ services:
       - NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${NEXT_PUBLIC_EMAILJS_TEMPLATE_ID}
       - NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${NEXT_PUBLIC_EMAILJS_PUBLIC_KEY}
     env_file:
-      - .env.local  # Use .env.local instead of .env to match your past file
-    volumes:
-      - ./.env.local:/app/.env.local  # Optional: Mount .env.local for runtime access
+      - .env.local
     entrypoint: |
       sh -c "echo '---- Printing Environment Variables ----'; 
              echo 'NEXT_PUBLIC_AUTH_SECRET=' \$NEXT_PUBLIC_AUTH_SECRET; 
