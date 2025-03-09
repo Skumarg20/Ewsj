@@ -2,33 +2,49 @@ version: '3.8'
 
 services:
   app:
-    image: sanantino/cogenist_frontend:latest
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env.local  # Loads all variables from .env.local
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}  # ✅ Add this
     build:
       context: .
+      dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}  # ✅ Pass at build time
+        - NEXT_PUBLIC_AUTH_SECRET=${NEXT_PUBLIC_AUTH_SECRET}
+        - NEXT_PUBLIC_RAZORPAY_KEY=${NEXT_PUBLIC_RAZORPAY_KEY}
+        - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
+        - NEXT_PUBLIC_EMAILJS_SERVICE_ID=${NEXT_PUBLIC_EMAILJS_SERVICE_ID}
+        - NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${NEXT_PUBLIC_EMAILJS_TEMPLATE_ID}
+        - NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${NEXT_PUBLIC_EMAILJS_PUBLIC_KEY}
+    ports:
+      - "3000:3000"  # Frontend runs on 3000 inside container
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}  # Default to production if not set
+      - PORT=${PORT:-3000}                # Default to 3000 if not set
+      - HOSTNAME=${HOSTNAME:-0.0.0.0}     # Default to 0.0.0.0 if not set
+      - NEXT_PUBLIC_AUTH_SECRET=${NEXT_PUBLIC_AUTH_SECRET}
+      - NEXT_PUBLIC_RAZORPAY_KEY=${NEXT_PUBLIC_RAZORPAY_KEY}
+      - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
+      - NEXT_PUBLIC_EMAILJS_SERVICE_ID=${NEXT_PUBLIC_EMAILJS_SERVICE_ID}
+      - NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${NEXT_PUBLIC_EMAILJS_TEMPLATE_ID}
+      - NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${NEXT_PUBLIC_EMAILJS_PUBLIC_KEY}
+    env_file:
+      - .env.local  # Use .env.local instead of .env to match your past file
     volumes:
-      - ./.env.local:/app/.env.local  # Mount .env.local inside the container
+      - ./.env.local:/app/.env.local  # Optional: Mount .env.local for runtime access
     entrypoint: |
       sh -c "echo '---- Printing Environment Variables ----'; 
-             echo 'NEXT_PUBLIC_AUTH_SECRET=' $NEXT_PUBLIC_AUTH_SECRET;
-             echo 'NEXT_PUBLIC_RAZORPAY_KEY=' $NEXT_PUBLIC_RAZORPAY_KEY;
-             echo 'NEXT_PUBLIC_BASE_URL=' $NEXT_PUBLIC_BASE_URL;
-             echo 'NEXT_PUBLIC_EMAILJS_SERVICE_ID=' $NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-             echo 'NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=' $NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-             echo 'NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=' $NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-             echo 'NODE_ENV=' $NODE_ENV;
-             echo 'PORT=' $PORT;
-             echo 'HOSTNAME=' $HOSTNAME;
-             echo '---- Running App ----';
+             echo 'NEXT_PUBLIC_AUTH_SECRET=' \$NEXT_PUBLIC_AUTH_SECRET; 
+             echo 'NEXT_PUBLIC_RAZORPAY_KEY=' \$NEXT_PUBLIC_RAZORPAY_KEY; 
+             echo 'NEXT_PUBLIC_BASE_URL=' \$NEXT_PUBLIC_BASE_URL; 
+             echo 'NEXT_PUBLIC_EMAILJS_SERVICE_ID=' \$NEXT_PUBLIC_EMAILJS_SERVICE_ID; 
+             echo 'NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=' \$NEXT_PUBLIC_EMAILJS_TEMPLATE_ID; 
+             echo 'NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=' \$NEXT_PUBLIC_EMAILJS_PUBLIC_KEY; 
+             echo 'NODE_ENV=' \$NODE_ENV; 
+             echo 'PORT=' \$PORT; 
+             echo 'HOSTNAME=' \$HOSTNAME; 
+             echo '---- Running App ----'; 
              node server.js"
-    command: ["sh", "-c", "npm run build && npm start"]
     restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
