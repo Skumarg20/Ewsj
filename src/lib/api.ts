@@ -1,13 +1,17 @@
 'use client'
 import axios from 'axios';
+import axiosInstance from './axiosInstance';
 
 export const login = async (email: string, password: string) => {
-  
-  const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/signin`, { email, password });
-  localStorage.setItem('token', response.data.access_token);
-  return response.data;
+  try {
+    const response = await axiosInstance.post("/auth/signin", { email, password });
+    localStorage.setItem("token", response.data.access_token);
+    return response.data;
+  } catch (error) {
+    console.error("Login Error:", error);
+    throw error;
+  }
 };
-
 export const signup = async (
   username: string,    // Reordered to match typical API expectations
   fullname: string,

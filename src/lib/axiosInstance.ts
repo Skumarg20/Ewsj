@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
   timeout: 5000, 
 });
 
-
+console.log(process.env.NEXT_PUBLIC_BASE_URL,"this is backend");
 
 axiosInstance.interceptors.request.use(
   (config) => {
