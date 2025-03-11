@@ -31,7 +31,9 @@ function TimeBlock({
       Break: "from-gray-400 to-gray-500",
       Revision: "from-amber-500 to-orange-500",
     };
-    return colors[subject as keyof typeof colors] || "from-indigo-500 to-violet-500";
+    return (
+      colors[subject as keyof typeof colors] || "from-indigo-500 to-violet-500"
+    );
   };
 
   const getSubjectBg = (subject: string) => {
@@ -42,7 +44,10 @@ function TimeBlock({
       Break: "bg-gray-50 border-gray-200 text-gray-700",
       Revision: "bg-amber-50 border-amber-200 text-amber-700",
     };
-    return colors[subject as keyof typeof colors] || "bg-indigo-50 border-indigo-200 text-indigo-700";
+    return (
+      colors[subject as keyof typeof colors] ||
+      "bg-indigo-50 border-indigo-200 text-indigo-700"
+    );
   };
 
   const calculateDuration = (timeRange: string): number => {
@@ -68,13 +73,17 @@ function TimeBlock({
         )} shadow-lg transform transition-transform duration-300 group-hover:scale-125`}
       ></div>
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl">
-        <div className={`h-1.5 bg-gradient-to-r ${getSubjectColor(session.subject)}`} />
+        <div
+          className={`h-1.5 bg-gradient-to-r ${getSubjectColor(session.subject)}`}
+        />
         <div className="p-4">
           <div className="flex justify-between items-start mb-3">
             <span
-              className={`px-3 py-1 rounded-full text-sm font-medium border ${getSubjectBg(session.subject)}`}
+              className={`px-3 py-1 rounded-full text-sm font-medium border ${
+                session?.subject ? getSubjectBg(session.subject) : "bg-gray-200"
+              }`}
             >
-              {session.subject.replace(/'/g, "'")}
+              {session?.subject || "No Subject"}
             </span>
             <div className="flex items-center gap-2 text-gray-600">
               <Clock className="w-4 h-4" />
@@ -85,17 +94,23 @@ function TimeBlock({
             {session.topic && (
               <div className="flex items-start gap-2">
                 <BookOpen className="w-4 h-4 text-indigo-600 mt-1 flex-shrink-0" />
-                <p className="text-sm font-medium text-gray-800">{session.topic.replace(/'/g, "'")}</p>
+                <p className="text-sm font-medium text-gray-800">
+                  {session.topic.replace(/'/g, "'")}
+                </p>
               </div>
             )}
             <div className="flex items-start gap-2">
               <GraduationCap className="w-4 h-4 text-indigo-600 mt-1 flex-shrink-0" />
-              <p className="text-sm text-gray-600">{session.activity.replace(/'/g, "'")}</p>
+              <p className="text-sm text-gray-600">
+                {session.activity.replace(/'/g, "'")}
+              </p>
             </div>
             {session.notes && (
               <div className="flex items-start gap-2">
                 <ScrollText className="w-4 h-4 text-indigo-600 mt-1 flex-shrink-0" />
-                <p className="text-sm text-gray-600">{session.notes.replace(/'/g, "'")}</p>
+                <p className="text-sm text-gray-600">
+                  {session.notes.replace(/'/g, "'")}
+                </p>
               </div>
             )}
           </div>
@@ -148,19 +163,20 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(
-      2,
-      "0"
-    )}`;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(
+      secs
+    ).padStart(2, "0")}`;
   };
 
-  const sortedSchedule = data.schedule.sort((a: StudySession, b: StudySession) => {
-    const getStartTime = (timeRange: string): number => {
-      const [start] = timeRange.split("-").map(Number);
-      return start;
-    };
-    return getStartTime(a.time) - getStartTime(b.time);
-  });
+  const sortedSchedule = data.schedule.sort(
+    (a: StudySession, b: StudySession) => {
+      const getStartTime = (timeRange: string): number => {
+        const [start] = timeRange.split("-").map(Number);
+        return start;
+      };
+      return getStartTime(a.time) - getStartTime(b.time);
+    }
+  );
 
   const stats = [
     {
@@ -184,7 +200,10 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
   ];
 
   const DraggableTimer = () => {
-    const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 4 });
+    const [position, setPosition] = useState<{ x: number; y: number }>({
+      x: 0,
+      y: 4,
+    });
     const dragRef = useRef<HTMLDivElement | null>(null);
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -206,7 +225,9 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
       position: "fixed",
       left: `${position.x}px`,
       top: `${position.y}px`,
-      transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : "translate(0px, 0px)",
+      transform: transform
+        ? `translate(${transform.x}px, ${transform.y}px)`
+        : "translate(0px, 0px)",
       zIndex: 50,
     };
 
@@ -222,7 +243,9 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
         className="bg-white/90 backdrop-blur-md rounded-lg shadow-lg p-4 flex items-center gap-3 cursor-move"
       >
         <Timer className="w-6 h-6 text-indigo-600" />
-        <span className="text-xl font-bold text-gray-800">{formatTime(timeLeft)}</span>
+        <span className="text-xl font-bold text-gray-800">
+          {formatTime(timeLeft)}
+        </span>
       </div>
     );
   };
@@ -237,23 +260,34 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-4">
               {data.title.replace(/'/g, "'")}
             </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-6">{data.description.replace(/'/g, "'")}</p>
+            <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+              {data.description.replace(/'/g, "'")}
+            </p>
 
             <blockquote className="relative p-6 mb-8">
               <div className="absolute top-0 left-0 transform -translate-x-4 -translate-y-4">
                 <Quote className="w-8 h-8 text-indigo-300" />
               </div>
-              <p className="text-lg text-gray-700 italic">{data.quote.replace(/'/g, "'")}</p>
+              <p className="text-lg text-gray-700 italic">
+                {data.quote.replace(/'/g, "'")}
+              </p>
             </blockquote>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
               {stats.map((stat, index) => (
-                <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm">
-                  <div className={`${stat.bg} w-12 h-12 rounded-lg flex items-center justify-center mb-3 mx-auto`}>
+                <div
+                  key={index}
+                  className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm"
+                >
+                  <div
+                    className={`${stat.bg} w-12 h-12 rounded-lg flex items-center justify-center mb-3 mx-auto`}
+                  >
                     {stat.icon}
                   </div>
                   <h3 className="text-gray-600 text-sm mb-1">{stat.label}</h3>
-                  <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {stat.value}
+                  </p>
                 </div>
               ))}
             </div>
@@ -262,12 +296,18 @@ function ViewAnalysisTimetable({ data }: { data: StudyPlanInterface }) {
           <div className="bg-white/40 backdrop-blur-md rounded-2xl p-8 shadow-lg">
             <div className="flex items-center gap-3 mb-8">
               <Brain className="w-6 h-6 text-indigo-600" />
-              <h2 className="text-2xl font-bold text-gray-800">Today&apos;s Schedule</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Today&apos;s Schedule
+              </h2>
             </div>
 
             <div className="space-y-0">
               {sortedSchedule.map((session) => (
-                <TimeBlock key={session.id} session={session} onStartSession={startTimer} />
+                <TimeBlock
+                  key={session.id}
+                  session={session}
+                  onStartSession={startTimer}
+                />
               ))}
             </div>
           </div>

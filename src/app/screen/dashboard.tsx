@@ -1,77 +1,32 @@
 "use client";
 import * as React from "react";
-import RightDashboard from "../components/RightDashboard";
-import TimeTable from "@/app/timetable/index";
-import StudyPlan from "../studyplan/page";
-import Clusters from "../talksphere/clusters";
-import Notes from "@/app/notes/page";
-
 import { AiOutlineSchedule } from "react-icons/ai";
 import { FaNotesMedical, FaUserGraduate } from "react-icons/fa6";
 import { MdOutlineMoreTime } from "react-icons/md";
-
 import { RxDashboard } from "react-icons/rx";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { motion } from "framer-motion";
 import ProfileDropdown from "@/components/profiledropdown";
 import Image from "next/image";
-import SoloStudy from "../solostudy/page";
+import { useRouter, usePathname } from "next/navigation";
 
 const NAVIGATION = [
-  { path: "dashboard", title: "Dashboard", icon: <RxDashboard /> },
-  { path: "solostudy", title: "Focus", icon: <FaUserGraduate /> },
-  { path: "studyplan", title: "Study Plan", icon: <AiOutlineSchedule /> },
-  { path: "timetable", title: "Time Table", icon: <MdOutlineMoreTime /> },
-  { path: "notes", title: "Notes", icon: <FaNotesMedical /> },
+  { path: "/dashboard", title: "Dashboard", icon: <RxDashboard /> },
+  { path: "/solostudy", title: "Focus", icon: <FaUserGraduate /> },
+  { path: "/studyplan", title: "Study Plan", icon: <AiOutlineSchedule /> },
+  { path: "/timetable", title: "Time Table", icon: <MdOutlineMoreTime /> },
+  { path: "/notes", title: "Notes", icon: <FaNotesMedical /> },
+  // Uncomment and adjust if needed
   // {
-  //   path: "group",
+  //   path: "/group",
   //   title: "Clusters",
   //   icon: <MdGroups2 />,
   //   children: [
-  //     {
-  //       path: "hbhsales",
-  //       title: "Sales",
-  //       icon: <GrNodes />,
-  //       groupId: "sal8777es",
-  //     },
-  //     {
-  //       path: "traf98fic",
-  //       title: "Traffic",
-  //       icon: <GrNodes />,
-  //       groupId: "traff38587ic",
-  //     },
+  //     { path: "hbhsales", title: "Sales", icon: <GrNodes />, groupId: "sal8777es" },
+  //     { path: "traf98fic", title: "Traffic", icon: <GrNodes />, groupId: "traff38587ic" },
   //   ],
   // },
-  // { path: "peers", title: "Peers", icon: <GrNodes /> },
- 
 ];
-
-function PageContent({ pathname }: { pathname: string }) {
-  const isGroupPage = pathname.startsWith("/group/");
-  const groupId = isGroupPage ? pathname.split("/")[2] : null;
-
-  return (
-    <div className="flex-1 p-2 md:p-2 bg-white">
-      {pathname === "/dashboard" && <RightDashboard />}
-      {pathname === "/solostudy" && <SoloStudy />}
-      {pathname === "/studyplan" && <StudyPlan />}
-      {pathname === "/timetable" && <TimeTable />}
-      {pathname === "/group" && <Clusters />}
-      {pathname === "/notes" && <Notes />}
-      
-      {isGroupPage && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mt-8 text-2xl md:text-3xl font-bold text-indigo-700"
-        >
-          Viewing Group: <span className="text-purple-600">{groupId}</span>
-          <h1 className="text-lg md:text-xl mt-2 text-gray-600">Hello!</h1>
-        </motion.div>
-      )}
-    </div>
-  );
-}
 
 interface NavItem {
   path: string;
@@ -87,19 +42,14 @@ interface NavChildItem {
   groupId: string;
 }
 
-function NavbarItem({
-  item,
-  pathname,
-  navigate,
-}: {
-  item: NavItem;
-  pathname: string;
-  navigate: (path: string) => void;
-}) {
+function NavbarItem({ item }: { item: NavItem }) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = React.useState(false);
+
   const isActive =
-    pathname === `/${item.path}` ||
-    (item.children && pathname.startsWith(`/${item.path}/`));
+    pathname === item.path ||
+    (item.children && pathname.startsWith(`${item.path}/`));
 
   return (
     <div className="relative">
@@ -108,7 +58,7 @@ function NavbarItem({
         whileTap={{ scale: 0.95 }}
         onClick={() => {
           if (item.children) setIsOpen(!isOpen);
-          else navigate(`/${item.path}`);
+          else router.push(item.path);
         }}
         className={`flex items-center p-3 rounded-xl cursor-pointer transition-colors ${
           isActive
@@ -129,7 +79,7 @@ function NavbarItem({
             <motion.div
               key={child.path}
               whileHover={{ scale: 1.05 }}
-              onClick={() => navigate(`/group/${child.path}`)}
+              onClick={() => router.push(`/group/${child.path}`)}
               className={`flex items-center p-2 rounded-lg cursor-pointer ${
                 pathname === `/group/${child.path}`
                   ? "bg-purple-500 text-white"
@@ -146,12 +96,11 @@ function NavbarItem({
   );
 }
 
-interface DashboardProps {
-  window?: () => Window | undefined;
-}
-
-export default function Dashboard({  }: DashboardProps) {
-  const [pathname, setPathname] = React.useState("/dashboard"); // Custom routing state
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [isNavbarOpen, setIsNavbarOpen] = React.useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
 
@@ -159,10 +108,6 @@ export default function Dashboard({  }: DashboardProps) {
     setIsMounted(true);
     setIsNavbarOpen(true);
   }, []);
-
-  const navigate = (path: string) => {
-    setPathname(path); // Custom navigation handler
-  };
 
   const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
 
@@ -182,14 +127,7 @@ export default function Dashboard({  }: DashboardProps) {
         >
           <div className="space-y-2 mt-14">
             {NAVIGATION.map((item, index) =>
-              item.path ? (
-                <NavbarItem
-                  key={index}
-                  item={item}
-                  pathname={pathname}
-                  navigate={navigate}
-                />
-              ) : null
+              item.path ? <NavbarItem key={index} item={item} /> : null
             )}
           </div>
         </motion.div>
@@ -218,21 +156,17 @@ export default function Dashboard({  }: DashboardProps) {
                   height={32}
                   className="h-8 w-auto"
                 />
-                <h1 className="text-lg font-bold text-indigo-600">
-                  CogeNist
-                </h1>
+                <h1 className="text-lg font-bold text-indigo-600">CogeNist</h1>
               </div>
             </div>
-
             <div>
               <ProfileDropdown />
             </div>
           </div>
-         
         </div>
 
-       
-        <PageContent pathname={pathname} />
+        {/* Page Content */}
+        <div className="flex-1 p-2 md:p-2 bg-white">{children}</div>
       </div>
     </div>
   );

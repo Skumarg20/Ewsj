@@ -84,11 +84,11 @@ export function RichTextEditorDemo({
       const jsonContent = editor.getJSON();
       if (onContentChange) {
         onContentChange(jsonContent);
-        console.log("Updated content:", jsonContent);
+        
       }
     },
   });
-console.log(initialContent,"this is content comming into editor page")
+
   if (!editor) return <div className="text-gray-500">Loading editor...</div>;
 
   return (
