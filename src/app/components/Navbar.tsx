@@ -17,6 +17,14 @@ import {
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Initialize based on token
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); 
+  }, []);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,7 +95,7 @@ function Navbar() {
               </a>
             ))}
             <button
-              onClick={() => (window.location.href = "/login")}
+              onClick={() => (window.location.href = isLoggedIn ? "/dashboard" : "/login")}
               className={`flex items-center space-x-2 px-6 py-3 rounded-full text-base font-bold ${
                 scrolled
                   ? "bg-gradient-to-r from-yellow-300 to-gray-400 text-gray-900 hover:from-yellow-400 hover:to-gray-500"
@@ -95,7 +103,7 @@ function Navbar() {
               } transition-all duration-300 hover:scale-105 hover:shadow-lg hover:glow-strong`}
             >
               <LogIn className="w-5 h-5 animate-pulse" />
-              <span>Jump In!</span>
+              <span>{isLoggedIn ? "Dashboard" : "Login"}</span>
             </button>
           </div>
 
@@ -140,7 +148,7 @@ function Navbar() {
                   window.document
                     .getElementById(`${item.name.toLowerCase()}`)
                     ?.scrollIntoView({ behavior: "smooth" });
-                  setIsMenuOpen(false); // Close menu after click
+                  setIsMenuOpen(false);
                 }}
                 className="group flex items-center justify-between space-x-3 px-4 py-3 rounded-full text-white hover:bg-gray-700/20 transition-all duration-300 hover:scale-105 hover:shadow-md"
               >
@@ -152,11 +160,11 @@ function Navbar() {
               </a>
             ))}
             <button
-              onClick={() => (window.location.href = "/login")}
+              onClick={() => (window.location.href = isLoggedIn ? "/dashboard" : "/login")}
               className="w-full flex items-center justify-center space-x-3 px-6 py-3 rounded-full bg-gradient-to-r from-yellow-300 to-gray-400 text-gray-900 text-lg font-bold hover:from-yellow-400 hover:to-gray-500 transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               <Rocket className="w-6 h-6 animate-pulse" />
-              <span>Launch Now!</span>
+              <span>{isLoggedIn ? "Dashboard" : "Login"}</span>
             </button>
           </div>
         </div>
@@ -164,6 +172,5 @@ function Navbar() {
     </nav>
   );
 }
-
 
 export default Navbar;
