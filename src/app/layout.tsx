@@ -16,15 +16,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {  
-  title: "Cogenist - AI-Powered Learning & Productivity Platform",  
-  description: "Cogenist is an AI-driven platform designed to enhance student productivity, focus, and exam preparation with smart tools and personalized learning insights.",  
+export const metadata: Metadata = {
+  title: "Cogenist - AI-Powered Learning & Productivity Platform",
+  description:
+    "Cogenist is an AI-driven platform designed for IIT JEE & NEET aspirants, improving productivity, focus, and exam preparation.",
+  openGraph: {
+    title: "Cogenist - AI-Powered Learning & Productivity",
+    description: "Boost your exam preparation with AI-powered tools for IIT JEE & NEET.",
+    url: "https://cogenist.com",
+    siteName: "Cogenist",
+    images: [{ url: "https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cogenist - AI-Powered Learning",
+    description: "Enhance your focus & time management for IIT JEE & NEET.",
+    images: ["https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png"],
+  },
 };
-
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const schemaMarkup = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    name: "Cogenist",
+    url: "https://cogenist.com",
+    description:
+      "Cogenist offers productivity tools, mentorship, and time management strategies for IIT JEE & NEET aspirants.",
+    publisher: {
+      "@type": "Organization",
+      name: "Cogenist",
+      logo: "https://ewsj12.s3.ap-south-1.amazonaws.com/coginest-logo+(1).png",
+    },
+  };
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
@@ -43,6 +70,11 @@ export default function RootLayout({
         <Script
           src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"
           strategy="beforeInteractive"
+        />
+        <Script
+          id="schema-markup"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
         />
      
       </body>

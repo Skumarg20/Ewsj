@@ -42,7 +42,6 @@ export default function PlanCard({
   onHoverStart,
   onHoverEnd,
  onClick,
-  loading,
 }: PlanCardProps): JSX.Element {
   return (
     <motion.div

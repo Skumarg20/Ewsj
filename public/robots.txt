@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://cogenist.com
+
+# Sitemaps
+Sitemap: https://cogenist.com/sitemap.xml

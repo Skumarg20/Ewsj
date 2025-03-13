@@ -1,34 +1,41 @@
 // src/app/session/page.tsx
 'use client';
 import React, { useEffect, useMemo } from 'react';
-import {  CheckCircle, Calendar, Timer } from 'lucide-react';
-import { StudySession } from '@/interface/studysession';
+import { CheckCircle, Calendar, Timer } from 'lucide-react';
+import { StudySession } from '@/interface/studysession'; // Import shared interface
 import withAuth from '@/lib/withAuth';
 import useStudyPlanStore from '@/state/store/timetablestore';
 import { useLoading } from '@/app/loader/context/loadingprovider';
-import { StudySessionCard } from '@/components/StudySessionCard'; // Adjust import path
+import { StudySessionCard } from '@/components/StudySessionCard';
 
-const parseTimeString = (timeStr: string) => {
-  const [time, period] = timeStr.trim().split(' ');
-  const [hours, minutes] = time.split(':');
-  let hour = parseInt(hours);
+// Extend StudySession interface to include status
+interface ExtendedStudySession extends StudySession {
+  status: 'current' | 'upcoming' | 'past';
+}
 
-  if (period === 'PM' && hour !== 12) {
-    hour += 12;
-  } else if (period === 'AM' && hour === 12) {
-    hour = 0;
+const parseTimeString = (timeStr: string, baseDate: Date) => {
+  if (!timeStr || typeof timeStr !== 'string' || !timeStr.includes(':')) {
+    throw new Error(`Invalid time string: ${timeStr}. Expected format "HH:mm" (e.g., "14:00").`);
   }
 
-  const date = new Date();
-  date.setHours(hour, parseInt(minutes), 0, 0);
+  const [hours, minutes] = timeStr.trim().split(':');
+  const hour = parseInt(hours);
+  const minute = parseInt(minutes);
+
+  if (isNaN(hour) || isNaN(minute) || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+    throw new Error(`Invalid time values in "${timeStr}". Hours must be 0-23, minutes 0-59.`);
+  }
+
+  const date = new Date(baseDate);
+  date.setHours(hour, minute, 0, 0);
   return date;
 };
 
-const parseTimeRange = (timeRange: string) => {
-  const [startStr, endStr] = timeRange.split(' - ');
+const parseTimeRange = (timeRange: string, baseDate: Date) => {
+  const [startStr, endStr] = timeRange.split('-');
   return {
-    start: parseTimeString(startStr),
-    end: parseTimeString(endStr),
+    start: parseTimeString(startStr, baseDate),
+    end: parseTimeString(endStr, baseDate),
   };
 };
 
@@ -42,24 +49,29 @@ function StudySessions() {
 
   const { currentSession, upcomingSessions, pastSessions } = useMemo(() => {
     const now = new Date();
-    console.log(currentStudyPlan?.schedule, 'this is scjhdvjdsbkfjv');
-    console.log(currentStudyPlan, 'this is study plan');
+    const planDate = currentStudyPlan?.date ? new Date(currentStudyPlan.date) : now;
     return (currentStudyPlan?.schedule || []).reduce<{
-      currentSession: (StudySession & { status: 'current' }) | null;
-      upcomingSessions: Array<StudySession & { status: 'upcoming' }>;
-      pastSessions: Array<StudySession & { status: 'past' }>;
+      currentSession: ExtendedStudySession | null;
+      upcomingSessions: ExtendedStudySession[];
+      pastSessions: ExtendedStudySession[];
     }>(
       (acc, session) => {
-        const { start, end } = parseTimeRange(session.time);
+        try {
+          const { start, end } = parseTimeRange(session.time, planDate);
 
-        if (start <= now && end >= now) {
-          acc.currentSession = { ...session, status: 'current' };
-        } else if (start > now) {
-          acc.upcomingSessions.push({ ...session, status: 'upcoming' });
-        } else {
-          acc.pastSessions.push({ ...session, status: 'past' });
+          if (start <= now && end >= now) {
+            acc.currentSession = { ...session, status: 'current' };
+          } else if (start > now) {
+            acc.upcomingSessions.push({ ...session, status: 'upcoming' });
+          } else {
+            acc.pastSessions.push({ ...session, status: 'past' });
+          }
+        } catch (error) {
+          console.warn(
+            `Skipping session ${session.id} due to invalid time: ${error}. Session data:`,
+            session
+          );
         }
-
         return acc;
       },
       { currentSession: null, upcomingSessions: [], pastSessions: [] }
@@ -76,18 +88,23 @@ function StudySessions() {
   );
 
   upcomingSessions.sort(
-    (a, b) => parseTimeRange(a.time).start.getTime() - parseTimeRange(b.time).start.getTime()
+    (a, b) =>
+      parseTimeRange(a.time, new Date(currentStudyPlan?.date || Date.now())).start.getTime() -
+      parseTimeRange(b.time, new Date(currentStudyPlan?.date || Date.now())).start.getTime()
   );
   pastSessions.sort(
-    (a, b) => parseTimeRange(b.time).start.getTime() - parseTimeRange(a.time).start.getTime()
+    (a, b) =>
+      parseTimeRange(b.time, new Date(currentStudyPlan?.date || Date.now())).start.getTime() -
+      parseTimeRange(a.time, new Date(currentStudyPlan?.date || Date.now())).start.getTime()
   );
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-4">
-            Today&apos;s Study Journey {/* Escaped single quote */}
+            Today&apos;s Study Journey
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             {stats.completedSessions} of {stats.totalSessions} sessions completed •{' '}
@@ -122,7 +139,7 @@ function StudySessions() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-800">Past Sessions</h3>
-              <p className="text-sm text-gray-600">{pastSessions.length} sessions </p>
+              <p className="text-sm text-gray-600">{pastSessions.length} sessions</p>
             </div>
           </div>
         </div>

@@ -76,8 +76,7 @@ export const useTargetStudyPlanStore = create<TargetStudyPlanState>((set) => ({
     try {
       const response: AxiosResponse<{ targetData: targetedStudyPlan }> = await axiosInstance.get("/study-plan/target-plan");
       const targetData = response.data?.targetData || null;
-      console.log(response.data, "this is response data");
-      console.log(targetData, "this is target data");
+    
       set({ targetPlan: targetData, targetloading: false });
     } catch (error) {
       console.error("Error fetching target plan:", error);
@@ -98,7 +97,7 @@ export const useTargetStudyPlanStore = create<TargetStudyPlanState>((set) => ({
     set({ targetloading: true, targeterror: null });
     try {
       const response: AxiosResponse<targetedStudyPlan> = await axiosInstance.post("/study-plan/target-plan", plan);
-      console.log(response.data, "this is data is coming after saving");
+     
       set({ targetPlan: response.data, targetloading: false });
     } catch (error) {
       set({

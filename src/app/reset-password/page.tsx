@@ -7,7 +7,6 @@ import {
   Mail,
   Fingerprint,
   KeyRound,
-  ArrowRight,
   ArrowLeft,
   LogIn,
 } from "lucide-react"; // Added ArrowLeft and LogIn icons
