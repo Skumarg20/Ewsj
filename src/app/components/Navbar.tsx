@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link"; // Import Link for client-side navigation
 import React, { useState, useEffect } from "react";
 import {
   Home,
@@ -17,14 +18,12 @@ import {
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Initialize based on token
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); 
+    setIsLoggedIn(!!token);
   }, []);
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +33,15 @@ function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Navigation items array with Exam added
+  const navItems = [
+    { name: "Home", icon: Home, href: "#home" },
+    { name: "Services", icon: Briefcase, href: "#services" },
+    { name: "Exam", icon: Users, href: "#exam", subItem: { name: "IIT JEE", href: "/exam/iitjee" } },
+    { name: "About", icon: Users, href: "#about" },
+    { name: "Contact", icon: Phone, href: "#contact" },
+  ];
 
   return (
     <nav
@@ -73,27 +81,43 @@ function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            {[
-              { name: "Home", icon: Home },
-              { name: "Services", icon: Briefcase },
-              { name: "About", icon: Users },
-              { name: "Contact", icon: Phone },
-            ].map((item) => (
-              <a
-                key={item.name}
-                href={`#${item.name.toLowerCase()}`}
-                onClick={() =>
-                  window.document
-                    .getElementById(`${item.name.toLowerCase()}`)
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className={`group flex items-center space-x-2 px-4 py-2 rounded-full text-base font-semibold text-white hover:bg-gray-700/20 transition-all duration-300 hover:scale-105 hover:shadow-md hover:glow`}
-              >
-                <item.icon className="w-5 h-5 group-hover:animate-bounce transition-all duration-300" />
-                <span>{item.name}</span>
-                <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300" />
-              </a>
-            ))}
+            {navItems.map((item) =>
+              item.subItem ? (
+                <div key={item.name} className="relative group">
+                  <div
+                    className={`group flex items-center space-x-2 px-4 py-2 rounded-full text-base font-semibold text-white hover:bg-gray-700/20 transition-all duration-300 hover:scale-105 hover:shadow-md hover:glow cursor-pointer`}
+                  >
+                    <item.icon className="w-5 h-5 group-hover:animate-bounce transition-all duration-300" />
+                    <span>{item.name}</span>
+                    <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300" />
+                  </div>
+                  {/* Dropdown for Exam */}
+                  <div className="absolute left-0 mt-2 w-48 bg-gray-800/90 backdrop-blur-xl rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-4 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+                    <Link
+                      href={item.subItem.href}
+                      className="block px-4 py-2 text-white hover:bg-gray-700/20 rounded-lg transition-all duration-300"
+                    >
+                      {item.subItem.name}
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={() =>
+                    window.document
+                      .getElementById(item.href.slice(1))
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className={`group flex items-center space-x-2 px-4 py-2 rounded-full text-base font-semibold text-white hover:bg-gray-700/20 transition-all duration-300 hover:scale-105 hover:shadow-md hover:glow`}
+                >
+                  <item.icon className="w-5 h-5 group-hover:animate-bounce transition-all duration-300" />
+                  <span>{item.name}</span>
+                  <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300" />
+                </a>
+              )
+            )}
             <button
               onClick={() => (window.location.href = isLoggedIn ? "/dashboard" : "/login")}
               className={`flex items-center space-x-2 px-6 py-3 rounded-full text-base font-bold ${
@@ -135,30 +159,40 @@ function Navbar() {
           }`}
         >
           <div className="px-4 pt-4 pb-6 space-y-3 bg-gradient-to-b from-gray-800/90 to-gray-900/90 backdrop-blur-xl shadow-md">
-            {[
-              { name: "Home", icon: Home },
-              { name: "Services", icon: Briefcase },
-              { name: "About", icon: Users },
-              { name: "Contact", icon: Phone },
-            ].map((item) => (
-              <a
-                key={item.name}
-                href={`#${item.name.toLowerCase()}`}
-                onClick={() => {
-                  window.document
-                    .getElementById(`${item.name.toLowerCase()}`)
-                    ?.scrollIntoView({ behavior: "smooth" });
-                  setIsMenuOpen(false);
-                }}
-                className="group flex items-center justify-between space-x-3 px-4 py-3 rounded-full text-white hover:bg-gray-700/20 transition-all duration-300 hover:scale-105 hover:shadow-md"
-              >
-                <div className="flex items-center space-x-3">
-                  <item.icon className="w-6 h-6 group-hover:animate-bounce" />
-                  <span className="text-lg font-semibold">{item.name}</span>
-                </div>
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-all duration-300" />
-              </a>
-            ))}
+            {navItems.map((item) =>
+              item.subItem ? (
+                <Link
+                  key={item.subItem.name}
+                  href={item.subItem.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="group flex items-center justify-between space-x-3 px-4 py-3 rounded-full text-white hover:bg-gray-700/20 transition-all duration-300 hover:scale-105 hover:shadow-md"
+                >
+                  <div className="flex items-center space-x-3">
+                    <item.icon className="w-6 h-6 group-hover:animate-bounce" />
+                    <span className="text-lg font-semibold">{item.subItem.name}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-all duration-300" />
+                </Link>
+              ) : (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => {
+                    window.document
+                      .getElementById(item.href.slice(1))
+                      ?.scrollIntoView({ behavior: "smooth" });
+                    setIsMenuOpen(false);
+                  }}
+                  className="group flex items-center justify-between space-x-3 px-4 py-3 rounded-full text-white hover:bg-gray-700/20 transition-all duration-300 hover:scale-105 hover:shadow-md"
+                >
+                  <div className="flex items-center space-x-3">
+                    <item.icon className="w-6 h-6 group-hover:animate-bounce" />
+                    <span className="text-lg font-semibold">{item.name}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-all duration-300" />
+                </a>
+              )
+            )}
             <button
               onClick={() => (window.location.href = isLoggedIn ? "/dashboard" : "/login")}
               className="w-full flex items-center justify-center space-x-3 px-6 py-3 rounded-full bg-gradient-to-r from-yellow-300 to-gray-400 text-gray-900 text-lg font-bold hover:from-yellow-400 hover:to-gray-500 transition-all duration-300 hover:scale-105 hover:shadow-lg"

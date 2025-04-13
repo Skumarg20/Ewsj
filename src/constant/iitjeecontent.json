@@ -1,0 +1,602 @@
+[
+  {
+    "id": "a4d7c4f9-18a5-4f0d-9b23-2c6e9b2b7cf2",
+    "video": {
+      "title": "Some Basic Concepts in Chemistry – Complete Overview for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/7BgnZS-CU5A"
+    },
+    "pdf": {
+      "title": "Basic Concepts in Chemistry – Notes, Formulae & Important Questions",
+      "description": "Master the foundation of Chemistry with essential concepts and formulas.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/10qJYpfoYQMm6Zb1-BRdbhERAgnW1uVzY/view?usp=sharing"
+    }
+  },
+  {
+    "id": "0a00a99d-8f4d-4027-95db-986ec6b27844",
+    "video": {
+      "title": "Atomic Structure – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/W03rjJyeaTc"
+    },
+    "pdf": {
+      "title": "Atomic Structure – Notes, Strategy & Key Concepts for JEE",
+      "description": "Understand atomic models, quantum numbers, and orbitals in-depth.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1NKNCBf_8TIsW72wwoZ_P_ZKpMQPIrGHH/view?usp=sharing"
+    }
+  },
+  {
+    "id": "7d90d30d-2266-4b22-9066-8ad0c25d4787",
+    "video": {
+      "title": "Chemical Bonding and Molecular Structure – Complete JEE Video",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL3"
+    },
+    "pdf": {
+      "title": "Chemical Bonding and Molecular Structure – Notes & Important Questions",
+      "description": "Learn bonding types, hybridization, and molecular orbital theory for JEE.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1somePDFURL3/view?usp=sharing"
+    }
+  },
+  {
+    "id": "ca2f73f1-3f38-42f9-b2ae-58dfd8bc85d5",
+    "video": {
+      "title": "Chemical Thermodynamics – Full Chapter for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL4"
+    },
+    "pdf": {
+      "title": "Chemical Thermodynamics – Notes & Strategies for JEE",
+      "description": "Master laws of thermodynamics, entropy, and Gibbs free energy for JEE.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1somePDFURL4/view?usp=sharing"
+    }
+  },
+  {
+    "id": "b0b1e0c7-62f4-4f61-a365-bbb6f4e49e1e",
+    "video": {
+      "title": "Solutions – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/XhaNhPMfyfE"
+    },
+    "pdf": {
+      "title": "Solutions – Notes & Important Questions for JEE",
+      "description": "Understand solubility, Raoult’s law, and colligative properties for JEE.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1AeNqfn9d26yIbszthGA5xgPBxpqkDXJe/view?usp=sharing"
+    }
+  },
+  {
+    "id": "fad6ff45-8f9f-47c6-96f4-09c378d0647d",
+    "video": {
+      "title": "Equilibrium – Full Chapter Explained | JEE Main + Advanced",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/sr_myNkGmYY"
+    },
+    "pdf": {
+      "title": "Equilibrium – Notes, Strategy & Must-Solve JEE Questions",
+      "description": "Your ultimate guide to mastering Equilibrium for JEE!",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1oe0rQFsuFHYWI2DGKutFI6-Z7Ue7cM5o/view?usp=sharing"
+    }
+  },
+  {
+    "id": "8539b28a-b232-4c5a-b5d3-b6f000ac0b00",
+    "video": {
+      "title": "Redox Reactions and Electrochemistry – Full Chapter for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/462EoA8Lxuw"
+    },
+    "pdf": {
+      "title": "Redox Reactions & Electrochemistry – Notes & Important Questions for JEE",
+      "description": "Master oxidation-reduction reactions, electrochemical cells, and more.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1AgrolyoSap9Rxm6OVpnenlH_4VnooCYN/view?usp=sharing"
+    }
+  },
+  {
+    "id": "c3f3c56e-8b79-4789-bd72-348bd90c99a4",
+    "video": {
+      "title": "Chemical Kinetics – Full JEE Chapter Explained",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/4Y1saUmH-6w"
+    },
+    "pdf": {
+      "title": "Chemical Kinetics – Notes, Strategy & Important Questions",
+      "description": "Learn reaction rates, rate laws, and Arrhenius equation for JEE.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1cdtyGbQ4JUY_zP-JZli-ntc8jh4nLkF2/view?usp=sharing"
+    }
+  },
+  {
+    "id": "4fbe9dbf-8101-4318-9a2b-54838fc6721b",
+    "video": {
+      "title": "Purification and Characterization of Organic Compounds for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL8"
+    },
+    "pdf": {
+      "title": "Purification & Characterization of Organic Compounds – Notes & JEE Questions",
+      "description": "Understand distillation, crystallization, and chromatography techniques.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1somePDFURL8/view?usp=sharing"
+    }
+  },
+  {
+    "id": "da3b8fe9-3f60-464a-9d9b-2266dbd3c74d",
+    "video": {
+      "title": "Some Basic Principles of Organic Chemistry – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/7CEV_emCTKQ"
+    },
+    "pdf": {
+      "title": "Basic Principles of Organic Chemistry – Notes & JEE Questions",
+      "description": "Master functional groups, reaction intermediates, and mechanisms.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/10qJYpfoYQMm6Zb1-BRdbhERAgnW1uVzY/view?usp=sharing"
+    }
+  },
+  {
+    "id": "d91b57f2-264a-46b9-8213-27102b0e1be2",
+    "video": {
+      "title": "Hydrocarbons – Full Chapter for JEE Main + Advanced",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL10"
+    },
+    "pdf": {
+      "title": "Hydrocarbons – Notes, Important Questions & JEE Strategy",
+      "description": "Understand alkanes, alkenes, alkynes, and aromatic compounds for JEE.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1CNoDB07OREFRoNE2zG4Mnc3W67opgfP3/view?usp=sharing"
+    }
+  },
+  {
+    "id": "fa2c8db7-2460-4853-aabb-08b60ed3cb8f",
+    "video": {
+      "title": "Organic Compounds – Full Chapter for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL11"
+    },
+    "pdf": {
+      "title": "Organic Compounds – Notes, Strategy & Key Questions for JEE",
+      "description": "Master organic compounds with this guide on reactions and properties.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1jqMp_UFTo1vayJFlZIBrPrC5nCtmpzvd/view?usp=sharing"
+    }
+  },
+  {
+    "id": "302b9f95-3b26-42b9-99b5-5fe32c7c7d6d",
+    "video": {
+      "title": "Complete Inorganic Chemistry for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL12"
+    },
+    "pdf": {
+      "title": "Complete Inorganic Chemistry – Notes & Important Questions",
+      "description": "Master all aspects of Inorganic Chemistry, including periodic table trends and bonding.",
+      "subject": "Chemistry",
+      "fileUrl": "https://drive.google.com/file/d/1h9V-j617vEjKRIiyL02flBdS7TJg3SRa/view?usp=sharing"
+    }
+  },
+  {
+    "id": "e9d917ad-fb35-45a9-9b7b-789f0b98d95a",
+    "video": {
+      "title": "Sets, Relations and Functions – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL1"
+    },
+    "pdf": {
+      "title": "Sets, Relations and Functions – Notes & Important Questions",
+      "description": "Master sets, relations, and functions with important concepts and practice questions.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1cB_nHBg3o6v7pdwYrRI41ApHhge5OZUh/view?usp=sharing"
+    }
+  },
+  {
+    "id": "b5b3bc5f-c5a9-497a-b9ed-b7fa29c98c92",
+    "video": {
+      "title": "Matrices and Determinants – Full Chapter for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL2"
+    },
+    "pdf": {
+      "title": "Matrices and Determinants – Notes & Strategy for JEE",
+      "description": "Understand matrix operations, properties, and determinants in-depth for JEE.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1tzcL0sqowtJ6cmN44kC3kq2S3RzattR5/view?usp=sharing"
+    }
+  },
+  {
+    "id": "ac39a60a-dc29-467f-a694-c0b058bcf99f",
+    "video": {
+      "title": "Permutations and Combinations – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL3"
+    },
+    "pdf": {
+      "title": "Permutations and Combinations – Notes & Key Questions",
+      "description": "Master the concepts of permutations and combinations, including formulae and strategies for JEE.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1697mfGYD925oiaP1uY-qBT6413njicQ2/view?usp=sharing"
+    }
+  },
+  {
+    "id": "c5c040d6-9786-4878-baf7-b6a9ff2ad7d2",
+    "video": {
+      "title": "Sequence and Series – Full Chapter for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL4"
+    },
+    "pdf": {
+      "title": "Sequence and Series – Notes & Important JEE Questions",
+      "description": "Understand arithmetic and geometric progressions and their applications.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1JEBw-sQLht2cVeV_yREec7ypUgRnwG_w/view?usp=sharing"
+    }
+  },
+  {
+    "id": "6e717f9f-c7c2-45cf-a54a-207bfbb7352f",
+    "video": {
+      "title": "Limit, Continuity and Differentiability – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL5"
+    },
+    "pdf": {
+      "title": "Limit, Continuity and Differentiability – Notes & Key Questions for JEE",
+      "description": "Master limits, continuity, and differentiability with concepts and important problems.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1zp4xjHXyYXWBZEXtnJTceT6PqVCec5eS/view?usp=sharing"
+    }
+  },
+  {
+    "id": "5d3f0389-d914-419f-93b9-1c15a29fe938",
+    "video": {
+      "title": "Integral Calculus – Full Chapter for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL6"
+    },
+    "pdf": {
+      "title": "Integral Calculus – Notes & Important Questions for JEE",
+      "description": "Learn integration techniques, definite and indefinite integrals with applications for JEE.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1kyA67DR1U0N4ZYkd02CovJZPJLc4BiWw/view?usp=sharing"
+    }
+  },
+  {
+    "id": "b6c1b5a7-5f47-4234-b19a-039ac9a4fd8f",
+    "video": {
+      "title": "Co-ordinate Geometry – Full JEE Chapter Explained",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL7"
+    },
+    "pdf": {
+      "title": "Co-ordinate Geometry – Notes & Strategy for JEE",
+      "description": "Master straight lines, circles, and conic sections for JEE preparation.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1yQ3HdI9IkwAELS07IyJCLxY8K45FZaUb/view?usp=sharing"
+    }
+  },
+  {
+    "id": "ee6b2d6e-6f89-4691-bb73-4ca08b8b2ff2",
+    "video": {
+      "title": "Three Dimensional Geometry – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL8"
+    },
+    "pdf": {
+      "title": "Three Dimensional Geometry – Notes & Important Questions for JEE",
+      "description": "Understand 3D geometry, direction cosines, and planes for JEE.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1ZFutw_gjIFiqNra3FB0VthF3r6u_nmXy/view?usp=sharing"
+    }
+  },
+  {
+    "id": "c4f2bcda-c861-47f0-b7ff-c6b65ac8b846",
+    "video": {
+      "title": "Binomial Theorem and Its Simple Applications for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL9"
+    },
+    "pdf": {
+      "title": "Binomial Theorem & Applications – Notes & Important JEE Questions",
+      "description": "Master binomial expansions, properties, and applications with essential strategies.",
+      "subject": "Mathematics",
+      "fileUrl": "https://drive.google.com/file/d/1CWkn0SZv0Pm5LXat1UjcRrQmZqd5BOQN/view?usp=sharing"
+    }
+  },
+  {
+    "id": "b37479c3-5c9e-47b5-9d85-e5b648f2cb6a",
+    "video": {
+      "title": "Units and Measurements – Complete Guide for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL1"
+    },
+    "pdf": {
+      "title": "Units and Measurements – Notes & Key Questions for JEE",
+      "description": "Master the basic concepts of units, dimensions, and errors in measurements.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1e1UsdeR_lvKv_qG2BPBjQZ1eGGH5WVIo/view?usp=sharing"
+    }
+  },
+  {
+    "id": "e45f0133-1cc3-492b-a81f-657381b3494c",
+    "video": {
+      "title": "Kinematics – Full Chapter Explained for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL2"
+    },
+    "pdf": {
+      "title": "Kinematics – Notes & Important Questions for JEE",
+      "description": "Understand the motion of objects, vectors, and related concepts with important problems.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/10NjjJtqVaunMePgonGtoq6TDcfFaJ65Q/view?usp=sharing"
+    }
+  },
+  {
+    "id": "6f287d02-b11a-4905-9c39-b12a1d00f426",
+    "video": {
+      "title": "Laws of Motion – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL3"
+    },
+    "pdf": {
+      "title": "Laws of Motion – Notes & Important Questions for JEE",
+      "description": "Conquer Newton's laws, force, and motion with a detailed guide and practice problems.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1lNb1bOXa-nliRdd0Dq3NGwvQcIPLEz21/view?usp=sharing"
+    }
+  },
+  {
+    "id": "9fc7fa3e-682f-40bc-9a83-9028b2a79d85",
+    "video": {
+      "title": "Work, Energy and Power – Full Chapter for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL4"
+    },
+    "pdf": {
+      "title": "Work, Energy, and Power – Notes & Key Questions for JEE",
+      "description": "Learn about the work-energy theorem, potential and kinetic energy, and power.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1T90eWcJZyB5OmkCAc8eR0-06Q_xczPJb/view?usp=sharing"
+    }
+  },
+  {
+    "id": "d7d8f3e4-4602-4bc0-8b65-b58ad46b9845",
+    "video": {
+      "title": "Rotational Motion – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL5"
+    },
+    "pdf": {
+      "title": "Rotational Motion – Notes & Important Questions for JEE",
+      "description": "Master rotational dynamics, torque, angular velocity, and related problems.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1Li6GPFj5T4Spn3TwBf5XG6esKERc2tom/view?usp=sharing"
+    }
+  },
+  {
+    "id": "d49d36fa-9a47-4f61-b3fc-d6f7a55a007e",
+    "video": {
+      "title": "Gravitation – Full Chapter Explained for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL6"
+    },
+    "pdf": {
+      "title": "Gravitation – Notes & Key Questions for JEE",
+      "description": "Understand gravitational force, potential energy, and the laws governing them.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1kz0ZyJDeY5nOwUsGWamyYIdsoKjoG6P_/view?usp=sharing"
+    }
+  },
+  {
+    "id": "e4b77e18-c405-4013-9816-0ffbbd5de7cc",
+    "video": {
+      "title": "Properties of Solids and Liquids – JEE Full Chapter",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL7"
+    },
+    "pdf": {
+      "title": "Properties of Solids and Liquids – Notes & Important Questions for JEE",
+      "description": "Learn about elasticity, surface tension, and viscosity for JEE.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/124u48iK6W67N4WHgJDUUUcDep5j2omiA/view?usp=sharing"
+    }
+  },
+  {
+    "id": "aeab750b-6ec6-4133-81c7-cf11852b25cd",
+    "video": {
+      "title": "Thermodynamics – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL8"
+    },
+    "pdf": {
+      "title": "Thermodynamics – Notes & Important JEE Questions",
+      "description": "Master the laws of thermodynamics, heat engines, and entropy.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1somePDFURL8/view?usp=sharing"
+    }
+  },
+  {
+    "id": "8cd5b8e9-bb18-430e-94e0-c9c849457e84",
+    "video": {
+      "title": "Kinetic Theory of Gases – Full Chapter Explained",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL9"
+    },
+    "pdf": {
+      "title": "Kinetic Theory of Gases – Notes & Key JEE Questions",
+      "description": "Understand the molecular behavior of gases and their relation to temperature and pressure.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/11Dc_y5OlNH3KlqoZbkTqs_tbTzpZPopC/view?usp=sharing"
+    }
+  },
+  {
+    "id": "8d05d9a3-5b73-4be1-9e7d-df6c8f4a40d3",
+    "video": {
+      "title": "Oscillations and Waves – Complete Guide for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL10"
+    },
+    "pdf": {
+      "title": "Oscillations and Waves – Notes & Key Questions for JEE",
+      "description": "Learn the basics of harmonic motion, waves, and sound waves for JEE.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/18p2tB3SdC5GyFCfQgozPYzJ_iqKEcPxx/view?usp=sharing"
+    }
+  },
+  {
+    "id": "a9d17ad1-7355-4566-b5e2-d97485b5448e",
+    "video": {
+      "title": "Electrostatics and Electric Charges – Full JEE Chapter",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/oBBwqVjSLmg"
+    },
+    "pdf": {
+      "title": "Electrostatics and Electric Charges – Notes & Important Questions for JEE",
+      "description": "Master Coulomb’s law, electric fields, and potential for JEE preparation.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1JQbuFeKanUQETBEeCd-AE8Wc32k3JEWl/view?usp=sharing"
+    }
+  },
+  {
+    "id": "3e3b04b7-2e6b-44bc-b87e-73db6533d378",
+    "video": {
+      "title": "Current Electricity – Complete JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/V2CwVhnlqDc"
+    },
+    "pdf": {
+      "title": "Current Electricity – Notes & Important Questions for JEE",
+      "description": "Learn about electric current, resistance, Ohm’s law, and circuits.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1PvUNO5RONw9NLMTcoan8XnGKm3oTvgvI/view?usp=sharing"
+    }
+  },
+  {
+    "id": "20d376ef-b97e-42f2-bdf6-2c542f8f504d",
+    "video": {
+      "title": "Magnetic Effects of Current and Magnetism – JEE Full Chapter",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL13"
+    },
+    "pdf": {
+      "title": "Magnetic Effects of Current and Magnetism – Notes & Key Questions for JEE",
+      "description": "Master magnetic fields, forces, and electromagnetic induction for JEE.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1gvQyJJVkxMhUOrihmBlSFk5o40N__-xX/view?usp=sharing"
+    }
+  },
+  {
+    "id": "264e4596-2763-48e4-b660-cd2cb5ed61b0",
+    "video": {
+      "title": "Electromagnetic Induction and Alternating Currents – JEE Guide",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/-8zpU8wgrJM"
+    },
+    "pdf": {
+      "title": "Electromagnetic Induction & Alternating Currents – Notes for JEE",
+      "description": "Understand Faraday's law, Lenz's law, and AC circuits for JEE preparation.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1cfIzTyKxOwoYokDVP9j2aZutot50js9f/view?usp=sharing"
+    }
+  },
+  {
+    "id": "2252cfa6-e3d9-4779-bd78-0b1f78d6f38b",
+    "video": {
+      "title": "Electromagnetic Waves – Full Chapter Explained",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/qShmMPnSmeg"
+    },
+    "pdf": {
+      "title": "Electromagnetic Waves – Notes & Important Questions for JEE",
+      "description": "Master the propagation and applications of electromagnetic waves for JEE.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/14RtcmUISPj0z8LNX4FNh0R71x_A9LcAq/view?usp=sharing"
+    }
+  },
+  {
+    "id": "d0221f56-3b43-4671-a609-7fc4fbb26c0d",
+    "video": {
+      "title": "Optics – Complete Guide for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/fADNUPfnQ1k"
+    },
+    "pdf": {
+      "title": "Optics – Notes & Key Questions for JEE",
+      "description": "Learn the basics of reflection, refraction, and optical instruments for JEE.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1LfVwVlGS9tdBcPa_U3iKiL3q_kCVXoew/view?usp=sharing"
+    }
+  },
+  {
+    "id": "0e38a0b3-4f59-40a0-b3b2-cd2ff0001151",
+    "video": {
+      "title": "Modern Physics – Full Chapter for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/somevideoURL17"
+    },
+    "pdf": {
+      "title": "Modern Physics – Notes & Important JEE Questions",
+      "description": "Understand quantum mechanics, dual nature of light, and atomic structure for JEE.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1KnxENOZAPGEW2MZDO80ZPwlSDaTNoo5t/view?usp=sharing"
+    }
+  },
+  {
+    "id": "724b5f9b-b8f9-4429-9830-0416f98ed533",
+    "video": {
+      "title": "Electronic Devices – Complete Guide for JEE",
+      "thumbnail": "",
+      "duration": "",
+      "src": "https://youtu.be/uUJc51zcF8g"
+    },
+    "pdf": {
+      "title": "Electronic Devices – Notes & Important Questions for JEE",
+      "description": "Learn about semiconductors, diodes, and transistors for JEE preparation.",
+      "subject": "Physics",
+      "fileUrl": "https://drive.google.com/file/d/1P-pMajm8LcgAkwPZoU5mW2sJWtzDVYhq/view?usp=sharing"
+    }
+  }
+]
