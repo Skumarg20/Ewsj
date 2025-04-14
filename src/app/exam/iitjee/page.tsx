@@ -57,7 +57,6 @@ export default function Page() {
 
   const allContent = contentData as Content[];
 
-  // Extract unique subjects, safely handling missing pdf
   const rawSubjects = Array.from(
     new Set(
       allContent
@@ -66,22 +65,19 @@ export default function Page() {
     )
   );
 
-  // Include "all" and "study-tips" if no subjects exist
   const subjects = rawSubjects.length > 0 
     ? ["all", ...rawSubjects]
     : ["all", "study-tips"];
 
-  // Filter content by active tab
   const filteredContent =
     activeTab === "all"
       ? allContent
       : activeTab === "study-tips"
-      ? allContent // Show all content for study-tips as a fallback
+      ? allContent
       : allContent.filter(
           (item) => item?.pdf?.subject?.toLowerCase() === activeTab
         );
 
-  // Extract YouTube video ID from src
   const getYouTubeId = (url: string): string | null => {
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = url.match(regex);
@@ -103,7 +99,7 @@ export default function Page() {
                     </span>
                   </h1>
                   <p className="text-lg md:text-xl text-gray-600 mb-6">
-                    Join India&apos;s premier mentorship platform designed by
+                    Join India`&apos;s premier mentorship platform designed by
                     IITians to help you crack one of the toughest exams. Get
                     personalized guidance, advanced study materials, and
                     strategic preparation.
@@ -125,7 +121,6 @@ export default function Page() {
                         className="ml-1 animate-bounce-slow"
                       />
                     </Button>
-
                     <Button
                       className="border-cogenist-indigo text-cogenist-indigo hover:bg-cogenist-light normal-case"
                       onClick={onHandleClick}
@@ -143,6 +138,7 @@ export default function Page() {
                       width={600}
                       height={400}
                       className="w-full max-w-md rounded-2xl shadow-lg relative z-10"
+                      priority={true}
                     />
                   </div>
                 </div>
@@ -328,7 +324,6 @@ export default function Page() {
                         >
                           <VideoCard
                             title={content.video.title}
-                            thumbnail={content.video.thumbnail}
                             duration={content.video.duration}
                             src={content.video.src}
                             onClick={() => handleContentClick(content)}
