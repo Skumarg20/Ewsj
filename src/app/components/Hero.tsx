@@ -60,7 +60,7 @@ const Hero = () => {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </button>
               <button
-                onClick={() => (window.location.href = "/login")}
+                onClick={() => (window.location.href = "/mentorship")}
                 className="group bg-transparent border-2 border-indigo-300 text-indigo-100 px-10 py-5 rounded-full font-bold text-lg hover:bg-indigo-500/20 transition-all duration-300 flex items-center justify-center gap-3 transform hover:scale-105"
               >
                 <Star className="w-6 h-6 animate-twinkle" />
