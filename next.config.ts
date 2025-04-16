@@ -4,10 +4,14 @@ const nextConfig = {
     domains: ["picsum.photos", "ewsj12.s3.ap-south-1.amazonaws.com"],
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        port: "",
-        pathname: "/**",
+        protocol: 'https',
+        hostname: 'img.youtube.com',
+        pathname: '/vi/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
       },
     ],
   },
