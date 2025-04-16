@@ -2,9 +2,8 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { FiUser, FiMail, FiBook, FiMessageSquare, FiClock, FiBookOpen, FiTarget, FiSend } from "react-icons/fi";
 import { motion, useAnimation } from "framer-motion";
-import emailjs from "@emailjs/browser"; // Import EmailJS
-import { useRouter } from "next/navigation"; // Import useRouter for Next.js navigation
-
+import emailjs from "@emailjs/browser";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   name: string;
@@ -20,25 +19,30 @@ const ContactUs: React.FC = () => {
     subject: "",
     message: "",
   });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const controls = useAnimation();
-  const router = useRouter(); // Initialize Next.js router
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSuccessMessage(null);
+    setErrorMessage(null);
 
     const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
     const templateID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
     const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
     if (!serviceID || !templateID || !publicKey) {
-      console.error("EmailJS configuration is missing. Please check your environment variables.");
-      alert("Oops! Configuration error. Please try again later.");
+      setErrorMessage("Configuration error. Please try again later.");
+      setIsSubmitting(false);
       return;
     }
 
@@ -49,43 +53,44 @@ const ContactUs: React.FC = () => {
       message: formData.message,
     };
 
-    emailjs.send(serviceID, templateID, templateParams, publicKey)
-      .then((response) => {
-        console.log("Email sent successfully!", response.status, response.text);
-        setIsSubmitted(true);
-        controls.start({
-          scale: [1, 1.05, 1],
-          transition: { duration: 0.5 },
-        });
-        setTimeout(() => {
-          setFormData({ name: "", email: "", subject: "", message: "" });
-          setIsSubmitted(false);
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error("Failed to send email:", error);
-        alert("Oops! Something went wrong. Please try again.");
+    try {
+      const response = await emailjs.send(serviceID, templateID, templateParams, publicKey);
+      console.log("Email sent successfully!", response.status, response.text);
+      setSuccessMessage("Your message has been sent successfully! 🚀");
+      await controls.start({
+        scale: [1, 1.1, 1],
+        transition: { duration: 0.5 },
       });
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      setErrorMessage("Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  // Pricing button click handler
   const handlePricingClick = () => {
-    router.push("/subscription"); // Redirect to subscriptions page
+    router.push("/subscription");
   };
 
   return (
-    <div className="w-[100%] md:[w-90%] h-full p-4 lg:p-7 mt-5 mb-5 flex flex-col lg:flex-row border shadow-2xl m-auto bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 relative overflow-hidden" id="contact">
-      {/* Enhanced Background Effects */}
+    <div
+      className="w-full md:w-[90%] h-full p-4 lg:p-7 mt-5 mb-5 flex flex-col lg:flex-row border shadow-2xl m-auto bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 relative overflow-hidden"
+      id="contact"
+    >
+      {/* Background Effects */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent animate-pulse-slow" />
-        <motion.div 
+        <motion.div
           className="absolute top-10 left-10"
           animate={{ y: [0, -30, 0], rotate: [0, 360] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
           <FiBookOpen className="w-16 h-16 text-indigo-300/30 hover:text-indigo-400 transition-colors" />
         </motion.div>
-        <motion.div 
+        <motion.div
           className="absolute bottom-10 right-10"
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -104,8 +109,7 @@ const ContactUs: React.FC = () => {
         >
           Supercharge Your Success <br /> with CogeNist
         </motion.h1>
-
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
@@ -113,19 +117,17 @@ const ContactUs: React.FC = () => {
         >
           Unleash your potential with cutting-edge tools and strategies designed to skyrocket your productivity and conquer your goals!
         </motion.p>
-
-        {/* Enhanced Pricing Button */}
-        <motion.div 
+        <motion.div
           className="mt-8 ml-4 lg:ml-5 flex items-center justify-center"
           whileHover={{
             scale: 1.05,
-            boxShadow: "0px 0px 15px rgba(0, 255, 255, 0.5)", // Neon glow
+            boxShadow: "0px 0px 15px rgba(0, 255, 255, 0.5)",
             transition: { duration: 0.3, ease: "easeInOut" },
           }}
-          whileTap={{ scale: 0.95, rotate: 2 }} // Click effect
-          onClick={handlePricingClick} // Redirect on click
+          whileTap={{ scale: 0.95, rotate: 2 }}
+          onClick={handlePricingClick}
           style={{
-            background: "linear-gradient(45deg, #00b4d8, #7209b7)", // Cool gradient
+            background: "linear-gradient(45deg, #00b4d8, #7209b7)",
             padding: "12px 24px",
             borderRadius: "12px",
             cursor: "pointer",
@@ -134,12 +136,12 @@ const ContactUs: React.FC = () => {
             textTransform: "uppercase",
             letterSpacing: "1px",
           }}
+          role="button"
+          aria-label="View Subscriptions"
         >
           Subscriptions
         </motion.div>
-
-        {/* Interactive Feature Cards */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-3 gap-4 mt-12 px-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -153,10 +155,10 @@ const ContactUs: React.FC = () => {
             <motion.div
               key={text}
               className="p-3 bg-gray-800/80 backdrop-blur-md rounded-lg border border-gray-700/50"
-              whileHover={{ 
-                y: -8, 
+              whileHover={{
+                y: -8,
                 boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
-                backgroundColor: "rgba(55, 65, 81, 0.9)"
+                backgroundColor: "rgba(55, 65, 81, 0.9)",
               }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -176,22 +178,41 @@ const ContactUs: React.FC = () => {
           className="bg-gray-800/90 backdrop-blur-md p-6 lg:p-8 rounded-2xl shadow-xl mx-2 lg:mx-0 border border-gray-700/50"
         >
           <h2 className="text-2xl lg:text-3xl font-bold text-white mb-6 flex items-center gap-3">
-            <motion.span
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-            >
+            <motion.span whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
               <FiMail className="text-purple-400 w-8 h-8" />
             </motion.span>
             Let’s Connect!
           </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" aria-label="Contact Form">
+            {successMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="p-3 bg-green-500/20 border border-green-500/50 rounded-lg text-green-300"
+                role="alert"
+              >
+                {successMessage}
+              </motion.div>
+            )}
+            {errorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300"
+                role="alert"
+              >
+                {errorMessage}
+              </motion.div>
+            )}
             {[
-              { id: "name", icon: <FiUser />, type: "text", placeholder: "Your Name" },
-              { id: "email", icon: <FiMail />, type: "email", placeholder: "Your Email" },
+              { id: "name", icon: <FiUser />, type: "text", placeholder: "Your Name", required: true },
+              { id: "email", icon: <FiMail />, type: "email", placeholder: "Your Email", required: true },
               { id: "subject", icon: <FiBook />, type: "text", placeholder: "What’s on your mind?" },
-              { id: "message", icon: <FiMessageSquare />, type: "textarea", placeholder: "Tell us everything!" },
-            ].map(({ id, icon, type, placeholder }, index) => (
+              { id: "message", icon: <FiMessageSquare />, type: "textarea", placeholder: "Tell us everything!", required: true },
+            ].map(({ id, icon, type, placeholder, required }, index) => (
               <motion.div
                 key={id}
                 initial={{ opacity: 0, y: 20 }}
@@ -203,9 +224,7 @@ const ContactUs: React.FC = () => {
                   htmlFor={id}
                   className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2"
                 >
-                  <motion.span whileHover={{ scale: 1.2, rotate: 10 }}>
-                    {icon}
-                  </motion.span>
+                  <motion.span whileHover={{ scale: 1.2, rotate: 10 }}>{icon}</motion.span>
                   <span>{id.charAt(0).toUpperCase() + id.slice(1)}</span>
                 </label>
                 {type === "textarea" ? (
@@ -215,8 +234,10 @@ const ContactUs: React.FC = () => {
                     value={formData[id as keyof FormData]}
                     onChange={handleChange}
                     placeholder={placeholder}
+                    required={required}
                     className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all hover:bg-gray-700/70"
                     rows={4}
+                    aria-required={required}
                   />
                 ) : (
                   <input
@@ -226,21 +247,26 @@ const ContactUs: React.FC = () => {
                     value={formData[id as keyof FormData]}
                     onChange={handleChange}
                     placeholder={placeholder}
+                    required={required}
                     className="w-full p-3 border border-gray-600 rounded-lg bg-gray-700/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all hover:bg-gray-700/70"
+                    aria-required={required}
                   />
                 )}
               </motion.div>
             ))}
-
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(168, 85, 247, 0.5)" }}
               whileTap={{ scale: 0.95 }}
               animate={controls}
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white py-3 px-6 rounded-lg font-semibold transition-all flex items-center justify-center gap-3"
+              disabled={isSubmitting}
+              className={`w-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white py-3 px-6 rounded-lg font-semibold transition-all flex items-center justify-center gap-3 ${
+                isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              aria-label="Submit Contact Form"
             >
               <FiSend className="w-5 h-5 group-hover:animate-bounce" />
-              {isSubmitted ? "Sent! 🚀" : "Launch Message"}
+              {isSubmitting ? "Sending..." : "Launch Message"}
             </motion.button>
           </form>
         </motion.div>

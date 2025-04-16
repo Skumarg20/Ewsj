@@ -39,8 +39,7 @@ function Navbar() {
     { name: "Home", icon: Home, href: "#home" },
     { name: "Services", icon: Briefcase, href: "#services" },
     { name: "Exam", icon: Users, href: "#exam", subItem: { name: "IIT JEE", href: "/exam/iitjee" } },
-    { name: "About", icon: Users, href: "#about" },
-    { name: "Contact", icon: Phone, href: "#contact" },
+    { name: "Counselling", icon: Phone, href: "/hamaracollege" },
   ];
 
   return (
